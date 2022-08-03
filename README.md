@@ -1,5 +1,7 @@
 # Hiragana 
 
+Web-app for practicing reading of hiragana, katakana, and kanji.
+
 ## Project Setup
 
 ```sh
