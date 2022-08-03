@@ -1,8 +1,8 @@
 <script setup lang="ts">
-import global from "@/data/Global";
-import database from "@/data/Database";
+import global from "@/storage/Global";
+import database from "@/storage/Database";
 import router from "@/router";
-import ReviewCollection from "@/data/ReviewCollection";
+import ReviewCollection from "@/storage/ReviewCollection";
 
 function startReview(collection: Array<Array<string>>) {
   global.reviewCollection = new ReviewCollection(collection);
@@ -27,9 +27,11 @@ const hiraganaAll = () => {
 
 <template>
 
-<div class="collection-title container text-center mt-5 p-3">
-  <h2>Hiragana</h2>
+<div class="collection-title container text-center d-flex flex-row">
+  <div><h2>Hiragana</h2></div>
+  <div class="w-100 mb-3 ms-3 line"></div>
 </div>
+
 <div class="collection container p-3 ">
   <div class="w-100 buttons">
     <button @click="hiraganaMonographs" class="btn btn-lg btn-primary"><div class="m">あ</div>Monographs</button>
@@ -43,9 +45,11 @@ const hiraganaAll = () => {
   </div>
 </div>
 
-<div class="collection-title container text-center mt-5 p-3">
-  <h2>Katakana</h2>
+<div class="collection-title container text-center d-flex flex-row mt-5">
+  <div><h2>Katakana</h2></div>
+  <div class="w-100 mb-3 ms-3 line"></div>
 </div>
+
 <div class="collection container p-3">
   <div class="w-100 buttons">
     <button class="btn btn-lg btn-primary"><div class="m">ア</div> Monographs</button>
@@ -62,14 +66,14 @@ const hiraganaAll = () => {
 </template>
 
 <style scoped>
-.collection-title {
-  border-radius: 10px 10px 0px 0px;
-  background-color: #FEF4DB;
-  border: 4px solid rgba(0,0,0,0.1);
+.line {
+  border-block-end: 4px solid rgba(0,0,0,0.1);
 }
+.collection-title {
+  color: rgba(0,0,0,0.75);
+}
+
 .collection {
-  border-radius: 0px 0px 10px 10px;
-  border: 4px solid rgba(0,0,0,0.1);
   text-align: center;
   border-block-start-width: 0px;
 }

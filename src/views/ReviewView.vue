@@ -1,11 +1,12 @@
 <script setup lang="ts">
 import { reactive, ref } from "vue";
 import router from "@/router";
-import global from '@/data/Global';
-import database from '@/data/Database'
-import ReviewCounter from '@/data/ReviewCounter';
-import ReviewCollection from '@/data/ReviewCollection';
-import ReviewReport from "@/data/ReviewReport";
+import global from '@/storage/Global';
+import database from '@/storage/Database'
+import ReviewCounter from '@/storage/ReviewCounter';
+import ReviewCollection from '@/storage/ReviewCollection';
+import ReviewReport from "@/storage/ReviewReport";
+import Translator from "@/language/Translator.js";
 
 // TODO: Using router was a very bad idea 
 /*
@@ -22,6 +23,13 @@ const counter = reactive(new ReviewCounter(collection.size(), 1));
 const input = ref("");
 const wrong = ref(false);
 
+function onChange(e: any) {
+  const inputText = input.value.split(" ").join("");
+  const translated = new Translator().toHiragana(inputText);
+  input.value = translated;
+  console.log(new Translator().toRomanji(input.value));
+}
+
 function checkAnswer(e: any) {
   e.preventDefault();
 
@@ -35,7 +43,7 @@ function checkAnswer(e: any) {
       // take a new one if it's correct
       counter.addCorrect(card.value); 
       card.value = collection.take();
-      input.value = "";
+      input.value = ""; 
     } else { 
       // otherwise we want to show the correct answer 
       wrong.value = true;
@@ -76,6 +84,7 @@ function checkAnswer(e: any) {
 <div class="container p-0">
   <form @submit="checkAnswer" class="mt-5">
     <input v-model="input" 
+      @input="onChange"
       :class="{ 'wrong': wrong }" 
       class="answer-form p-4 form-control form-control-lg text-center" placeholder="" />
   </form>
@@ -84,7 +93,11 @@ function checkAnswer(e: any) {
 
 <style scoped>
 .progress {
+  background-color: #e1d7c0;
   border-radius: 10px 10px 0px 0px;
+}
+.progress-bar {
+  background-color: #b6ab90;
 }
 .wrong {
   background-color: rgba(255,150,150,1) !important;

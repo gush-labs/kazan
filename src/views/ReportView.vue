@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import router from '@/router';
-import global from '@/data/Global';
-import ReviewCollection from '@/data/ReviewCollection';
+import global from '@/storage/Global';
+import ReviewCollection from '@/storage/ReviewCollection';
 
 const results: Array<any> = [];
 const reviewReport = global.reviewReport;
@@ -83,7 +83,6 @@ function complete() {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(10em, 1fr));
   gap: 1em;
-  border: 4px solid rgba(0,0,0,0.1);
 }
 .report-item {
   color: white;

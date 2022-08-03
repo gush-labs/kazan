@@ -204,35 +204,11 @@ const katakana_monographs = [
   [ "", "" ],
 ]
 
-const kanji_l5words = [
-  [ '八', 'hachi' ],
-  [ '大人', "otona" ],
-  [ '一人', 'hitori' ],
-  [ '下', 'shita' ],
-  [ '人工', 'jinkou' ],
-  [ '大きい', 'ookii' ],
-  [ '八つ', 'yattsu' ],
-  [ '', '' ],
-  [ '', '' ],
-  [ '', '' ],
-  [ '', '' ],
-  [ '', '' ],
-  [ '', '' ],
-  [ '', '' ],
-]
-
-const jlpt5words = [
-  // nouns
-  [ "人", "hito" ],
-
-  // adjectives
-  [ "良い", "ii" ],
-  [ "良くない", "yokunai" ],
-  [ "良かった", "yokatta" ],
-  [ "良くなかった", "yokunakatta" ],
-
-  [ "私", "watashi" ],
-]
+const wanikani_l1_vocabular = [
+  ["大人", "おとな"],
+  ["一人", "ひとり"],
+  ["人工", "じんこう"],
+];
 
 const database = {
   hiragana: {
@@ -245,7 +221,11 @@ const database = {
       digraphs: diacritics_digraphs,
     },
   },
-  words: [ jlpt5words ]
+  wanikani: {
+    words: [ 
+      wanikani_l1_vocabular,
+    ]
+  }
 }
 
 export default database;

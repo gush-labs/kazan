@@ -42,7 +42,7 @@ class ReviewCounter {
   }
 
   getProgress(): number {
-    return Math.floor((this.completed / (this.collectionSize * this.repeatTimes)) * 100);
+    return (this.completed / (this.collectionSize * this.repeatTimes)) * 100;
   }
 }
 
