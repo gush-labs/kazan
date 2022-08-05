@@ -1,50 +1,32 @@
 <script setup lang="ts">
-import router from '@/router';
-import global from '@/storage/Global';
 import ReviewCollection from '@/storage/ReviewCollection';
+import type ReviewReport from '@/storage/ReviewReport.js';
 
-const results: Array<any> = [];
-const reviewReport = global.reviewReport;
-const reviewCollection = global.reviewCollection;
+const props = defineProps<{
+  setCollection: (collection: ReviewCollection) => void,
+  redirectTo: (page: string) => void,
+  collection: ReviewCollection,
+  report: ReviewReport,
+}>();
 
-var correct = 0;
-var incorrect = 0;
+const report = props.report;
+const collection = props.collection;
+const correct = report.correct.size;
+const incorrect = report.incorrect.size;
 
-if (reviewReport && reviewCollection) {
-  // make a report from data
-  reviewReport.correct.forEach(id => {
-    results.push({ target: reviewCollection.pairs[id][0], correct: true }); });
-  correct = reviewReport.correct.size;
+const cards: Array<any> = [];
+report.correct.forEach(id => cards.push({ target: collection.pairs[id][0], correct: true }));
+report.incorrect.forEach(id => cards.push({ target: collection.pairs[id][0], correct: false }));
 
-  reviewReport.incorrect.forEach(id => {
-    results.push({ target: reviewCollection.pairs[id][0], correct: false }); });
-  incorrect = reviewReport.incorrect.size;
-} else {
-  // if there is no report is present we should redirect user
-  // to the home page
-  router.push({ name: "home" });
-}
-
-function repeatAll() {
-  router.push({ name: "review" });
-}
+const repeatAll = () => props.redirectTo("review")
+const complete = () => props.redirectTo("collection")
 
 function repeatIncorrect() {
-  if (reviewCollection && reviewReport) {
-
-    const collection: Array<Array<string>> = [];
-    reviewReport.incorrect.forEach(id => {
-      collection.push(reviewCollection.pairs[id]); });
-    global.reviewCollection = new ReviewCollection(collection);
-
-    router.push({ name: "review" });
-  }
+    const newCollection: Array<Array<string>> = [];
+    report.incorrect.forEach(id => newCollection.push(collection.pairs[id]) );
+    props.setCollection(new ReviewCollection(newCollection));
+    props.redirectTo("review");
 }
-
-function complete() {
-  router.push({ name: "home" });
-}
-
 </script>
 
 <template>
@@ -55,7 +37,7 @@ function complete() {
 </div>
 
 <div class="container report mb-5 p-3">
-  <div v-for="result in results" 
+  <div v-for="result in cards" 
     :class="{'report-correct': result.correct, 'report-incorrect': !result.correct }" 
     class="report-item p-1">{{ result.target }}</div>
 </div>

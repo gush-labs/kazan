@@ -1,33 +1,27 @@
 <script setup lang="ts">
 import { reactive, ref } from "vue";
-import router from "@/router";
-import global from '@/storage/Global';
-import database from '@/storage/Database'
+import type ReviewCollection from '@/storage/ReviewCollection';
 import ReviewCounter from '@/storage/ReviewCounter';
-import ReviewCollection from '@/storage/ReviewCollection';
 import ReviewReport from "@/storage/ReviewReport";
-import Translator from "@/language/Translator.js";
+import translator from "@/language/Translator.js";
 
-// TODO: Using router was a very bad idea 
-/*
-if (!global.reviewCollection) {
-  // redirect to the home page if there 
-  // is nothing to review
-  router.push({ name: "home" });
-}
-*/
+const props = defineProps<{
+  redirectTo: (page: string) => void,
+  setReport: (report: ReviewReport) => void,
+  collection: ReviewCollection,
+}>();
 
-const collection = global.reviewCollection ? global.reviewCollection : new ReviewCollection(database.hiragana.monographs.main);
+const collection = props.collection;
 const card = ref(collection.take());
 const counter = reactive(new ReviewCounter(collection.size(), 1));
 const input = ref("");
 const wrong = ref(false);
 
-function onChange(e: any) {
-  const inputText = input.value.split(" ").join("");
-  const translated = new Translator().toHiragana(inputText);
-  input.value = translated;
-  console.log(new Translator().toRomanji(input.value));
+function onChange() {
+  if (collection.typeHiragana) {
+    const inputText = input.value.split(" ").join("");
+    input.value = translator.toHiragana(inputText);
+  }
 }
 
 function checkAnswer(e: any) {
@@ -56,9 +50,8 @@ function checkAnswer(e: any) {
   }
 
   if (counter.getProgress() >= 100) {
-    global.reviewCollection = new ReviewCollection(collection.pairs);
-    global.reviewReport = new ReviewReport(counter.getCorrectCards(), counter.getIncorrectCards());
-    router.push({ name: "report" });
+    props.setReport(new ReviewReport(counter.getCorrectCards(), counter.getIncorrectCards()));
+    props.redirectTo("report");
   }
 }
 </script>

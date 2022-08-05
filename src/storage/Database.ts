@@ -208,6 +208,40 @@ const wanikani_l1_vocabular = [
   ["大人", "おとな"],
   ["一人", "ひとり"],
   ["人工", "じんこう"],
+  ["大きい", "おおきい"],
+  ["下", "した"],
+  ["八", "はち"],
+  ["八つ", "やっつ"],
+  ["入り口","いりぐち"],
+  ["大した","たいした"],
+  ["山","やま"],
+  ["口","くち"],
+  ["ふじ山","ふじさん"],
+  ["九","く"],
+  ["九つ","ここのつ"],
+  ["一","いち"],
+  ["一つ","ひとつ"],
+  ["人","ひと"],
+  ["下さい","ください"],
+  ["人口","じんこう"],
+  ["力","ちから"],
+  ["川","かわ"],
+  ["七","なな"],
+  ["七つ","ななつ"],
+  ["大きさ","おおきさ"],
+  ["十","じゅう"],
+  ["三","さん"],
+  ["三人","さんにん"],
+  ["三つ","みっつ"],
+  ["入る","はいる"],
+  ["上げる","あげる"],
+  ["下げる","さげる"],
+  ["二","に"],
+  ["二人","ふたり"],
+  ["二つ","ふたつ"],
+  ["上","うえ"],
+  ["力いっぱい","ちからいっぱい"],
+  ["女","おんな"],
 ];
 
 const database = {
@@ -215,11 +249,14 @@ const database = {
     monographs: {
       main: monographs,
       digraphs: monographs_digraphs, 
+      all: monographs.concat(monographs_digraphs)
     },
     diacritics: {
       main: diacritics,
       digraphs: diacritics_digraphs,
+      all: diacritics.concat(diacritics_digraphs)
     },
+    all: monographs.concat(monographs_digraphs).concat(diacritics).concat(diacritics_digraphs),
   },
   wanikani: {
     words: [ 

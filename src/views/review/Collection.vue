@@ -1,32 +1,27 @@
 <script setup lang="ts">
-import global from "@/storage/Global";
 import database from "@/storage/Database";
-import router from "@/router";
 import ReviewCollection from "@/storage/ReviewCollection";
 
-function startReview(collection: Array<Array<string>>) {
-  global.reviewCollection = new ReviewCollection(collection);
-  router.push({ name: "review" });
+const props = defineProps<{
+  redirectTo: (page: string) => void
+  setCollection: (collection: ReviewCollection) => void,
+}>();
+
+function startReview(collection: Array<Array<string>>, typeHiragana: boolean = false) {
+  props.setCollection(new ReviewCollection(collection));
+  props.redirectTo("review");
 }
 
 const hiraganaMonographs = () => startReview(database.hiragana.monographs.main);
 const hiraganaMonographsPlus = () => startReview(database.hiragana.monographs.digraphs);
 const hiraganaDiacritics = () => startReview(database.hiragana.diacritics.main);
 const hiraganaDiacriticsPlus = () => startReview(database.hiragana.diacritics.digraphs);
-const hiraganaAllMonographs = () => {
-  startReview(database.hiragana.monographs.main.concat(database.hiragana.monographs.digraphs)); }
-const hiraganaAllDiacritics = () => {
-  startReview(database.hiragana.diacritics.main.concat(database.hiragana.diacritics.digraphs)); }
-const hiraganaAll = () => {
-  startReview(database.hiragana.monographs.main
-    .concat(database.hiragana.monographs.digraphs)
-    .concat(database.hiragana.diacritics.main)
-    .concat(database.hiragana.diacritics.digraphs)); }
-
+const hiraganaAllMonographs = () => startReview(database.hiragana.monographs.all);
+const hiraganaAllDiacritics = () => startReview(database.hiragana.diacritics.all);
+const hiraganaAll = () => startReview(database.hiragana.all);
 </script>
 
 <template>
-
 <div class="collection-title container text-center d-flex flex-row">
   <div><h2>Hiragana</h2></div>
   <div class="w-100 mb-3 ms-3 line"></div>
@@ -62,7 +57,6 @@ const hiraganaAll = () => {
     <button class="btn btn-lg btn-primary disabled"><div class="m">トム</div> Words</button>
   </div>
 </div>
-
 </template>
 
 <style scoped>
