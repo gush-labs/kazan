@@ -121,7 +121,7 @@ function checkAnswer(e: any) {
 }
 .answer-form {
   border: 4px solid rgba(0,0,0,0.1);
-  font-size: 1.5em;
+  font-size: 2em;
   border-radius: 10px;
 }
 textarea:focus, input:focus{

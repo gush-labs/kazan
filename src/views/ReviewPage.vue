@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { ref } from 'vue';
-import ReviewCollection from '@/storage/ReviewCollection';
-import ReviewReport from '@/storage/ReviewReport';
+import type ReviewCollection from '@/storage/ReviewCollection';
+import type ReviewReport from '@/storage/ReviewReport';
 import Review from "./review/Review.vue";
 import Collection from "./review/Collection.vue";
 import Report from "./review/Report.vue";
@@ -25,7 +25,7 @@ const setReport = (newReport: ReviewReport) => report.value = newReport;
   :collection="collection" 
   :redirectTo="redirectTo" />
 
-<Report v-if="state == 'report' && collection" 
+<Report v-if="state == 'report' && collection && report" 
   :setCollection="setCollection" 
   :report="report"
   :collection="collection" 

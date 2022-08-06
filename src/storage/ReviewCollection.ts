@@ -1,3 +1,4 @@
+import translator from '@/language/Translator';
 import ReviewCard from './ReviewCard';
 
 class ReviewCollection {
@@ -21,20 +22,31 @@ class ReviewCollection {
       return new ReviewCard(0, "", "");
     }
 
+    // Take a new card from the list of least reviewed cards
     const mins = this.getMins();
     const id = mins[Math.floor(Math.random() * mins.length)];
     return new ReviewCard(id, this.pairs[id][0], this.pairs[id][1]);
   }
 
-  verify(card: ReviewCard, answer: string): boolean {
-    if (card.answer === answer || card.target === answer) {
-      this.correctCounters[card.id] += 1;
-      return true;
-    }
-    return false;
+  verify(card: ReviewCard, input: string): boolean {
+    const romanjiAnswer = translator.toRomanji(card.answer);
+    const romanjiInput = translator.toRomanji(input);
+    const romanjiTarget = translator.toRomanji(card.target);
+
+    const correct = card.answer === input ||
+                    card.target === input ||
+                    romanjiAnswer === input || 
+                    romanjiTarget === romanjiInput ||
+                    romanjiAnswer === romanjiInput;
+
+    this.correctCounters[card.id] += correct ? 1 : 0;
+    return correct;
   }
 
-  private getMins(): Array<number> {
+  /**
+   * @returns array of cards which were reviewed least of all
+   */
+  getMins(): Array<number> {
     const mins: Array<number> = [];
     
     var min = this.correctCounters[0];

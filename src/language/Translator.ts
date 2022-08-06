@@ -5,6 +5,10 @@ const alphabet: Set<String> = new Set("a b c d e f g h i j k l m n o p q r s t u
 
 function initializeMapper() {
     function setToMapper(pair: string[]) {
+      // normally じ is used instead of ぢ
+      // so we'll skip this hiragana
+      if (pair[0].split("")[0] === "ぢ") return;
+
       if (pair[1] == "n") {
         mapper.set(pair[0], "nn");
         mapper.set("nn", pair[0]);
@@ -13,14 +17,15 @@ function initializeMapper() {
         mapper.set(pair[1], pair[0]);
       }
     };
-    database.hiragana.monographs.main.forEach(pair => setToMapper(pair));
-    database.hiragana.monographs.digraphs.forEach(pair => setToMapper(pair));
-    database.hiragana.diacritics.main.forEach(pair => setToMapper(pair));
-    database.hiragana.diacritics.digraphs.forEach(pair => setToMapper(pair));
+    database.hiragana.all.forEach(setToMapper);
 }
 initializeMapper();
 
 class Translator {
+
+  isRomanji(char: string): boolean {
+    return alphabet.has(char.toLowerCase());
+  }
 
   /**
    * Converts hiragana to romanji
@@ -61,7 +66,6 @@ class Translator {
     var prev = "";
     input.split("").forEach(i => {
       const l = i.toLowerCase();
-      console.log(prev);
       if (!alphabet.has(l)) {
         output += l;
       } else if (mapper.has(prev + l)) {
