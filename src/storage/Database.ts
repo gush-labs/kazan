@@ -197,11 +197,92 @@ const katakana_monographs = [
 
   [ "ワ", "wa" ],
   [ "ヲ", "wo" ],
-  [ "", "" ],
-  [ "", "" ],
-  [ "", "" ],
-  [ "", "" ],
-  [ "", "" ],
+
+  [ "ン", "n" ],
+]
+
+const katakana_digraphs = [
+  ["キャ", "kya"],
+  ["キュ", "kyu"],
+  ["キョ", "kyo"],
+
+  ["シャ", "sha"],
+  ["シュ", "shu"],
+  ["ショ", "sho"],
+
+  ["チャ", "cha"],
+  ["チュ", "chu"],
+  ["チョ", "cho"],
+
+  ["ニャ", "nya"],
+  ["ニュ", "nyu"],
+  ["ニョ", "nyo"],
+
+  ["ヒャ", "hya"],
+  ["ヒュ", "hyu"],
+  ["ヒョ", "hyo"],
+
+  ["ミャ", "mya"],
+  ["ミュ", "myu"],
+  ["ミョ", "myo"],
+
+  ["リャ", "rya"],
+  ["リュ", "ryu"],
+  ["リョ", "ryo"],
+];
+
+const katakana_diacritics = [
+  ["ガ", "ga"],
+  ["ギ", "gi"],
+  ["グ", "gu"],
+  ["ゲ", "ge"],
+  ["ゴ", "go"],
+
+  ["ザ", "za"],
+  ["ジ", "ji"],
+  ["ズ", "zu"],
+  ["ゼ", "ze"],
+  ["ゾ", "zo"],
+
+  ["ダ", "da"],
+  ["ヂ", "ji"],
+  ["ヅ", "zu"],
+  ["デ", "de"],
+  ["ド", "do"],
+
+  ["バ", "ba"],
+  ["ビ", "bi"],
+  ["ブ", "bu"],
+  ["ベ", "be"],
+  ["ボ", "bo"],
+
+  ["パ", "pa"],
+  ["ピ", "pi"],
+  ["プ", "pu"],
+  ["ペ", "pe"],
+  ["ポ", "po"],
+]
+
+const katakana_diacritics_digraphs = [
+  ["ギャ", "gya"],
+  ["ギュ", "gyu"],
+  ["ギョ", "gyo"],
+
+  ["ジャ", "jya"],
+  ["ジュ", "jyu"],
+  ["ジョ", "jyo"],
+
+  ["ヂャ", "jya"],
+  ["ヂュ", "jyu"],
+  ["ヂョ", "jyo"],
+
+  ["ビャ", "bya"],
+  ["ビュ", "byu"],
+  ["ビョ", "byo"],
+
+  ["ピャ", "pya"],
+  ["ピュ", "pyu"],
+  ["ピョ", "pyo"],
 ]
 
 const wanikani_l1_vocabular = [
@@ -257,6 +338,19 @@ const database = {
       all: diacritics.concat(diacritics_digraphs)
     },
     all: monographs.concat(monographs_digraphs).concat(diacritics).concat(diacritics_digraphs),
+  },
+  katakana: {
+    monographs: {
+      main: katakana_monographs,
+      digraphs: katakana_digraphs,
+      all: katakana_monographs.concat(katakana_digraphs)
+    },
+    diacritics: {
+      main: katakana_diacritics,
+      digraphs: katakana_diacritics_digraphs,
+      all: katakana_diacritics.concat(katakana_diacritics_digraphs)
+    },
+    all: katakana_monographs.concat(katakana_digraphs).concat(katakana_diacritics).concat(katakana_diacritics_digraphs),
   },
   wanikani: {
     words: [ 

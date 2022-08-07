@@ -7,8 +7,8 @@ const props = defineProps<{
   setCollection: (collection: ReviewCollection) => void,
 }>();
 
-function startReview(collection: Array<Array<string>>, typeHiragana: boolean = false) {
-  props.setCollection(new ReviewCollection(collection, typeHiragana));
+function startReview(collection: Array<Array<string>>, kana: string = "romanji") {
+  props.setCollection(new ReviewCollection(collection, kana));
   props.redirectTo("review");
 }
 
@@ -19,7 +19,7 @@ const hiraganaDiacriticsPlus = () => startReview(database.hiragana.diacritics.di
 const hiraganaAllMonographs = () => startReview(database.hiragana.monographs.all);
 const hiraganaAllDiacritics = () => startReview(database.hiragana.diacritics.all);
 const hiraganaAll = () => startReview(database.hiragana.all);
-const words1 = () => startReview(database.wanikani.words[0], true);
+const words1 = () => startReview(database.wanikani.words[0], "hiragana");
 </script>
 
 <template>
@@ -37,7 +37,6 @@ const words1 = () => startReview(database.wanikani.words[0], true);
     <button @click="hiraganaAllMonographs" class="btn btn-lg btn-primary"><div class="m">ちゃ</div>All monographs</button>
     <button @click="hiraganaAllDiacritics" class="btn btn-lg btn-primary"><div class="m">ぎゃ</div>All diacritics</button>
     <button @click="hiraganaAll" class="btn btn-lg btn-primary"><div class="m">あえ</div>All hiragana</button>
-    <button class="btn btn-lg btn-primary disabled"><div class="m">ねこ</div> Words</button>
   </div>
 </div>
 

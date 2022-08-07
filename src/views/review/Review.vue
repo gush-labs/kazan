@@ -18,9 +18,11 @@ const input = ref("");
 const wrong = ref(false);
 
 function onChange() {
-  if (collection.typeHiragana) {
-    const inputText = input.value.split(" ").join("");
+  const inputText = input.value.split(" ").join("");
+  if (collection.kana == "hiragana") {
     input.value = translator.toHiragana(inputText);
+  } else if (collection.kana == "katakana") {
+    input.value = translator.toKatakana(inputText);
   }
 }
 

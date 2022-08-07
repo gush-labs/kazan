@@ -5,11 +5,11 @@ class ReviewCollection {
   
   pairs: Array<Array<string>>;
   correctCounters: Array<number> = [];
-  typeHiragana: boolean;
+  kana: string;
 
-  constructor(pairs: Array<Array<string>>, typeHiragana: boolean = false) {
+  constructor(pairs: Array<Array<string>>, kana: string) {
     this.pairs = pairs;
-    this.typeHiragana = typeHiragana;
+    this.kana = kana;
     pairs.forEach(() => this.correctCounters.push(0));
   }
 

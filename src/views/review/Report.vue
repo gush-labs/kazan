@@ -24,7 +24,7 @@ const complete = () => props.redirectTo("collection")
 function repeatIncorrect() {
     const newCollection: Array<Array<string>> = [];
     report.incorrect.forEach(id => newCollection.push(collection.pairs[id]) );
-    props.setCollection(new ReviewCollection(newCollection, collection.typeHiragana));
+    props.setCollection(new ReviewCollection(newCollection, collection.kana));
     props.redirectTo("review");
 }
 </script>
