@@ -19,7 +19,17 @@ const hiraganaDiacriticsPlus = () => startReview(database.hiragana.diacritics.di
 const hiraganaAllMonographs = () => startReview(database.hiragana.monographs.all);
 const hiraganaAllDiacritics = () => startReview(database.hiragana.diacritics.all);
 const hiraganaAll = () => startReview(database.hiragana.all);
-const words1 = () => startReview(database.wanikani.words[0], "hiragana");
+
+const katakanaMonographs = () => startReview(database.katakana.monographs.main);
+const katakanaMonographsPlus = () => startReview(database.katakana.monographs.digraphs);
+const katakanaDiacritics = () => startReview(database.katakana.diacritics.main);
+const katakanaDiacriticsPlus = () => startReview(database.katakana.diacritics.digraphs);
+const katakanaAllMonographs = () => startReview(database.katakana.monographs.all);
+const katakanaAllDiacritics = () => startReview(database.katakana.diacritics.all);
+const katakanaAll = () => startReview(database.katakana.all);
+
+const wkWords1 = () => startReview(database.kanji.wanikani[0], "hiragana");
+const basicNumbers = () => startReview(database.kanji.numbers.kanji, "hiragana");
 </script>
 
 <template>
@@ -41,13 +51,14 @@ const words1 = () => startReview(database.wanikani.words[0], "hiragana");
 </div>
 
 <div class="collection-title container text-center d-flex flex-row mt-5">
-  <div><h2>WaniKani&nbsp;Vocabularity</h2></div>
+  <div><h2>Kanji</h2></div>
   <div class="w-100 mb-3 ms-3 line"></div>
 </div>
 
 <div class="collection container p-3">
   <div class="w-100 buttons">
-    <button @click="words1" class="btn btn-lg btn-primary"><div class="m">人工</div> Level 1</button>
+    <button @click="basicNumbers" class="btn btn-lg btn-primary"><div class="m">十二</div> Basic Numbers</button>
+    <button @click="wkWords1" class="btn btn-lg btn-primary"><div class="m">人工</div> Wanikani L1</button>
     <button class="btn btn-lg btn-primary disabled"><div class="m">四月</div> Level 2</button>
     <button class="btn btn-lg btn-primary disabled"><div class="m">半分</div> Level 3</button>
     <button class="btn btn-lg btn-primary disabled"><div class="m">元気</div> Level 4</button>

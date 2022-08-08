@@ -31,12 +31,10 @@ class ReviewCollection {
   verify(card: ReviewCard, input: string): boolean {
     const romanjiAnswer = translator.toRomanji(card.answer);
     const romanjiInput = translator.toRomanji(input);
-    const romanjiTarget = translator.toRomanji(card.target);
 
     const correct = card.answer === input ||
-                    card.target === input ||
+                    card.answer === romanjiInput ||
                     romanjiAnswer === input || 
-                    romanjiTarget === romanjiInput ||
                     romanjiAnswer === romanjiInput;
 
     this.correctCounters[card.id] += correct ? 1 : 0;

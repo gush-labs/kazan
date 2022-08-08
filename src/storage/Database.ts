@@ -325,6 +325,35 @@ const wanikani_l1_vocabular = [
   ["女","おんな"],
 ];
 
+const kanji_numbers = [
+  ["一","ichi"],
+  ["ニ","ni"],
+  ["三","san"],
+  ["四","yon"],
+  ["五","go"],
+  ["六","roku"],
+  ["七","nana"],
+  ["八","hachi"],
+  ["九","ku"],
+  ["十","jyuu"],
+  ["百","hyaku"],
+  ["千","sen"],
+  ["万","man"],
+];
+
+const arabic_numbers = [
+  ["1","ichi"],
+  ["2","ni"],
+  ["3","san"],
+  ["4","yon"],
+  ["5","go"],
+  ["6","roku"],
+  ["7","nana"],
+  ["8","hachi"],
+  ["9","kyuu"],
+  ["10","jyuu"],
+];
+
 const database = {
   hiragana: {
     monographs: {
@@ -352,8 +381,12 @@ const database = {
     },
     all: katakana_monographs.concat(katakana_digraphs).concat(katakana_diacritics).concat(katakana_diacritics_digraphs),
   },
-  wanikani: {
-    words: [ 
+  kanji: {
+    numbers: {
+      kanji: kanji_numbers,
+      arabic: arabic_numbers
+    },
+    wanikani: [ 
       wanikani_l1_vocabular,
     ]
   }
