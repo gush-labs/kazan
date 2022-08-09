@@ -1,4 +1,5 @@
 import database from "@/storage/Database";
+import { throwStatement } from "@babel/types";
 
 const hiragana: Map<string, string> = new Map(); // romanji -> hiragana
 const katakana: Map<string, string> = new Map(); // romanji -> katakana
@@ -47,14 +48,17 @@ class Translator {
     // TODO: Add handling of sokuon
     input.split("").forEach(i => {
       const l = i.toLowerCase();
-      if (alphabet.has(l)) { return; }
+      if (alphabet.has(l)) { output += l; return; }
 
       prev += l;
       if (prev.length == 2) {
         if (romanji.has(prev)) { output += romanji.get(prev); }
         else {
-          output += romanji.get(prev[0]);
-          output += romanji.get(prev[1]);
+          if (romanji.has(prev[0])) output += romanji.get(prev[0]);
+          else output += prev[0];
+
+          if (romanji.has(prev[1])) output += romanji.get(prev[1]);
+          else output += prev[1];
         }
         prev = "";
       }
@@ -74,11 +78,19 @@ class Translator {
     return this.toKana(input, hiragana);
   }
 
+  completeHiragana(input: string): string {
+    return this.toKana(input, hiragana, true);
+  }
+
   toKatakana(input: string): string {
     return this.toKana(input, katakana);
   }
 
-  toKana(input: string, kana: Map<string, string>) {
+  completeKatakana(input: string) {
+    return this.toKana(input, katakana, true);
+  }
+
+  toKana(input: string, kana: Map<string, string>, complete: boolean = false) {
     var output = "";
     var prev = "";
     input.split("").forEach(i => {
@@ -95,6 +107,10 @@ class Translator {
         prev += l;
       }
     });
+    // When user completed the input, we should check if there is an "n"
+    // at the end of the string. If so, we should replace it with a proper kana
+    // before checking the answer
+    if (complete && prev == "n" && kana.has("nn")) prev = kana.get("nn")!;
     return output + prev;
   }
 

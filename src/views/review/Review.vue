@@ -30,7 +30,9 @@ function checkAnswer(e: any) {
   e.preventDefault();
 
   // remove all spaces from the input
-  const inputText = input.value.split(" ").join("");
+  var inputText = input.value.split(" ").join("");
+  if (collection.kana == "hiragana") inputText = translator.completeHiragana(inputText);
+  if (collection.kana == "katakana") inputText = translator.completeKatakana(inputText);
 
   if (inputText != "" && !wrong.value) {
     // verify the current review card
