@@ -1,4 +1,3 @@
-
 class ReviewCard {
   target: string;
   answer: string;

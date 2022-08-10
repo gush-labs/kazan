@@ -3,8 +3,8 @@ import type ReviewCard from "./ReviewCard";
 class ReviewCounter {
   private correct: Set<number> = new Set();
   private incorrect: Set<number> = new Set();
-  private completed: number = 0;
-  
+  private completed = 0;
+
   private collectionSize: number;
   private repeatTimes: number;
 

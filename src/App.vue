@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import { RouterView } from "vue-router";
-
 </script>
 
 <template>
@@ -12,9 +11,9 @@ import { RouterView } from "vue-router";
 
 <style scoped>
 .header {
-  font-family: 'Mochiy Pop One', sans-serif;
+  font-family: "Mochiy Pop One", sans-serif;
   font-weight: bolder;
-  background-color: #FEF4DB;
-  border-bottom: 4px solid rgba(0,0,0,0.1);
+  background-color: #fef4db;
+  border-bottom: 4px solid rgba(0, 0, 0, 0.1);
 }
 </style>

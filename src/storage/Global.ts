@@ -6,6 +6,6 @@ class Global {
   reviewCollection: ReviewCollection | null = null;
 }
 
-const global = new Global(); 
+const global = new Global();
 
 export default global;

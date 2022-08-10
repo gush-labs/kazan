@@ -14,7 +14,7 @@ const router = createRouter({
       path: "/typer",
       name: "typer",
       component: TyperPage,
-    }
+    },
   ],
 });
 

@@ -1,8 +1,7 @@
-import translator from '@/language/Translator';
-import ReviewCard from './ReviewCard';
+import translator from "@/language/Translator";
+import ReviewCard from "./ReviewCard";
 
 class ReviewCollection {
-  
   pairs: Array<Array<string>>;
   correctCounters: Array<number> = [];
   kana: string;
@@ -32,10 +31,11 @@ class ReviewCollection {
     const romanjiAnswer = translator.toRomanji(card.answer);
     const romanjiInput = translator.toRomanji(input);
 
-    const correct = card.answer === input ||
-                    card.answer === romanjiInput ||
-                    romanjiAnswer === input || 
-                    romanjiAnswer === romanjiInput;
+    const correct =
+      card.answer === input ||
+      card.answer === romanjiInput ||
+      romanjiAnswer === input ||
+      romanjiAnswer === romanjiInput;
 
     this.correctCounters[card.id] += correct ? 1 : 0;
     return correct;
@@ -46,18 +46,21 @@ class ReviewCollection {
    */
   getMins(): Array<number> {
     const mins: Array<number> = [];
-    
-    var min = this.correctCounters[0];
+
+    let min = this.correctCounters[0];
     this.correctCounters.forEach((element) => {
-      if (min > element) { min = element; }
+      if (min > element) {
+        min = element;
+      }
     });
     this.correctCounters.forEach((element, id) => {
-      if (element == min) { mins.push(id); }
+      if (element == min) {
+        mins.push(id);
+      }
     });
 
     return mins;
   }
-
 }
 
 export default ReviewCollection;

@@ -1,27 +1,27 @@
 <script setup lang="ts">
-import translator from '@/language/Translator.js';
-import { ref } from 'vue';
+import translator from "@/language/Translator.js";
+import { ref } from "vue";
 
 const input = ref("");
 
 const text = ref("おじいさんがやまへきをきりにいけば");
 const textParsed = text.value.split("");
-const checked = ref<Array<{text: string, corrected: boolean}>>([]);
+const checked = ref<Array<{ text: string; corrected: boolean }>>([]);
 const typed = ref("");
 
-var correctId = 0;
-var wasError: boolean = false;
+let correctId = 0;
+let wasError = false;
 
 function onChange(e: any) {
   input.value = translator.toHiragana(input.value);
 
   const characters = input.value.split("");
-  var localId = 0;
+  let localId = 0;
   characters.forEach((ch) => {
     if (!translator.isRomanji(ch)) {
-      if (ch === textParsed[correctId + localId]) { 
+      if (ch === textParsed[correctId + localId]) {
         checked.value.push({ text: ch, corrected: wasError });
-        localId += 1; 
+        localId += 1;
         wasError = false;
       } else {
         wasError = true;
@@ -33,25 +33,28 @@ function onChange(e: any) {
   input.value = input.value.slice(localId);
   typed.value = input.value;
 }
-
 </script>
 
 <template>
-<div class="container">
-  <div class="text">
-    <input @input="onChange" class="input" v-model="input" />
+  <div class="container">
+    <div class="text">
+      <input @input="onChange" class="input" v-model="input" />
 
-    <div class="source-text">{{ text }}</div>
-    <div class="text-container d-flex flex-row">
-      <div class="input-text" ref="inputTextComponent">
-        <span v-for="element in checked" class="correct" :class="{ 'corrected': element.corrected }">{{ element.text }}</span>
-        <span class="typed">{{ typed }}</span>
+      <div class="source-text">{{ text }}</div>
+      <div class="text-container d-flex flex-row">
+        <div class="input-text" ref="inputTextComponent">
+          <span
+            v-for="element in checked"
+            class="correct"
+            :class="{ corrected: element.corrected }"
+            >{{ element.text }}</span
+          >
+          <span class="typed">{{ typed }}</span>
+        </div>
+        <div class="carriage"></div>
       </div>
-      <div class="carriage"></div>
     </div>
-
   </div>
-</div>
 </template>
 
 <style scoped>

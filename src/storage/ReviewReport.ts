@@ -1,4 +1,3 @@
-
 class ReviewReport {
   correct: Set<number>;
   incorrect: Set<number>;
