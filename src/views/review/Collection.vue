@@ -20,7 +20,7 @@ const hiraganaDiacriticsPlus = () =>
   startReview(database.hiragana.diacritics.digraphs);
 const hiraganaAllMonographs = () =>
   startReview(database.hiragana.monographs.all);
-const hiraganaAllDiacritics = () =>
+const hiraganaAllDiacritics =() =>
   startReview(database.hiragana.diacritics.all);
 const hiraganaAll = () => startReview(database.hiragana.all);
 

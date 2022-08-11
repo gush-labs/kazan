@@ -28,8 +28,8 @@ class ReviewCollection {
   }
 
   verify(card: ReviewCard, input: string): boolean {
-    const romanjiAnswer = translator.toRomanji(card.answer);
-    const romanjiInput = translator.toRomanji(input);
+    const romanjiAnswer = translator.toRomaji(card.answer);
+    const romanjiInput = translator.toRomaji(input);
 
     const correct =
       card.answer === input ||

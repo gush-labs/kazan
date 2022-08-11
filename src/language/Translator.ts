@@ -1,15 +1,15 @@
 import database from "@/storage/Database";
 
-const hiragana: Map<string, string> = new Map(); // romanji -> hiragana
-const katakana: Map<string, string> = new Map(); // romanji -> katakana
-const romanji: Map<string, string> = new Map(); // kana -> romanji
+const hiragana: Map<string, string> = new Map(); // romaji -> hiragana
+const katakana: Map<string, string> = new Map(); // romaji -> katakana
+const romaji: Map<string, string> = new Map(); // kana -> romaji
 const alphabet: Set<string> = new Set(
   "a b c d e f g h i j k l m n o p q r s t u v w x y z".split(" ")
 );
 
 function initializeMapper() {
   function setToMapper(pair: string[], kana: Map<string, string>) {
-    if (pair[1] != ".") romanji.set(pair[0], pair[1]);
+    if (pair[1] != ".") romaji.set(pair[0], pair[1]);
 
     // normally じ is used instead of ぢ
     // so we'll skip this hiragana
@@ -27,6 +27,7 @@ function initializeMapper() {
   }
   database.hiragana.all.forEach((pair) => setToMapper(pair, hiragana));
   setToMapper(["っ", "."], hiragana);
+  setToMapper(["こ", "co"], hiragana);
 
   database.katakana.all.forEach((pair) => setToMapper(pair, katakana));
   setToMapper(["ッ", "."], katakana);
@@ -39,11 +40,11 @@ class Translator {
   }
 
   /**
-   * Converts hiragana to romanji
+   * Converts hiragana to romaji
    * @param input string with hiragana text
-   * @returns hiragana text represented in romanji
+   * @returns hiragana text represented in romaji
    */
-  toRomanji(input: string): string {
+  toRomaji(input: string): string {
     let output = "";
     let prev = "";
 
@@ -57,20 +58,20 @@ class Translator {
 
       prev += l;
       if (prev.length == 2) {
-        if (romanji.has(prev)) {
-          output += romanji.get(prev);
+        if (romaji.has(prev)) {
+          output += romaji.get(prev);
         } else {
-          if (romanji.has(prev[0])) output += romanji.get(prev[0]);
+          if (romaji.has(prev[0])) output += romaji.get(prev[0]);
           else output += prev[0];
 
-          if (romanji.has(prev[1])) output += romanji.get(prev[1]);
+          if (romaji.has(prev[1])) output += romaji.get(prev[1]);
           else output += prev[1];
         }
         prev = "";
       }
     });
-    if (prev.length == 1 && romanji.has(prev)) {
-      output += romanji.get(prev);
+    if (prev.length == 1 && romaji.has(prev)) {
+      output += romaji.get(prev);
     }
     return output;
   }
