@@ -7,7 +7,8 @@ const alphabet: Set<string> = new Set(
   "a b c d e f g h i j k l m n o p q r s t u v w x y z".split(" ")
 );
 
-function initializeMapper() {
+// Fills collections above with the actual data from the database
+(() => {
   function setToMapper(pair: string[], kana: Map<string, string>) {
     if (pair[1] != ".") romaji.set(pair[0], pair[1]);
 
@@ -25,14 +26,14 @@ function initializeMapper() {
       kana.set(pair[1], pair[0]);
     }
   }
+
   database.hiragana.all.forEach((pair) => setToMapper(pair, hiragana));
   setToMapper(["っ", "."], hiragana);
   setToMapper(["こ", "co"], hiragana);
 
   database.katakana.all.forEach((pair) => setToMapper(pair, katakana));
   setToMapper(["ッ", "."], katakana);
-}
-initializeMapper();
+})();
 
 class Translator {
   isRomanji(char: string): boolean {
