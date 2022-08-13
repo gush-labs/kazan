@@ -40,6 +40,8 @@ const wkWords = (i: number) =>
   startReview(database.kanji.wanikani[i], "hiragana");
 const basicNumbers = () =>
   startReview(database.kanji.numbers.kanji, "hiragana");
+const countThings = () =>
+  startReview(database.kanji.numbers.things, "hiragana");
 </script>
 
 <template>
@@ -91,6 +93,10 @@ const basicNumbers = () =>
       <button @click="basicNumbers" class="btn btn-lg btn-primary">
         <div class="m">十二</div>
         Basic Numbers
+      </button>
+      <button @click="countThings" class="btn btn-lg btn-primary">
+        <div class="m">一人</div>
+        Count Things 
       </button>
       <button @click="() => wkWords(0)" class="btn btn-lg btn-primary">
         <div class="m">人工</div>

@@ -421,6 +421,58 @@ const kanji_numbers = [
   ["万", "man"],
 ];
 
+const kanji_numbers_people = [
+  ["一人", "ひとり"],
+  ["二人", "ふたり"],
+  ["三人", "さんにん"],
+  ["四人", "よにん"],
+  ["五人", "ごにん"],
+  ["六人", "ろくにん"],
+  ["七人", "しちにん"],
+  ["八人", "はちにん"],
+  ["九人", "くにん"],
+  ["十人", "じゅうにん"],
+]
+
+const kanji_numbers_days = [
+  ["一日", "いちにち"],
+  ["二日", "ふつか"],
+  ["三日", "みっか"],
+  ["四日", "よっか"],
+  ["五日", "いつか"],
+  ["六日", "むいか"],
+  ["七日", "なのか"],
+  ["八日", "ようか"],
+  ["九日", "ここのか"],
+  ["十日", "とおか"],
+]
+
+const kanji_numbers_things = [
+  ["", ""],
+  ["", ""],
+  ["", ""],
+  ["", ""],
+  ["", ""],
+  ["", ""],
+  ["", ""],
+  ["", ""],
+  ["", ""],
+  ["", ""],
+]
+
+const kanji_numbers_month = [
+  ["一月", "いちがつ"],
+  ["二月", "にがつ"],
+  ["三月", "さんがつ"],
+  ["四月", "しがつ"],
+  ["五月", "ごがつ"],
+  ["六月", "ろくがつ"],
+  ["七月", "しちがつ"],
+  ["八月", "はちがつ"],
+  ["九月", "くがつ"],
+  ["十月", "じゅうがつ"],
+]
+
 const arabic_numbers = [
   ["1", "ichi"],
   ["2", "ni"],
@@ -471,6 +523,10 @@ const database = {
     numbers: {
       kanji: kanji_numbers,
       arabic: arabic_numbers,
+      things: kanji_numbers_days
+        .concat(kanji_numbers)
+        .concat(kanji_numbers_month)
+        .concat(kanji_numbers_people)
     },
     wanikani: [wanikani_l1_vocabular, wanikani_l2_vocabular],
   },
