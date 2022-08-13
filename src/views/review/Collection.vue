@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import database from "@/storage/Database";
 import ReviewCollection from "@/storage/ReviewCollection";
+import Button from "../../components/Button.vue";
 
 const props = defineProps<{
   redirectTo: (page: string) => void;
@@ -12,36 +13,7 @@ function startReview(collection: Array<Array<string>>, kana = "romanji") {
   props.redirectTo("review");
 }
 
-const hiraganaMonographs = () => startReview(database.hiragana.monographs.main);
-const hiraganaMonographsPlus = () =>
-  startReview(database.hiragana.monographs.digraphs);
-const hiraganaDiacritics = () => startReview(database.hiragana.diacritics.main);
-const hiraganaDiacriticsPlus = () =>
-  startReview(database.hiragana.diacritics.digraphs);
-const hiraganaAllMonographs = () =>
-  startReview(database.hiragana.monographs.all);
-const hiraganaAllDiacritics =() =>
-  startReview(database.hiragana.diacritics.all);
-const hiraganaAll = () => startReview(database.hiragana.all);
-
-const katakanaMonographs = () => startReview(database.katakana.monographs.main);
-const katakanaMonographsPlus = () =>
-  startReview(database.katakana.monographs.digraphs);
-const katakanaDiacritics = () => startReview(database.katakana.diacritics.main);
-const katakanaDiacriticsPlus = () =>
-  startReview(database.katakana.diacritics.digraphs);
-const katakanaAllMonographs = () =>
-  startReview(database.katakana.monographs.all);
-const katakanaAllDiacritics = () =>
-  startReview(database.katakana.diacritics.all);
-const katakanaAll = () => startReview(database.katakana.all);
-
-const wkWords = (i: number) =>
-  startReview(database.kanji.wanikani[i], "hiragana");
-const basicNumbers = () =>
-  startReview(database.kanji.numbers.kanji, "hiragana");
-const countThings = () =>
-  startReview(database.kanji.numbers.things, "hiragana");
+const db = database;
 </script>
 
 <template>
@@ -52,34 +24,13 @@ const countThings = () =>
 
   <div class="collection container p-3">
     <div class="w-100 buttons">
-      <button @click="hiraganaMonographs" class="btn btn-lg btn-primary">
-        <div class="m">あ</div>
-        Monographs
-      </button>
-      <button @click="hiraganaMonographsPlus" class="btn btn-lg btn-primary">
-        <div class="m">きゅ</div>
-        Monographs+
-      </button>
-      <button @click="hiraganaDiacritics" class="btn btn-lg btn-primary">
-        <div class="m">が</div>
-        Diacritics
-      </button>
-      <button @click="hiraganaDiacriticsPlus" class="btn btn-lg btn-primary">
-        <div class="m">じゅ</div>
-        Diacritics+
-      </button>
-      <button @click="hiraganaAllMonographs" class="btn btn-lg btn-primary">
-        <div class="m">ちゃ</div>
-        All monographs
-      </button>
-      <button @click="hiraganaAllDiacritics" class="btn btn-lg btn-primary">
-        <div class="m">ぎゃ</div>
-        All diacritics
-      </button>
-      <button @click="hiraganaAll" class="btn btn-lg btn-primary">
-        <div class="m">あえ</div>
-        All hiragana
-      </button>
+      <Button @click="() => startReview(db.hiragana.monographs.main)" label="あ">Monographs</Button>
+      <Button @click="() => startReview(db.hiragana.monographs.digraphs)" label="きゅ">Digraphs</Button>
+      <Button @click="() => startReview(db.hiragana.diacritics.main)" label="が">Diacritics</Button>
+      <Button @click="() => startReview(db.hiragana.diacritics.digraphs)" label="じゅ">Digraphs</Button>
+      <Button @click="() => startReview(db.hiragana.monographs.all)" label="ちゃ">All Monographs</Button>
+      <Button @click="() => startReview(db.hiragana.diacritics.all)" label="ぎゃ">All Digraphs</Button>
+      <Button @click="() => startReview(db.hiragana.all)" label="あえ">All Hiragana</Button>
     </div>
   </div>
 
@@ -90,32 +41,27 @@ const countThings = () =>
 
   <div class="collection container p-3">
     <div class="w-100 buttons">
-      <button @click="basicNumbers" class="btn btn-lg btn-primary">
-        <div class="m">十二</div>
-        Basic Numbers
-      </button>
-      <button @click="countThings" class="btn btn-lg btn-primary">
-        <div class="m">一人</div>
-        Count Things 
-      </button>
-      <button @click="() => wkWords(0)" class="btn btn-lg btn-primary">
-        <div class="m">人工</div>
-        Wanikani L1
-      </button>
-      <button @click="() => wkWords(1)" class="btn btn-lg btn-primary">
-        <div class="m">四月</div>
-        Wanikani L2
-      </button>
-      <button class="btn btn-lg btn-primary disabled">
-        <div class="m">半分</div>
-        Level 3
-      </button>
-      <button class="btn btn-lg btn-primary disabled">
-        <div class="m">元気</div>
-        Level 4
-      </button>
+      <Button @click="() => startReview(db.kanji.numbers.kanji, 'hiragana')" label="十二">Basic Numbers</Button>
+      <Button @click="() => startReview(db.kanji.numbers.things, 'hiragana')" label="一人">Count Things</Button>
+      <Button @click="() => startReview(db.kanji.wanikani[0], 'hiragana')" label="人工">Wanikani L1</Button>
+      <Button @click="() => startReview(db.kanji.wanikani[1], 'hiragana')" label="四月">Wanikani L2</Button>
     </div>
   </div>
+
+  <div class="collection-title container text-center d-flex flex-row mt-5">
+    <div><h2>Grammar</h2></div>
+    <div class="w-100 mb-3 ms-3 line"></div>
+  </div>
+
+  <div class="collection container p-3">
+    <div class="w-100 buttons">
+      <Button label="良い" disabled>い Adjectives</Button>
+      <Button label="大好き" disabled>な Adjectives</Button>
+      <Button label="食べる" disabled>る Verb</Button>
+      <Button label="聞く" disabled>う Verb</Button>
+    </div>
+  </div>
+
 </template>
 
 <style scoped>
@@ -125,19 +71,9 @@ const countThings = () =>
 .collection-title {
   color: rgba(0, 0, 0, 0.75);
 }
-
 .collection {
   text-align: center;
   border-block-start-width: 0px;
-}
-.collection .btn {
-  position: relative;
-}
-.m {
-  position: absolute;
-  font-size: 1.3em;
-  top: 50%;
-  transform: translateY(-50%);
 }
 .buttons {
   display: grid;

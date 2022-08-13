@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import ReviewCollection from "@/storage/ReviewCollection";
 import type ReviewReport from "@/storage/ReviewReport.js";
+import Button from "../../components/Button.vue";
 
 const props = defineProps<{
   setCollection: (collection: ReviewCollection) => void;
@@ -53,19 +54,9 @@ function repeatIncorrect() {
   </div>
 
   <div class="buttons container p-0 mb-5">
-    <button @click="repeatAll" class="btn btn-primary btn-lg w-100 p-3">
-      <i class="bi bi-arrow-repeat"></i> Repeat all
-    </button>
-    <button
-      @click="repeatIncorrect"
-      v-if="incorrect > 0"
-      class="btn btn-primary btn-lg w-100 p-3"
-    >
-      <i class="bi bi-arrow-repeat"></i> Repeat incorrect
-    </button>
-    <button @click="complete" class="btn btn-primary btn-lg w-100 p-3">
-      <i class="bi bi-arrow-return-left"></i> Complete
-    </button>
+    <Button @click="repeatAll" icon="arrow-repeat"> Repeat all</Button>
+    <Button @click="repeatIncorrect" icon="arrow-repeat"> Repeat incorrect</Button>
+    <Button @click="complete" icon="arrow-return-left"> Complete</Button>
   </div>
 </template>
 
