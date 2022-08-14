@@ -1,40 +1,34 @@
 <script setup lang="ts">
 import { ref } from "vue";
-import type ReviewCollection from "@/storage/ReviewCollection";
-import type ReviewReport from "@/storage/ReviewReport";
-import Review from "./review/Review.vue";
-import Collection from "./review/Collection.vue";
-import Report from "./review/Report.vue";
+import type { Review } from "@/storage/Review";
+import ReviewView from "./review/ReviewView.vue";
+import CollectionView from "./review/CollectionView.vue";
+import ReportView from "./review/ReportView.vue";
 
 const state = ref("collection");
-const collection = ref<ReviewCollection | null>(null);
-const report = ref<ReviewReport | null>(null);
+const review = ref<Review | null>(null);
 
-const redirectTo = (page: string) => (state.value = page);
-const setCollection = (newCollection: ReviewCollection) =>
-  (collection.value = newCollection);
-const setReport = (newReport: ReviewReport) => (report.value = newReport);
+const redirectTo = (page: string) => state.value = page;
+const setReview= (newReview: Review) => review.value = newReview;
 </script>
 
 <template>
-  <Collection
+  <CollectionView
     v-if="state == 'collection'"
-    :setCollection="setCollection"
+    :setReview="setReview"
     :redirectTo="redirectTo"
   />
 
-  <Review
-    v-if="state == 'review' && collection"
-    :setReport="setReport"
-    :collection="collection"
+  <ReviewView
+    v-if="state == 'review' && review"
+    :review="review"
     :redirectTo="redirectTo"
   />
 
-  <Report
-    v-if="state == 'report' && collection && report"
-    :setCollection="setCollection"
-    :report="report"
-    :collection="collection"
+  <ReportView
+    v-if="state == 'report' && review && review.complete()"
+    :setReview="setReview"
+    :review="review"
     :redirectTo="redirectTo"
   />
 </template>

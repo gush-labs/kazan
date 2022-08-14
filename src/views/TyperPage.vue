@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import translator from "@/language/Translator.js";
 import { ref } from "vue";
-import type { Ref } from "vue";
 
 class Line {
   sourceText: string;
@@ -165,16 +164,5 @@ function onChange() {
 }
 .hide {
   display: none !important;
-}
-@keyframes blink {
-  0% {
-    background-color: white;
-  }
-  50% {
-    background-color: black;
-  }
-  100% {
-    background-color: white;
-  }
 }
 </style>

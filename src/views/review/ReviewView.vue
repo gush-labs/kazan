@@ -1,27 +1,23 @@
 <script setup lang="ts">
-import { reactive, ref } from "vue";
-import type ReviewCollection from "@/storage/ReviewCollection";
-import ReviewCounter from "@/storage/ReviewCounter";
-import ReviewReport from "@/storage/ReviewReport";
+import { ref } from "vue";
+import type { Review } from "@/storage/Review";
 import translator from "@/language/Translator.js";
 
 const props = defineProps<{
   redirectTo: (page: string) => void;
-  setReport: (report: ReviewReport) => void;
-  collection: ReviewCollection;
+  review: Review;
 }>();
 
-const collection = props.collection;
-const card = ref(collection.take());
-const counter = reactive(new ReviewCounter(collection.size(), 1));
+const review = props.review;
+const card = ref(review.take());
 const input = ref("");
 const wrong = ref(false);
 
 function onChange() {
   const inputText = input.value.split(" ").join("");
-  if (collection.kana == "hiragana") {
+  if (review.kana == "hiragana") {
     input.value = translator.toHiragana(inputText);
-  } else if (collection.kana == "katakana") {
+  } else if (review.kana == "katakana") {
     input.value = translator.toKatakana(inputText);
   }
 }
@@ -31,34 +27,29 @@ function checkAnswer(e: any) {
 
   // remove all spaces from the input
   let inputText = input.value.split(" ").join("");
-  if (collection.kana == "hiragana")
+  if (review.kana == "hiragana")
     inputText = translator.completeHiragana(inputText);
-  if (collection.kana == "katakana")
+  if (review.kana == "katakana")
     inputText = translator.completeKatakana(inputText);
 
   if (inputText != "" && !wrong.value) {
     // verify the current review card
-    const correct = collection.verify(card.value, inputText);
+    const correct = review.verify(card.value, inputText);
     if (correct) {
       // take a new one if it's correct
-      counter.addCorrect(card.value);
-      card.value = collection.take();
+      card.value = review.take();
       input.value = "";
     } else {
       // otherwise we want to show the correct answer
       wrong.value = true;
-      counter.addIncorrect(card.value);
     }
   } else if (wrong.value) {
     wrong.value = false;
-    card.value = collection.take();
+    card.value = review.take();
     input.value = "";
   }
 
-  if (counter.getProgress() >= 100) {
-    props.setReport(
-      new ReviewReport(counter.getCorrectCards(), counter.getIncorrectCards())
-    );
+  if (review.complete()) {
     props.redirectTo("report");
   }
 }
@@ -70,7 +61,7 @@ function checkAnswer(e: any) {
       <div
         class="progress-bar progress-bar-striped"
         role="progressbar"
-        :style="{ width: counter.getProgress() + '%' }"
+        :style="{ width: (review.progress() * 100) + '%' }"
         aria-label="Basic example"
         aria-valuenow="0"
         aria-valuemin="0"
@@ -81,10 +72,10 @@ function checkAnswer(e: any) {
 
   <div class="stats-window container p-0 d-flex flex-row">
     <div class="bg-success flex-fill p-3 first">
-      {{ counter.getCorrect() }} correct
+      {{ review.getCorrect() }} correct
     </div>
     <div class="bg-danger flex-fill p-3 last">
-      {{ counter.getIncorrect() }} incorrect
+      {{ review.getIncorrect() }} incorrect
     </div>
   </div>
 
@@ -136,7 +127,6 @@ function checkAnswer(e: any) {
   right: 50%;
   transform: translate(50%, -0.5em);
 }
-
 .review-window {
   background-color: #fef4db;
   border-radius: 0px 0px 10px 10px;

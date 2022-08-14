@@ -1,15 +1,15 @@
 <script setup lang="ts">
-import database from "@/storage/Database";
-import ReviewCollection from "@/storage/ReviewCollection";
+import { generateCards, database } from "@/storage/Database";
+import { Review, RandomPicker } from "@/storage/Review";
 import Button from "../../components/Button.vue";
 
 const props = defineProps<{
   redirectTo: (page: string) => void;
-  setCollection: (collection: ReviewCollection) => void;
+  setReview: (review: Review) => void;
 }>();
 
 function startReview(collection: Array<Array<string>>, kana = "romanji") {
-  props.setCollection(new ReviewCollection(collection, kana));
+  props.setReview(new Review(new RandomPicker(generateCards(collection)), kana));
   props.redirectTo("review");
 }
 

@@ -1,3 +1,5 @@
+import Card from "./Card";
+
 const monographs = [
   ["あ", "a"],
   ["い", "i"],
@@ -486,7 +488,7 @@ const arabic_numbers = [
   ["10", "jyuu"],
 ];
 
-const database = {
+export const database = {
   hiragana: {
     monographs: {
       main: monographs,
@@ -532,4 +534,8 @@ const database = {
   },
 };
 
-export default database;
+export function generateCards(entries: Array<Array<string>>): Card[] {
+  const result: Card[] = []
+  entries.forEach(entry => result.push(Card.create(0, entry[0], entry[1])) );
+  return result;
+}
