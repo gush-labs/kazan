@@ -5,7 +5,6 @@ import router from "@/router";
 
 const props = defineProps<{
   setReview: (review: Review) => void;
-  redirectTo: (page: string) => void;
   review: Review;
 }>();
 
@@ -13,12 +12,8 @@ const review = props.review;
 const picker = review.picker;
 
 const cards: Array<any> = [];
-picker
-  .getCorrect()
-  .forEach((card) => cards.push({ target: card.target, correct: true }));
-picker
-  .getIncorrect()
-  .forEach((card) => cards.push({ target: card.target, correct: false }));
+picker.getCorrect().forEach(card => cards.push({ target: card.target, correct: true }));
+picker.getIncorrect().forEach(card => cards.push({ target: card.target, correct: false }));
 
 function repeatAll() {
   props.setReview(review.repeat());
@@ -34,37 +29,27 @@ function complete() {
 </script>
 
 <template>
-  <div class="d-flex flex-column justify-content-center mt-5">
-    <div class="stats-window mb-3 d-flex flex-row">
-      <div class="flex-fill completed">
-        <i class="bi bi-circle"></i> {{ picker.getCorrect().length }} completed
-      </div>
-      <div class="flex-fill mistakes">
-        <i class="bi bi-x-lg"></i> {{ picker.getIncorrect().length }} mistakes
-      </div>
-    </div>
+<div class="d-flex flex-column justify-content-center mt-5">
+  <div class="stats-window mb-3 d-flex flex-row">
+    <div class="flex-fill completed"><i class="bi bi-circle"></i> {{ picker.getCorrect().length }} completed</div>
+    <div class="flex-fill mistakes"><i class="bi bi-x-lg"></i> {{ picker.getIncorrect().length }} mistakes</div>
+  </div>
 
-    <div class="report mb-3">
-      <div
-        v-for="result in cards"
-        :class="{
-          'card-correct': result.correct,
-          'card-incorrect': !result.correct,
-        }"
-        class="card-item p-1"
-      >
-        {{ result.target }}
-      </div>
-    </div>
-
-    <div class="buttons">
-      <Button @click="repeatAll" icon="arrow-repeat"> Repeat all</Button>
-      <Button v-if="picker.getIncorrect().length != 0" @click="repeatIncorrect">
-        Repeat incorrect</Button
-      >
-      <Button @click="complete" icon="arrow-return-left"> Complete</Button>
+  <div class="report mb-3">
+    <div
+      v-for="result in cards"
+      :class="{'card-correct': result.correct, 'card-incorrect': !result.correct}"
+      class="card-item p-1">
+      {{ result.target }}
     </div>
   </div>
+
+  <div class="buttons">
+    <Button @click="repeatAll" icon="arrow-repeat"> Repeat all</Button>
+    <Button v-if="picker.getIncorrect().length != 0" @click="repeatIncorrect"> Repeat incorrect</Button>
+    <Button @click="complete" icon="arrow-return-left"> Complete</Button>
+  </div>
+</div>
 </template>
 
 <style scoped>
