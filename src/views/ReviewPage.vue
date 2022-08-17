@@ -29,6 +29,5 @@ const setReview = (newReview: Review) => (review.value = newReview);
     v-if="state == 'report' && review && review.complete()"
     :setReview="setReview"
     :review="review"
-    :redirectTo="redirectTo"
   />
 </template>
