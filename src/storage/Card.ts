@@ -1,8 +1,7 @@
-
 class Card {
-  target: string = "";
-  answer: string = "";
-  id: number = 0;
+  target = "";
+  answer = "";
+  id = 0;
 
   static create(id: number, target: string, answer: string): Card {
     const card = new Card();
@@ -12,7 +11,7 @@ class Card {
     return card;
   }
 
-  static from(id: number = 0, card: Card): Card{
+  static from(id = 0, card: Card): Card {
     const newCard = new Card();
     newCard.id = id;
     newCard.answer = card.answer;
@@ -20,7 +19,7 @@ class Card {
     return newCard;
   }
 
-  static empty(): Card{
+  static empty(): Card {
     return new Card();
   }
 }

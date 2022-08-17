@@ -5,12 +5,12 @@ import { ref } from "vue";
 class Line {
   sourceText: string;
   text: string[];
-  validated: {text: string, corrected: boolean}[] = [];
-  compareIterator: number = 0;
-  active: boolean = false;
-  wasError: boolean = false;
-  typed: string = "";
-  
+  validated: { text: string; corrected: boolean }[] = [];
+  compareIterator = 0;
+  active = false;
+  wasError = false;
+  typed = "";
+
   constructor(text: string) {
     this.sourceText = text;
     this.text = text.split("");
@@ -44,7 +44,6 @@ class Line {
   complete(): boolean {
     return this.compareIterator == this.text.length;
   }
-
 }
 
 const sourceText = [
@@ -56,12 +55,12 @@ const sourceText = [
   "おばあさんもきをつけてな",
   "まいにちやさしくいいあってでかけます",
 ];
-var text = ref<Line[]>([]);
-sourceText.forEach(line => text.value.push(new Line(line)));
-var lineBlocks = ref<HTMLDivElement[]>([]);
+const text = ref<Line[]>([]);
+sourceText.forEach((line) => text.value.push(new Line(line)));
+const lineBlocks = ref<HTMLDivElement[]>([]);
 // sourceText.forEach(() => lineBlocks.value.push(ref(null)));
 
-var line: number = 0;
+let line = 0;
 text.value[line].active = true;
 
 const input = ref("");
@@ -71,7 +70,7 @@ function onChange() {
   // validate against the current line of text
   if (!currentLine.complete()) {
     input.value = translator.toHiragana(input.value);
-    var correctChars = currentLine.validate(input.value);
+    const correctChars = currentLine.validate(input.value);
     input.value = input.value.slice(correctChars);
   }
 
@@ -83,9 +82,9 @@ function onChange() {
     text.value[line].active = true;
 
     const cursor = lineBlocks.value[line];
-    console.log('SCROLL ' + cursor);
-    if (cursor) { 
-      console.log('SCROLL ' + cursor.offsetTop);
+    console.log("SCROLL " + cursor);
+    if (cursor) {
+      console.log("SCROLL " + cursor.offsetTop);
       window.scrollTo(0, cursor.offsetTop);
     }
   }
@@ -97,7 +96,7 @@ function onChange() {
     <div class="text">
       <input @input="onChange" class="input" v-model="input" />
 
-      <div class="line-parent" v-for="line, i in text" ref="lineBlocks">
+      <div class="line-parent" v-for="(line, i) in text" ref="lineBlocks">
         <div class="source-text">{{ line.sourceText }}</div>
         <div class="text-container d-flex flex-row">
           <div class="input-text">
@@ -109,10 +108,9 @@ function onChange() {
             >
             <span class="typed">{{ line.typed }}</span>
           </div>
-          <div :class="{'hide': !line.active}" class="carriage"></div>
+          <div :class="{ hide: !line.active }" class="carriage"></div>
         </div>
       </div>
-
     </div>
   </div>
 </template>

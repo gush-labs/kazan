@@ -8,8 +8,8 @@ import ReportView from "./review/ReportView.vue";
 const state = ref("collection");
 const review = ref<Review | null>(null);
 
-const redirectTo = (page: string) => state.value = page;
-const setReview= (newReview: Review) => review.value = newReview;
+const redirectTo = (page: string) => (state.value = page);
+const setReview = (newReview: Review) => (review.value = newReview);
 </script>
 
 <template>

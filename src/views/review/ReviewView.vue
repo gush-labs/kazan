@@ -1,43 +1,81 @@
 <script setup lang="ts">
 import { ref } from "vue";
-import type { Review } from "@/storage/Review";
+import { database, generateCards } from "@/storage/Database";
+import { Review, RandomPicker } from "@/storage/Review";
+import ReportView from "./ReportView.vue";
 import translator from "@/language/Translator.js";
+import router from "@/router";
 
-const props = defineProps<{
-  redirectTo: (page: string) => void;
-  review: Review;
-}>();
+function startReview(
+  collection: Array<Array<string>>,
+  kana = "romanji"
+): Review {
+  return new Review(new RandomPicker(generateCards(collection)), kana);
+}
 
-const review = props.review;
-const card = ref(review.take());
+const db = database;
+const review = ref(startReview(db.hiragana.all));
+const dbQuery = router.currentRoute.value.query.db?.toString();
+if (dbQuery) {
+  if (dbQuery == "allHiragana") {
+    review.value = startReview(db.hiragana.all);
+  }
+  if (dbQuery == "allMonographs") {
+    review.value = startReview(db.hiragana.monographs.all);
+  }
+  if (dbQuery == "allDiacritics") {
+    review.value = startReview(db.hiragana.diacritics.all);
+  }
+  if (dbQuery == "wkLevel1") {
+    review.value = startReview(db.kanji.wanikani[0], "hiragana");
+  }
+  if (dbQuery == "wkLevel2") {
+    review.value = startReview(db.kanji.wanikani[1], "hiragana");
+  }
+  if (dbQuery == "test") {
+    review.value = startReview(db.kanji.wanikani[0].slice(0, 5), "hiragana");
+  }
+}
+
+const card = ref(review.value.take());
 const input = ref("");
 const wrong = ref(false);
+const complete = ref(false);
 
 function onChange() {
   const inputText = input.value.split(" ").join("");
-  if (review.kana == "hiragana") {
+  if (review.value.kana == "hiragana") {
     input.value = translator.toHiragana(inputText);
-  } else if (review.kana == "katakana") {
+  } else if (review.value.kana == "katakana") {
     input.value = translator.toKatakana(inputText);
   }
 }
 
+function setReview(r: Review) {
+  review.value = r;
+  input.value = "";
+  wrong.value = false;
+  complete.value = false;
+  card.value = review.value.take();
+}
+
 function checkAnswer(e: any) {
   e.preventDefault();
+  const rev = review.value;
 
   // remove all spaces from the input
   let inputText = input.value.split(" ").join("");
-  if (review.kana == "hiragana")
+  if (rev.kana == "hiragana")
     inputText = translator.completeHiragana(inputText);
-  if (review.kana == "katakana")
+  if (rev.kana == "katakana")
     inputText = translator.completeKatakana(inputText);
 
   if (inputText != "" && !wrong.value) {
     // verify the current review card
-    const correct = review.verify(card.value, inputText);
+    const correct = rev.verify(card.value, inputText);
     if (correct) {
       // take a new one if it's correct
-      card.value = review.take();
+      card.value = rev.take();
       input.value = "";
     } else {
       // otherwise we want to show the correct answer
@@ -45,61 +83,53 @@ function checkAnswer(e: any) {
     }
   } else if (wrong.value) {
     wrong.value = false;
-    card.value = review.take();
+    card.value = rev.take();
     input.value = "";
   }
 
-  if (review.complete()) {
-    props.redirectTo("report");
+  if (rev.complete()) {
+    complete.value = true;
   }
 }
 </script>
 
 <template>
-  <div class="container p-0 mt-5">
-    <div class="progress">
-      <div
-        class="progress-bar progress-bar-striped"
-        role="progressbar"
-        :style="{ width: (review.progress() * 100) + '%' }"
-        aria-label="Basic example"
-        aria-valuenow="0"
-        aria-valuemin="0"
-        aria-valuemax="100"
-      ></div>
+  <div v-if="!complete" class="d-flex flex-column justify-content-center">
+    <div :class="{ wrong: wrong }" class="review-window text-center">
+      <div class="review-title d-flex flex-column justify-content-end">
+        <div></div>
+      </div>
+      <div>
+        <h1 class="review-target">{{ card.target }}</h1>
+      </div>
+      <div class="review-answer d-flex flex-column justify-content-start">
+        <div v-if="wrong">{{ card.answer }}</div>
+      </div>
+    </div>
+
+    <div class="answer-container mb-3 mt-3">
+      <form @submit="checkAnswer">
+        <input
+          v-model="input"
+          @input="onChange"
+          class="answer-form form-control"
+          placeholder=""
+        />
+      </form>
+    </div>
+
+    <div class="stats-window mb-5">
+      <div class="completed">
+        <i class="bi bi-circle"></i> {{ review.getCorrect() }} completed
+      </div>
+      <div class="">{{ Math.round(review.progress() * 100) }}%</div>
+      <div class="mistakes">
+        <i class="bi bi-x-lg"></i> {{ review.getIncorrect() }} mistakes
+      </div>
     </div>
   </div>
 
-  <div class="stats-window container p-0 d-flex flex-row">
-    <div class="bg-success flex-fill p-3 first">
-      {{ review.getCorrect() }} correct
-    </div>
-    <div class="bg-danger flex-fill p-3 last">
-      {{ review.getIncorrect() }} incorrect
-    </div>
-  </div>
-
-  <div
-    :class="{ wrong: wrong }"
-    class="review-window mt-0 container text-center p-5"
-  >
-    <div class="review-target">{{ card.target }}</div>
-    <div v-if="wrong" class="review-answer">
-      <span class="badge text-bg-light">{{ card.answer }}</span>
-    </div>
-  </div>
-
-  <div class="container p-0">
-    <form @submit="checkAnswer" class="mt-5">
-      <input
-        v-model="input"
-        @input="onChange"
-        :class="{ wrong: wrong }"
-        class="answer-form p-4 form-control form-control-lg text-center"
-        placeholder=""
-      />
-    </form>
-  </div>
+  <ReportView v-if="complete" :setReview="setReview" :review="review" />
 </template>
 
 <style scoped>
@@ -111,36 +141,43 @@ function checkAnswer(e: any) {
   background-color: #b6ab90;
 }
 .wrong {
-  background-color: rgba(255, 150, 150, 1) !important;
+  color: rgb(176, 56, 56) !important;
 }
+
 .stats-window {
-  background-color: #fef4db;
   border-radius: 10px;
-  font-weight: bold;
-  color: white;
-  font-size: 1.2em;
   text-align: center;
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
 }
-.review-answer {
-  font-size: 2em;
-  position: absolute;
-  right: 50%;
-  transform: translate(50%, -0.5em);
+.stats-window .completed {
+  color: rgb(25, 79, 13);
 }
+.stats-window .mistakes {
+  color: rgb(82, 17, 17);
+}
+
 .review-window {
-  background-color: #fef4db;
-  border-radius: 0px 0px 10px 10px;
-  border: 4px solid rgba(0, 0, 0, 0.1);
-  border-block-start: 0px;
+  display: grid;
+  grid-template-rows: 2em 1fr 2em;
 }
-.review-target {
-  font-size: 5em;
+.review-window .review-target {
+  font-size: 4.5em;
+  font-weight: normal;
+  margin: 0;
 }
-.answer-form {
-  border: 4px solid rgba(0, 0, 0, 0.1);
+.review-window .review-answer {
+  font-weight: bold;
+  font-size: 1.5em;
+}
+
+.answer-container .answer-form {
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  border-radius: 0px;
+  text-align: center;
   font-size: 2em;
-  border-radius: 10px;
 }
+
 textarea:focus,
 input:focus {
   outline: none;

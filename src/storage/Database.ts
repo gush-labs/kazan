@@ -1,62 +1,62 @@
 import Card from "./Card";
 
 const monographs = [
-  ["あ", "a"],
+  ["あ", "a"], // 0
   ["い", "i"],
   ["う", "u"],
   ["え", "e"],
-  ["お", "o"],
+  ["お", "o"], // 4
 
-  ["か", "ka"],
+  ["か", "ka"], // 5
   ["き", "ki"],
   ["く", "ku"],
   ["け", "ke"],
-  ["こ", "ko"],
+  ["こ", "ko"], // 9
 
-  ["さ", "sa"],
+  ["さ", "sa"], // 10
   ["し", "shi"],
   ["す", "su"],
   ["せ", "se"],
-  ["そ", "so"],
+  ["そ", "so"], // 14
 
-  ["た", "ta"],
+  ["た", "ta"], // 15
   ["ち", "chi"],
   ["つ", "tsu"],
   ["て", "te"],
-  ["と", "to"],
+  ["と", "to"], // 19
 
-  ["な", "na"],
+  ["な", "na"], // 20
   ["に", "ni"],
   ["ぬ", "nu"],
   ["ね", "ne"],
-  ["の", "no"],
+  ["の", "no"], // 24
 
-  ["は", "ha"],
+  ["は", "ha"], // 25
   ["ひ", "hi"],
   ["ふ", "fu"],
   ["へ", "he"],
-  ["ほ", "ho"],
+  ["ほ", "ho"], // 29
 
-  ["ま", "ma"],
+  ["ま", "ma"], // 30
   ["み", "mi"],
   ["む", "mu"],
   ["め", "me"],
-  ["も", "mo"],
+  ["も", "mo"], // 34
 
-  ["や", "ya"],
+  ["や", "ya"], // 35
   ["ゆ", "yu"],
-  ["よ", "yo"],
+  ["よ", "yo"], // 37
 
-  ["ら", "ra"],
+  ["ら", "ra"], // 38
   ["り", "ri"],
   ["る", "ru"],
   ["れ", "re"],
-  ["ろ", "ro"],
+  ["ろ", "ro"], // 42
 
-  ["わ", "wa"],
-  ["を", "wo"],
+  ["わ", "wa"], // 43
+  ["を", "wo"], // 44
 
-  ["ん", "n"],
+  ["ん", "n"], // 45
 ];
 
 const diacritics = [
@@ -144,62 +144,62 @@ const diacritics_digraphs = [
 ];
 
 const katakana_monographs = [
-  ["ア", "a"],
+  ["ア", "a"], // 0
   ["イ", "i"],
   ["ウ", "u"],
   ["エ", "e"],
-  ["オ", "o"],
+  ["オ", "o"], // 4
 
-  ["カ", "ka"],
+  ["カ", "ka"], // 5
   ["キ", "ki"],
   ["ク", "ku"],
   ["ケ", "ke"],
-  ["コ", "ko"],
+  ["コ", "ko"], // 9
 
-  ["サ", "sa"],
+  ["サ", "sa"], // 10
   ["シ", "shi"],
   ["ス", "su"],
   ["セ", "se"],
-  ["ソ", "so"],
+  ["ソ", "so"], // 14
 
-  ["タ", "ta"],
+  ["タ", "ta"], // 15
   ["チ", "chi"],
   ["ツ", "tsu"],
   ["テ", "te"],
-  ["ト", "to"],
+  ["ト", "to"], // 19
 
-  ["ナ", "na"],
+  ["ナ", "na"], // 20
   ["ニ", "ni"],
   ["ヌ", "nu"],
   ["ネ", "ne"],
-  ["ノ", "no"],
+  ["ノ", "no"], // 24
 
-  ["ハ", "ha"],
+  ["ハ", "ha"], // 25
   ["ヒ", "hi"],
   ["フ", "fu"],
   ["ヘ", "he"],
-  ["ホ", "ho"],
+  ["ホ", "ho"], // 29
 
-  ["マ", "ma"],
+  ["マ", "ma"], // 30
   ["ミ", "mi"],
   ["ム", "mu"],
   ["メ", "me"],
-  ["モ", "mo"],
+  ["モ", "mo"], // 34
 
-  ["ヤ", "ya"],
+  ["ヤ", "ya"], // 35
   ["ユ", "yu"],
-  ["ヨ", "yo"],
+  ["ヨ", "yo"], // 37
 
-  ["ラ", "ra"],
+  ["ラ", "ra"], // 38
   ["リ", "ri"],
   ["ル", "ru"],
   ["レ", "re"],
-  ["ロ", "ro"],
+  ["ロ", "ro"], // 42
 
-  ["ワ", "wa"],
-  ["ヲ", "wo"],
+  ["ワ", "wa"], // 43
+  ["ヲ", "wo"], // 44
 
-  ["ン", "n"],
+  ["ン", "n"], // 45
 ];
 
 const katakana_digraphs = [
@@ -434,7 +434,7 @@ const kanji_numbers_people = [
   ["八人", "はちにん"],
   ["九人", "くにん"],
   ["十人", "じゅうにん"],
-]
+];
 
 const kanji_numbers_days = [
   ["一日", "いちにち"],
@@ -447,7 +447,7 @@ const kanji_numbers_days = [
   ["八日", "ようか"],
   ["九日", "ここのか"],
   ["十日", "とおか"],
-]
+];
 
 const kanji_numbers_things = [
   ["", ""],
@@ -460,7 +460,7 @@ const kanji_numbers_things = [
   ["", ""],
   ["", ""],
   ["", ""],
-]
+];
 
 const kanji_numbers_month = [
   ["一月", "いちがつ"],
@@ -473,7 +473,7 @@ const kanji_numbers_month = [
   ["八月", "はちがつ"],
   ["九月", "くがつ"],
   ["十月", "じゅうがつ"],
-]
+];
 
 const arabic_numbers = [
   ["1", "ichi"],
@@ -490,6 +490,21 @@ const arabic_numbers = [
 
 export const database = {
   hiragana: {
+    /*
+    alphabet: {
+      a: monographs.splice(0, 5),
+      ka: monographs.splice(5, 5),
+      sa: monographs.splice(10, 5),
+      ta: monographs.splice(15, 5),
+      na: monographs.splice(20, 5),
+      ha: monographs.splice(25, 5),
+      ma: monographs.splice(30, 5),
+      ya: monographs.splice(35, 3),
+      ra: monographs.splice(38, 5),
+      wa: monographs.splice(43, 2),
+      n: monographs.splice(45, 1)
+    },
+    */
     monographs: {
       main: monographs,
       digraphs: monographs_digraphs,
@@ -506,6 +521,21 @@ export const database = {
       .concat(diacritics_digraphs),
   },
   katakana: {
+    /*
+    alphabet: {
+      a: katakana_monographs.splice(0, 5),
+      ka: katakana_monographs.splice(5, 5),
+      sa: katakana_monographs.splice(10, 5),
+      ta: katakana_monographs.splice(15, 5),
+      na: katakana_monographs.splice(20, 5),
+      ha: katakana_monographs.splice(25, 5),
+      ma: katakana_monographs.splice(30, 5),
+      ya: katakana_monographs.splice(35, 3),
+      ra: katakana_monographs.splice(38, 5),
+      wa: katakana_monographs.splice(43, 2),
+      n: katakana_monographs.splice(45, 1)
+    },
+    */
     monographs: {
       main: katakana_monographs,
       digraphs: katakana_digraphs,
@@ -528,14 +558,14 @@ export const database = {
       things: kanji_numbers_days
         .concat(kanji_numbers)
         .concat(kanji_numbers_month)
-        .concat(kanji_numbers_people)
+        .concat(kanji_numbers_people),
     },
     wanikani: [wanikani_l1_vocabular, wanikani_l2_vocabular],
   },
 };
 
 export function generateCards(entries: Array<Array<string>>): Card[] {
-  const result: Card[] = []
-  entries.forEach(entry => result.push(Card.create(0, entry[0], entry[1])) );
+  const result: Card[] = [];
+  entries.forEach((entry) => result.push(Card.create(0, entry[0], entry[1])));
   return result;
 }

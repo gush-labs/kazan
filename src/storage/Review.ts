@@ -33,7 +33,7 @@ export class RandomPicker implements Picker {
   collection: Collection = [];
   correctCounters: Array<number> = [];
   incorrectCards = new Set<number>();
-  
+
   constructor(collection: Collection) {
     collection.forEach(() => this.correctCounters.push(0));
     this.collection = collection;
@@ -61,14 +61,18 @@ export class RandomPicker implements Picker {
   getCorrect(): Card[] {
     const result: Card[] = [];
     this.collection.forEach((card, id) => {
-      if (!this.incorrectCards.has(id)) { result.push(card); }
+      if (!this.incorrectCards.has(id)) {
+        result.push(card);
+      }
     });
     return result;
   }
 
   getIncorrect(): Card[] {
     const result: Card[] = [];
-    this.incorrectCards.forEach(id => { result.push(this.collection[id]); })
+    this.incorrectCards.forEach((id) => {
+      result.push(this.collection[id]);
+    });
     return result;
   }
 
@@ -118,9 +122,9 @@ export class Review {
   picker: Picker;
 
   size: number;
-  completed = new Set<number>;
-  correct = new Set<number>;
-  incorrect = new Set<number>;
+  completed = new Set<number>();
+  correct = new Set<number>();
+  incorrect = new Set<number>();
 
   constructor(picker: Picker, kana: string) {
     this.picker = picker;
@@ -145,7 +149,6 @@ export class Review {
   }
 
   progress(): number {
-    console.log(this.completed.size / this.size);
     return this.completed.size / this.size;
   }
 
@@ -153,7 +156,7 @@ export class Review {
     return new Review(this.picker.repeat(), this.kana);
   }
 
-  repeatIncorrect(): Review{
+  repeatIncorrect(): Review {
     return new Review(this.picker.repeatIncorrect(), this.kana);
   }
 
@@ -167,14 +170,13 @@ export class Review {
       romanjiAnswer === input ||
       romanjiAnswer === romanjiInput;
 
-    if (correct) { 
+    if (correct) {
       this.completed.add(card.id);
       if (!this.incorrect.has(card.id)) {
         this.correct.add(card.id);
       }
       this.picker.correct(card.id);
-    }
-    else { 
+    } else {
       if (!this.correct.has(card.id)) {
         this.incorrect.add(card.id);
       }
@@ -182,6 +184,4 @@ export class Review {
     }
     return correct;
   }
-
 }
-

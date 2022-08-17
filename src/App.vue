@@ -1,27 +1,56 @@
 <script setup lang="ts">
 import { RouterView } from "vue-router";
+import Footer from "@/components/Footer.vue";
+import Header from "./components/Header.vue";
 </script>
 
 <template>
-  <div class="header container-fluid mb-5 p-3">
-    <div class="container">
-      <h2>
-        <RouterLink :to="{name:'home'}">ジャレド</RouterLink>
-      </h2>
-    </div>
+  <div class="app-container">
+    <Header />
+    <RouterView />
+    <Footer />
   </div>
-  <RouterView />
 </template>
 
-<style scoped>
-.header {
-  font-family: "Mochiy Pop One", sans-serif;
-  font-weight: bolder;
-  background-color: #fef4db;
-  border-bottom: 4px solid rgba(0, 0, 0, 0.1);
+<style>
+.app-container {
+  position: relative;
+
+  max-width: 600px;
+  min-height: 100vh;
+  padding-top: 1em;
+  padding-bottom: 1em;
+  margin-left: auto;
+  margin-right: auto;
+
+  display: grid;
+  grid-template-rows: auto 1fr auto;
 }
-.header a {
-  text-decoration: none;
-  color: black;
+@media screen and (max-width: 650px) {
+  .app-container {
+    margin-left: 1em;
+    margin-right: 1em;
+  }
+}
+
+/* Styles to properly size text related to parent elements.
+   Bootstrap by default sizes everything related to a global font size. */
+h4 {
+  font-size: calc(1.275em + 0.3vw);
+}
+.btn {
+  font-size: 1em;
+}
+
+/* Just global style to make some things look a little bit better */
+.dropdown-menu {
+  border-radius: 0px;
+  padding: 0;
+}
+.dropdown-toggle::after {
+  display: none;
+}
+.btn {
+  border-radius: 0px;
 }
 </style>
