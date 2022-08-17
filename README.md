@@ -1,6 +1,6 @@
-# Hiragana 
+# [カザン - Kazan](https://kana.vadimgush.com)
 
-Web-app for practicing reading of hiragana, katakana, and kanji.
+Web-app for kana, vocabularity, kanji, and reading practice.
 
 ## Project Setup
 
