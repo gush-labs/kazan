@@ -58,7 +58,7 @@ pages.set("hiragana", {
 pages.set("vocab", {
   name: "Vocabulary",
   parent: "home",
-  title: "Which vocabulary do you want to choose?",
+  title: "Choose vocabulary",
   buttons: [
     { name: "WaniKani", page: "wk" },
     { name: "JLPT", page: "jlpt" },
