@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import router from "@/router";
+import Button from "@/components/Button.vue";
 
 function goHome() {
   router.push({ name: "home" });
@@ -7,14 +8,12 @@ function goHome() {
 </script>
 
 <template>
-  <div class="header mb-5 d-flex flex-row justify-content-between">
+  <div class="header d-flex flex-row justify-content-between">
     <div class="dropdown language">
-      <a class="dropdown-toggle header-link pb-2" data-bs-toggle="dropdown"
-        ><i class="bi bi-translate"></i> English</a
-      >
+      <Button dropdown plain icon="translate">English</Button>
       <ul class="dropdown-menu">
-        <li><a class="dropdown-item active" href="#">English</a></li>
-        <li><a class="dropdown-item disabled" href="#">日本語</a></li>
+        <li><button class="dropdown-item active" href="#">English</button></li>
+        <li><button class="dropdown-item disabled" href="#">日本語</button></li>
       </ul>
     </div>
 
@@ -23,13 +22,11 @@ function goHome() {
     </div>
 
     <div class="dropdown profile">
-      <a class="dropdown-toggle header-link pb-2" data-bs-toggle="dropdown"
-        ><i class="bi bi-person-fill"></i> Profile</a
-      >
+      <Button dropdown plain icon="person-fill">Profile</Button>
       <div class="dropdown-menu dropdown-menu-end profile-menu">
         <ul class="profile-links">
-          <li><a class="dropdown-item disabled" href="#">Sign in</a></li>
-          <li><a class="dropdown-item disabled" href="#">Settings</a></li>
+          <li><button  class="dropdown-item disabled" href="#">Sign in</button></li>
+          <li><button class="dropdown-item disabled" href="#">Settings</button></li>
         </ul>
       </div>
     </div>
@@ -60,5 +57,6 @@ function goHome() {
 }
 .logo img {
   max-height: 5em;
+  height: 5em;
 }
 </style>

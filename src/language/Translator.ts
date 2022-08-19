@@ -3,9 +3,7 @@ import { database } from "@/storage/Database";
 const hiragana: Map<string, string> = new Map(); // romaji -> hiragana
 const katakana: Map<string, string> = new Map(); // romaji -> katakana
 const romaji: Map<string, string> = new Map(); // kana -> romaji
-const alphabet: Set<string> = new Set(
-  "a b c d e f g h i j k l m n o p q r s t u v w x y z".split(" ")
-);
+const alphabet: Set<string> = new Set("a b c d e f g h i j k l m n o p q r s t u v w x y z".split(" "));
 
 // Fills collections above with the actual data from the database
 (() => {

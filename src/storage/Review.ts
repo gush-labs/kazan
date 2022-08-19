@@ -122,6 +122,12 @@ export class Review {
   picker: Picker;
 
   size: number;
+
+  // Counts how much time user spend
+  // answering every card
+  time: number[] = [];
+  timeStart = Date.now();
+
   completed = new Set<number>();
   correct = new Set<number>();
   incorrect = new Set<number>();
@@ -137,6 +143,7 @@ export class Review {
   }
 
   take(): Card {
+    this.timeStart = Date.now();
     return this.picker.pick();
   }
 
@@ -160,6 +167,10 @@ export class Review {
     return new Review(this.picker.repeatIncorrect(), this.kana);
   }
 
+  getTimers(): number[] {
+    return this.time;
+  }
+
   verify(card: Card, input: string): boolean {
     const romanjiAnswer = translator.toRomaji(card.answer);
     const romanjiInput = translator.toRomaji(input);
@@ -171,6 +182,10 @@ export class Review {
       romanjiAnswer === romanjiInput;
 
     if (correct) {
+      console.log("verify: " + input);
+      const elapsed = (Date.now() - this.timeStart) / 1000;
+      this.time.push(elapsed);
+
       this.completed.add(card.id);
       if (!this.incorrect.has(card.id)) {
         this.correct.add(card.id);
