@@ -34,7 +34,7 @@ distribution.forEach(v => { values.push(((v - minCount) / (maxCount - minCount))
 
   <div class="title-container d-flex flex-row justify-content-between">
     <div class="min text-muted">{{ Math.round(minTime * 10) / 10 }} sec.</div>
-    <div class="text-muted pb-1"><i class="bi bi-stopwatch"></i> Time</div>
+    <div class="text-muted pb-1"><i class="bi bi-stopwatch"></i> Answer time</div>
     <div class="max text-muted">{{ Math.round(maxTime * 10) / 10 }} sec.</div>
   </div>
   <div class="dist-container">

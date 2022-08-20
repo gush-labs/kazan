@@ -1,22 +1,29 @@
-class Card {
-  target = "";
-  answer = "";
-  id = 0;
 
-  static create(id: number, target: string, answer: string): Card {
+class Card {
+  id: number = 0;
+  target: string = "";
+  answers: string[] = [];
+
+  static create(target: string, answer: string): Card {
     const card = new Card();
-    card.id = id;
     card.target = target;
-    card.answer = answer;
+    card.answers.push(answer);
     return card;
   }
 
-  static from(id = 0, card: Card): Card {
-    const newCard = new Card();
-    newCard.id = id;
-    newCard.answer = card.answer;
-    newCard.target = card.target;
-    return newCard;
+  static createM(target: string, answers: string[]): Card {
+    const card = new Card();
+    card.target = target;
+    card.answers = answers;
+    return card;
+  }
+
+  answer(): string {
+    return this.answers[0];
+  }
+
+  assignId(id: number) {
+    this.id = id;
   }
 
   static empty(): Card {

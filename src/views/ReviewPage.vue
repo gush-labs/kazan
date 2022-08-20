@@ -85,7 +85,7 @@ function checkAnswer(e: any) {
         <h1 class="review-target">{{ card.target }}</h1>
       </div>
       <div class="review-answer d-flex flex-column justify-content-start">
-        <div v-if="wrong">{{ card.answer }}</div>
+        <div v-if="wrong">{{ card.answer() }}</div>
       </div>
     </div>
 

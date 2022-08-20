@@ -18,7 +18,8 @@ picker.getIncorrect().forEach(card => cards.push({ target: card.target, correct:
 const congrats = [
   "No mistakes! Good job!",
   "Everything is correct!",
-  "Nice progress!"]
+  "Nice progress!",
+  "Keep it going!"]
 const congrat = congrats[Math.floor(Math.random() * 3)]
 </script>
 

@@ -35,8 +35,11 @@ export class RandomPicker implements Picker {
   incorrectCards = new Set<number>();
 
   constructor(collection: Collection) {
-    collection.forEach(() => this.correctCounters.push(0));
-    this.collection = collection;
+    collection.forEach((card, i) => {
+      card.assignId(i);
+      this.correctCounters.push(0);
+      this.collection.push(card);
+    });
   }
 
   pick(): Card {
@@ -47,7 +50,7 @@ export class RandomPicker implements Picker {
     // Take a new card from the list of least reviewed cards
     const mins = this.getMins();
     const id = mins[Math.floor(Math.random() * mins.length)];
-    return Card.from(id, this.collection[id]);
+    return this.collection[id];
   }
 
   repeat(): RandomPicker {
@@ -172,17 +175,16 @@ export class Review {
   }
 
   verify(card: Card, input: string): boolean {
-    const romanjiAnswer = translator.toRomaji(card.answer);
+    const romanjiAnswer = translator.toRomaji(card.answer());
     const romanjiInput = translator.toRomaji(input);
 
     const correct =
-      card.answer === input ||
-      card.answer === romanjiInput ||
+      card.answer() === input ||
+      card.answer() === romanjiInput ||
       romanjiAnswer === input ||
       romanjiAnswer === romanjiInput;
 
     if (correct) {
-      console.log("verify: " + input);
       const elapsed = (Date.now() - this.timeStart) / 1000;
       this.time.push(elapsed);
 

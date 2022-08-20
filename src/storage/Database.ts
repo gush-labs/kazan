@@ -1,68 +1,85 @@
+import { labeledStatement } from "@babel/types";
 import Card from "./Card";
 
-const vocabular = new Map<string, any[]>();
+type Word = {
+  japanese: string; // full word in japanese using kanji, hiragana and katakana
+  reading: string; // reading of this word in hiragana
+  meanings: string[]; // possible meanings 
+  english: string; // one choosen meaning in english
+}
+
+const japanese_vocabular = new Map<string, Word>();
+const english_vocabular = new Map<string, Word[]>();
 {
-  function set(key: string, reading: string, meaning: string[]) {
-    if (vocabular.has(key)) { console.error("Duplicate in the dababase: " + key); }
-    vocabular.set(key, [key, reading, meaning]);
+  function set(japanese: string, reading: string, meanings: string[], english: string) {
+    const word = {japanese, reading, meanings, english };
+    if (japanese_vocabular.has(japanese)) { console.error("Duplicate in the dababase: " + japanese); }
+    japanese_vocabular.set(japanese, word);
+
+    if (!english_vocabular.has(english)) { english_vocabular.set(english, []); }
+    english_vocabular.get(english)!.push(word);
   }
+  var start = Date.now();
 
-  set("私", "わたし", ["me", "i"]);
-  set("誰", "だれ", ["who"]);
-  set("何", "なに", ["what"]);
-  set("名前", "なまえ", ["name"]);
-  set("友達", "ともだち", ["friend"]);
-  set("先生", "せんせい", ["teacher"]);
-  set("学生", "がくせい", ["student"]);
-  set("お母さん", "おかあさん", ["mother"]);
-  set("お父さん", "おとうさん", ["father"]);
-  set("おじいさん", "おじいさん", ["grandfather", "grandpa"]);
-  set("おばあさん", "おばあさん", ["grapndmother", "grandma"]);
-  set("兄", "あに", ["older brother"]);
-  set("妹", "いもうと", ["younger sister"]);
-  set("家族", "かぞく", ["family"]);
-  set("日本語", "にほんご", ["japanese", "japanese language"]);
-  set("大人", "おとな", ["adult"]);
-  set("一人", "ひとり", ["one person", "alone"]);
-  set("人工", "じんこう", ["artificial"]);
-  set("大きい", "おおきい", ["big"]);
-  set("下", "した", ["down"]);
-  set("八", "はち", ["eight"]);
-  set("八つ", "やっつ", ["eight things"]);
-  set("入り口", "いりぐち", ["entrance", "enter"]);
-  set("大した", "たいした", ["important"]);
-  set("山", "やま", ["mountain"]);
-  set("口", "くち", ["mouth"]);
-  set("ふじ山", "ふじさん", ["mountain fuji", "fuji"]);
-  set("九", "く", ["nine"]);
-  set("色", "いろ", ["color"]);
+  set("私", "わたし", ["me", "i"], "me");
+  set("誰", "だれ", ["who"], "who?");
+  set("何", "なに", ["what"], "what?");
+  set("名前", "なまえ", ["name"], "name");
+  set("友達", "ともだち", ["friend"], "friend");
+  set("先生", "せんせい", ["teacher"], "teacher");
+  set("学生", "がくせい", ["student"], "student");
+  set("お母さん", "おかあさん", ["mother"], "mother");
+  set("お父さん", "おとうさん", ["father"], "mother");
+  set("母", "はは", ["mother"], "mother");
+  set("父", "ちち", ["father"], "father");
+  set("おじいさん", "おじいさん", ["grandfather", "grandpa"], "grandfather");
+  set("おばあさん", "おばあさん", ["grapndmother", "grandma"], "grandmother");
+  set("兄", "あに", ["older brother"], "older brother");
+  set("妹", "いもうと", ["younger sister"], "younger sister");
+  set("家族", "かぞく", ["family"], "family");
+  set("日本語", "にほんご", ["japanese", "japanese language"], "japanese");
+  set("大人", "おとな", ["adult"], "adult");
+  set("一人", "ひとり", ["one person", "alone"], "one person");
+  set("人工", "じんこう", ["artificial"], "artificial");
+  set("大きい", "おおきい", ["big"], "big");
+  set("下", "した", ["down"], "down");
+  set("八", "はち", ["eight"], "eight");
+  set("八つ", "やっつ", ["eight things"], "eight things");
+  set("入り口", "いりぐち", ["entrance", "enter"], "entrance");
+  set("大した", "たいした", ["important"], "important");
+  set("山", "やま", ["mountain"], "mountain");
+  set("口", "くち", ["mouth"], "mouth");
+  set("ふじ山", "ふじさん", ["mountain fuji", "fuji"], "mountain Fuji");
+  set("九", "く", ["nine"], "nine");
+  set("色", "いろ", ["color"], "color");
+  set("九つ", "ここのつ", ["nine things"], "nine things");
+  set("一", "いち", ["one"], "one");
+  set("一つ", "ひとつ", ["one thing"], "one thing");
+  set("人", "ひと", ["person"], "person");
+  set("下さい", "ください", ["please give me"], "please give me");
+  set("人口", "じんこう", ["population"], "population");
+  set("力", "ちから", ["power"], "power");
+  set("川", "かわ", ["river"], "river");
+  set("七", "なな", ["seven"], "seven");
+  set("七つ", "ななつ", ["seven thigns"], "seven things");
+  set("大きさ", "おおきさ", ["size"], "size");
+  set("十", "じゅう", ["ten"], "ten");
+  set("三", "さん", ["three"], "three");
+  set("三人", "さんにん", ["three people", "three person"], "three people");
+  set("三つ", "みっつ", ["three things"], "three things");
+  set("入る", "はいる", ["to enter", "enter"], "to enter"),
+  set("上げる", "あげる", ["to raise"], "to raise");
+  set("下げる", "さげる", ["to lower"], "to lower");
+  set("二", "に", ["two"], "two");
+  set("二人", "ふたり", ["two people", "two person"], "two people");
+  set("二つ", "ふたつ", ["two things"], "two things");
+  set("上", "うえ", ["up"], "up");
+  set("力いっぱい", "ちからいっぱい", ["full power"], "full power");
+  set("女", "おんな", ["woman"], "woman");
 
-  /*
-  ["九つ", "ここのつ"],
-  ["一", "いち"],
-  ["一つ", "ひとつ"],
-  ["人", "ひと"],
-  ["下さい", "ください"],
-  ["人口", "じんこう"],
-  ["力", "ちから"],
-  ["川", "かわ"],
-  ["七", "なな"],
-  ["七つ", "ななつ"],
-  ["大きさ", "おおきさ"],
-  ["十", "じゅう"],
-  ["三", "さん"],
-  ["三人", "さんにん"],
-  ["三つ", "みっつ"],
-  ["入る", "はいる"],
-  ["上げる", "あげる"],
-  ["下げる", "さげる"],
-  ["二", "に"],
-  ["二人", "ふたり"],
-  ["二つ", "ふたつ"],
-  ["上", "うえ"],
-  ["力いっぱい", "ちからいっぱい"],
-  ["女", "おんな"],
-  */
+  console.log("Database loaded in " + (Date.now() - start) + " ms.");
+  console.log("Japanese database: " + japanese_vocabular.size + " entries");
+  console.log("English database: " + english_vocabular.size + " entries");
 }
 
 const monographs = [
@@ -432,26 +449,53 @@ export const database = {
     jlpt: [ jlpt_l1_vocabular ]
   },
 
-  vocabToCards: (words: string[]) => {
+  japaneseReadings: (japanese: string[]) => {
     const added = new Set<string>();
-    return words.map(k => {
-      if (added.has(k)) { console.error("Duplicate in the same table: " + k); }
-      added.add(k);
+    return japanese.map(w => {
+      if (added.has(w)) { console.error("Duplicate in the same table: " + w); }
+      added.add(w);
 
-      const entry = vocabular.get(k);
-      if (entry) { return Card.create(0, entry[0] as string, entry[1] as string); }
-      else { console.error("Word is not in the database: " + k); }
+      const word = japanese_vocabular.get(w);
+      if (word) { return Card.create(word.japanese, word.reading); }
+      else { console.error("Word is not in the database: " + w); }
+      return undefined;
+    }).filter(e => e).map(e => e!);
+  },
 
+  japaneseMeanings: (japanese: string[]) => {
+    const added = new Set<string>();
+    return japanese.map(w => {
+      if (added.has(w)) { console.error("Duplicate in the same table: " + w); }
+      added.add(w);
+
+      const word = japanese_vocabular.get(w);
+      if (word) { return Card.createM(word.japanese, word.meanings); }
+      else { console.error("Word is not in the database: " + w); }
+      return undefined;
+    }).filter(e => e).map(e => e!);
+  },
+
+  englishToJapanese: (english: string[]) => {
+    const added = new Set<string>();
+    return english.map(w => {
+      if (added.has(w)) { console.error("Duplicate in the same table: " + w); }
+      added.add(w);
+
+      const words = english_vocabular.get(w);
+      if (words) { 
+        return Card.createM(w, words.map(e => e.japanese).concat(words.map(e => e.reading))); 
+      }
+      else { console.error("Word is not in the database: " + w); }
       return undefined;
     }).filter(e => e).map(e => e!);
   },
 
   kanaToCards: (kana: string[][]) => {
-    return kana.map(entry => Card.create(0, entry[0], entry[1]));
+    return kana.map(entry => Card.create(entry[0], entry[1]));
   }
 };
 
 
 export function generateCards(entries: Array<Array<string>>): Card[] {
-  return entries.map(entry => Card.create(0, entry[0], entry[1]));
+  return entries.map(entry => Card.create(entry[0], entry[1]));
 }
