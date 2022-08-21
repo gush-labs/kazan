@@ -381,6 +381,7 @@ const jlpt_l1_vocabular = [
 export class WanikaniProfile {
   username: string = "";
   level: number = 0;
+  api: string = "";
 }
 
 class Database {
@@ -487,7 +488,6 @@ class Database {
     jlpt: [ jlpt_l1_vocabular ]
   };
 
-  wanikaniApi: string | undefined;
   wanikaniProfile: Ref<WanikaniProfile | undefined> = ref(undefined);
 
   wordsReadings(words: string[]) {
