@@ -1,17 +1,19 @@
 <script setup lang="ts">
 import router from "@/router";
 import Button from "@/components/Button.vue";
+import Link from "@/components/Link.vue";
+import { database } from "@/storage/Database";
 
-function goHome() {
-  router.push({ name: "home" });
-}
+function goHome() { router.push({ name: "home" }); }
+const db = database;
+const profile = db.wanikaniProfile;
 </script>
 
 <template>
   <div class="header d-flex flex-row justify-content-between">
     <div class="dropdown language">
       <Button dropdown plain icon="translate">English</Button>
-      <ul class="dropdown-menu">
+      <ul class="dropdown-menu language-links">
         <li><button class="dropdown-item active" href="#">English</button></li>
         <li><button class="dropdown-item disabled" href="#">日本語</button></li>
       </ul>
@@ -22,11 +24,13 @@ function goHome() {
     </div>
 
     <div class="dropdown profile">
-      <Button dropdown plain icon="person-fill">Profile</Button>
+      <Button dropdown plain icon="person-circle">
+        {{ profile ? profile.username : "Profile" }}
+      </Button>
       <div class="dropdown-menu dropdown-menu-end profile-menu">
         <ul class="profile-links">
-          <li><button  class="dropdown-item disabled" href="#">Sign in</button></li>
-          <li><button class="dropdown-item disabled" href="#">Settings</button></li>
+          <Link v-if="profile == undefined" :to="{name: 'login'}" class="dropdown-item">Sign in</Link>
+          <Button class="dropdown-item disabled" href="#">Settings</Button>
         </ul>
       </div>
     </div>
@@ -39,6 +43,12 @@ function goHome() {
   list-style-type: none;
   padding: 0;
   margin: 0;
+}
+.dropdown-menu a {
+  border: none;
+}
+.dropdown-menu .btn {
+  border: none;
 }
 .header-link {
   text-decoration: none;

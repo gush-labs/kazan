@@ -1,7 +1,7 @@
 <template>
   <div class="footer d-flex flex-row justify-content-center text-muted">
     <div>
-      version 0.2 <i class="bi bi-dot"></i>
+      version 0.3 <i class="bi bi-dot"></i>
       <a class="author-link text-muted" href="https://github.com/vadimgush"
         >@vadimgush</a
       >

@@ -1,25 +1,30 @@
-import { labeledStatement } from "@babel/types";
 import Card from "./Card";
+import { reactive, ref } from "vue";
+import type { Ref } from "vue";
 
 type Word = {
   japanese: string; // full word in japanese using kanji, hiragana and katakana
   reading: string; // reading of this word in hiragana
   meanings: string[]; // possible meanings 
-  english: string; // one choosen meaning in english
+  meaning: string; // primary meaning
+
+  // optional fields for now
+  wk_id?: number; // WaniKani id
+  audio?: string; // link to prononciation audio
+  pictch?: string; // pitch pattern for this word
 }
 
-const japanese_vocabular = new Map<string, Word>();
-const english_vocabular = new Map<string, Word[]>();
+const vocabular = new Map<string, Word>();
+const vocabularMeaning = new Map<string, Word[]>();
 {
-  function set(japanese: string, reading: string, meanings: string[], english: string) {
-    const word = {japanese, reading, meanings, english };
-    if (japanese_vocabular.has(japanese)) { console.error("Duplicate in the dababase: " + japanese); }
-    japanese_vocabular.set(japanese, word);
+  function set(japanese: string, reading: string, meanings: string[], meaning: string) {
+    const word = { japanese, reading, meanings, meaning };
+    if (vocabular.has(japanese)) { console.error("Duplicate in the dababase: " + japanese); }
+    vocabular.set(japanese, word);
 
-    if (!english_vocabular.has(english)) { english_vocabular.set(english, []); }
-    english_vocabular.get(english)!.push(word);
+    if (!vocabularMeaning.has(meaning)) { vocabularMeaning.set(meaning, []); }
+    vocabularMeaning.get(meaning)!.push(word);
   }
-  var start = Date.now();
 
   set("私", "わたし", ["me", "i"], "me");
   set("誰", "だれ", ["who"], "who?");
@@ -76,10 +81,6 @@ const english_vocabular = new Map<string, Word[]>();
   set("上", "うえ", ["up"], "up");
   set("力いっぱい", "ちからいっぱい", ["full power"], "full power");
   set("女", "おんな", ["woman"], "woman");
-
-  console.log("Database loaded in " + (Date.now() - start) + " ms.");
-  console.log("Japanese database: " + japanese_vocabular.size + " entries");
-  console.log("English database: " + english_vocabular.size + " entries");
 }
 
 const monographs = [
@@ -97,11 +98,11 @@ const monographs = [
 ];
 
 const diacritics = [
-  ["が", "ga"], ["ぎ", "gi"], ["ぐ", "gu"], ["げ", "ge"], ["ご", "go"],
-  ["ざ", "za"], ["じ", "ji"], ["ず", "zu"], ["ぜ", "ze"], ["ぞ", "zo"],
-  ["だ", "da"], ["ぢ", "ji"], ["づ", "zu"], ["で", "de"], ["ど", "do"],
-  ["ば", "ba"], ["び", "bi"], ["ぶ", "bu"], ["べ", "be"], ["ぼ", "bo"],
-  ["ぱ", "pa"], ["ぴ", "pi"], ["ぷ", "pu"], ["ぺ", "pe"], ["ぽ", "po"],
+  ["が", "ga"], ["ぎ", "gi"], ["ぐ", "gu"], ["げ", "ge"], ["ご", "go"], // 4
+  ["ざ", "za"], ["じ", "ji"], ["ず", "zu"], ["ぜ", "ze"], ["ぞ", "zo"], // 9
+  ["だ", "da"], ["ぢ", "ji"], ["づ", "zu"], ["で", "de"], ["ど", "do"], // 14
+  ["ば", "ba"], ["び", "bi"], ["ぶ", "bu"], ["べ", "be"], ["ぼ", "bo"], // 19
+  ["ぱ", "pa"], ["ぴ", "pi"], ["ぷ", "pu"], ["ぺ", "pe"], ["ぽ", "po"], // 24
 ];
 
 const monographs_digraphs = [
@@ -136,7 +137,15 @@ const katakana_monographs = [
   ["ン", "n"], // 45
 ];
 
-const katakana_digraphs = [
+const katakana_diacritics = [
+  ["ガ", "ga"], ["ギ", "gi"], ["グ", "gu"], ["ゲ", "ge"], ["ゴ", "go"],
+  ["ザ", "za"], ["ジ", "ji"], ["ズ", "zu"], ["ゼ", "ze"], ["ゾ", "zo"],
+  ["ダ", "da"], ["ヂ", "ji"], ["ヅ", "zu"], ["デ", "de"], ["ド", "do"],
+  ["バ", "ba"], ["ビ", "bi"], ["ブ", "bu"], ["ベ", "be"], ["ボ", "bo"],
+  ["パ", "pa"], ["ピ", "pi"], ["プ", "pu"], ["ペ", "pe"], ["ポ", "po"],
+];
+
+const katakana_monographs_digraphs = [
   ["キャ", "kya"], ["キュ", "kyu"], ["キョ", "kyo"],
   ["シャ", "sha"], ["シュ", "shu"], ["ショ", "sho"],
   ["チャ", "cha"], ["チュ", "chu"], ["チョ", "cho"],
@@ -144,14 +153,6 @@ const katakana_digraphs = [
   ["ヒャ", "hya"], ["ヒュ", "hyu"], ["ヒョ", "hyo"],
   ["ミャ", "mya"], ["ミュ", "myu"], ["ミョ", "myo"],
   ["リャ", "rya"], ["リュ", "ryu"], ["リョ", "ryo"],
-];
-
-const katakana_diacritics = [
-  ["ガ", "ga"], ["ギ", "gi"], ["グ", "gu"], ["ゲ", "ge"], ["ゴ", "go"],
-  ["ザ", "za"], ["ジ", "ji"], ["ズ", "zu"], ["ゼ", "ze"], ["ゾ", "zo"],
-  ["ダ", "da"], ["ヂ", "ji"], ["ヅ", "zu"], ["デ", "de"], ["ド", "do"],
-  ["バ", "ba"], ["ビ", "bi"], ["ブ", "bu"], ["ベ", "be"], ["ボ", "bo"],
-  ["パ", "pa"], ["ピ", "pi"], ["プ", "pu"], ["ペ", "pe"], ["ポ", "po"],
 ];
 
 const katakana_diacritics_digraphs = [
@@ -377,8 +378,13 @@ const jlpt_l1_vocabular = [
   "食べる"
 ]
 
-export const database = {
-  hiragana: {
+export class WanikaniProfile {
+  username: string = "";
+  level: number = 0;
+}
+
+class Database {
+  hiragana = {
     alphabet: {
       a: monographs.slice(0, 5),
       ka: monographs.slice(5, 10),
@@ -389,8 +395,27 @@ export const database = {
       ma: monographs.slice(30, 35),
       ya: monographs.slice(35, 38),
       ra: monographs.slice(38, 43),
-      wa: monographs.slice(43, 45),
-      n: monographs.slice(45, 46)
+      wa: monographs.slice(43, 46),
+
+      ga: diacritics.slice(0, 5),
+      za: diacritics.slice(5, 10),
+      da: diacritics.slice(10, 15),
+      ba: diacritics.slice(15, 20),
+      pa: diacritics.slice(20, 25),
+
+      kya: monographs_digraphs.slice(0, 3),
+      sha: monographs_digraphs.slice(3, 6),
+      cha: monographs_digraphs.slice(6, 9),
+      nya: monographs_digraphs.slice(9, 12),
+      hya: monographs_digraphs.slice(12, 15),
+      mya: monographs_digraphs.slice(15, 18),
+      rya: monographs_digraphs.slice(18, 21),
+
+      gya: diacritics_digraphs.slice(0, 3),
+      jya1: diacritics_digraphs.slice(3, 6),
+      jya2: diacritics_digraphs.slice(6, 9),
+      bya: diacritics_digraphs.slice(9, 12),
+      pya: diacritics_digraphs.slice(12, 15),
     },
     monographs: {
       main: monographs,
@@ -406,8 +431,9 @@ export const database = {
       .concat(monographs_digraphs)
       .concat(diacritics)
       .concat(diacritics_digraphs),
-  },
-  katakana: {
+  };
+
+  katakana = {
     alphabet: {
       a: katakana_monographs.slice(0, 5),
       ka: katakana_monographs.slice(5, 10),
@@ -418,13 +444,32 @@ export const database = {
       ma: katakana_monographs.slice(30, 35),
       ya: katakana_monographs.slice(35, 38),
       ra: katakana_monographs.slice(38, 43),
-      wa: katakana_monographs.slice(43, 45),
-      n: katakana_monographs.slice(45, 46)
+      wa: katakana_monographs.slice(43, 46),
+
+      ga: katakana_diacritics.slice(0, 5),
+      za: katakana_diacritics.slice(5, 10),
+      da: katakana_diacritics.slice(10, 15),
+      ba: katakana_diacritics.slice(15, 20),
+      pa: katakana_diacritics.slice(20, 25),
+
+      kya: katakana_monographs_digraphs.slice(0, 3),
+      sha: katakana_monographs_digraphs.slice(3, 6),
+      cha: katakana_monographs_digraphs.slice(6, 9),
+      nya: katakana_monographs_digraphs.slice(9, 12),
+      hya: katakana_monographs_digraphs.slice(12, 15),
+      mya: katakana_monographs_digraphs.slice(15, 18),
+      rya: katakana_monographs_digraphs.slice(18, 21),
+
+      gya: katakana_diacritics_digraphs.slice(0, 3),
+      jya1: katakana_diacritics_digraphs.slice(3, 6),
+      jya2: katakana_diacritics_digraphs.slice(6, 9),
+      bya: katakana_diacritics_digraphs.slice(9, 12),
+      pya: katakana_diacritics_digraphs.slice(12, 15),
     },
     monographs: {
       main: katakana_monographs,
-      digraphs: katakana_digraphs,
-      all: katakana_monographs.concat(katakana_digraphs),
+      digraphs: katakana_monographs_digraphs,
+      all: katakana_monographs.concat(katakana_monographs_digraphs),
     },
     diacritics: {
       main: katakana_diacritics,
@@ -432,70 +477,57 @@ export const database = {
       all: katakana_diacritics.concat(katakana_diacritics_digraphs),
     },
     all: katakana_monographs
-      .concat(katakana_digraphs)
+      .concat(katakana_monographs_digraphs)
       .concat(katakana_diacritics)
       .concat(katakana_diacritics_digraphs),
-  },
-  kanji: {
-    numbers: {
-      kanji: kanji_numbers,
-      arabic: arabic_numbers,
-      things: kanji_numbers_days
-        .concat(kanji_numbers)
-        .concat(kanji_numbers_month)
-        .concat(kanji_numbers_people),
-    },
+  };
+
+  vocabular = {
     wanikani: [ wanikani_l1_vocabular, wanikani_l2_vocabular ],
     jlpt: [ jlpt_l1_vocabular ]
-  },
+  };
 
-  japaneseReadings: (japanese: string[]) => {
-    const added = new Set<string>();
-    return japanese.map(w => {
-      if (added.has(w)) { console.error("Duplicate in the same table: " + w); }
-      added.add(w);
+  wanikaniApi: string | undefined;
+  wanikaniProfile: Ref<WanikaniProfile | undefined> = ref(undefined);
 
-      const word = japanese_vocabular.get(w);
-      if (word) { return Card.create(word.japanese, word.reading); }
-      else { console.error("Word is not in the database: " + w); }
+  wordsReadings(words: string[]) {
+    return this.findData(words, (word) => {
+      const entry = vocabular.get(word);
+      return entry ? Card.create(entry.japanese, [entry.reading]) : undefined;
+    });
+  };
+
+  wordsMeanings(words: string[]) {
+    return this.findData(words, (word) => {
+      const entry = vocabular.get(word);
+      return entry ? Card.create(entry.japanese, entry.meanings) : undefined;
+    });
+  };
+
+  meaningsWords(meanings: string[]): Card[] {
+    return this.findData(meanings, (meaning) => {
+      const words = vocabularMeaning.get(meaning);
+      if (words) { return Card.create(meaning, words.map(e => e.japanese).concat(words.map(e => e.reading))); }
       return undefined;
+    });
+  };
+
+  private findData<T>(keys: string[], reader: (key: string) => T | undefined): T[] {
+    const requested = new Set<string>();
+    return keys.map(key => {
+      if (requested.has(key)) { console.error("Requested several times: " + key); return undefined; }
+      requested.add(key);
+      return reader(key)
     }).filter(e => e).map(e => e!);
-  },
-
-  japaneseMeanings: (japanese: string[]) => {
-    const added = new Set<string>();
-    return japanese.map(w => {
-      if (added.has(w)) { console.error("Duplicate in the same table: " + w); }
-      added.add(w);
-
-      const word = japanese_vocabular.get(w);
-      if (word) { return Card.createM(word.japanese, word.meanings); }
-      else { console.error("Word is not in the database: " + w); }
-      return undefined;
-    }).filter(e => e).map(e => e!);
-  },
-
-  englishToJapanese: (english: string[]) => {
-    const added = new Set<string>();
-    return english.map(w => {
-      if (added.has(w)) { console.error("Duplicate in the same table: " + w); }
-      added.add(w);
-
-      const words = english_vocabular.get(w);
-      if (words) { 
-        return Card.createM(w, words.map(e => e.japanese).concat(words.map(e => e.reading))); 
-      }
-      else { console.error("Word is not in the database: " + w); }
-      return undefined;
-    }).filter(e => e).map(e => e!);
-  },
-
-  kanaToCards: (kana: string[][]) => {
-    return kana.map(entry => Card.create(entry[0], entry[1]));
   }
+
+  kanaToCards(kana: string[][]) {
+    return kana.map(entry => Card.create(entry[0], [entry[1]]));
+  };
 };
 
+export const database = new Database();
 
 export function generateCards(entries: Array<Array<string>>): Card[] {
-  return entries.map(entry => Card.create(entry[0], entry[1]));
+  return entries.map(entry => Card.create(entry[0], [entry[1]]));
 }

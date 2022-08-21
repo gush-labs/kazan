@@ -4,14 +4,7 @@ class Card {
   target: string = "";
   answers: string[] = [];
 
-  static create(target: string, answer: string): Card {
-    const card = new Card();
-    card.target = target;
-    card.answers.push(answer);
-    return card;
-  }
-
-  static createM(target: string, answers: string[]): Card {
+  static create(target: string, answers: string[]): Card {
     const card = new Card();
     card.target = target;
     card.answers = answers;

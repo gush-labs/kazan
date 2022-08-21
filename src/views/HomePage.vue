@@ -36,22 +36,8 @@ pages.set("kana", {
   parent: "home",
   title: "Which kana do you want to practice?",
   buttons: [
-    { name: "Hiragana", page: "hiragana" },
-    { name: "Katakana", page: "katakana" },
-  ],
-});
-
-pages.set("hiragana", {
-  name: "Hiragana",
-  parent: "kana",
-  title: "Select parts of hiragana",
-  buttons: [
-    { name: "Monographs", link: { name: "review", query: { db: "allMonographs"}} },
-    { name: "Digraphs",   link: { name: "review", query: { db: "allDigraphs"}} },
-    { name: "Monographs+" },
-    { name: "Digraphs+" },
-    { name: "All Hiragana", link: { name: "review", query: { db: "allHiragana" }} },
-    { name: "Choose Manually" },
+    { name: "Hiragana", link: { name: "kana", params: { kana: "hiragana"} }},
+    { name: "Katakana", link: { name: "kana", params: { kana: "katakana"} }},
   ],
 });
 

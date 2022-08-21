@@ -7,6 +7,8 @@ const props = defineProps<{
   disabled?: boolean;
   plain?: boolean;
   dropdown?: boolean;
+  switch?: boolean;
+  switched?: boolean;
 }>();
 
 </script>
@@ -14,7 +16,12 @@ const props = defineProps<{
 <template>
   <button
     @click="(e) => emits('click', e)"
-    :class="{ plain: plain, btn: !plain, disabled: props.disabled, 'dropdown-toggle': dropdown }"
+    :class="{ 
+      plain: plain, 
+      btn: !plain, 
+      disabled: props.disabled, 
+      'dropdown-toggle': dropdown, 
+      switched: props.switch && props.switched }"
     :data-bs-toggle="dropdown ? 'dropdown' : ''">
     <div v-if="props.label" class="m">{{ props.label }}</div>
     <i v-if="props.icon" :class="'bi bi-' + props.icon"></i> <slot />
@@ -22,6 +29,10 @@ const props = defineProps<{
 </template>
 
 <style scoped>
+.switched {
+  background-color: rgba(0,0,0,0.5) !important;
+  color: white !important;
+}
 .plain {
   border: none;
   margin: 0;

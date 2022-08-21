@@ -25,14 +25,25 @@ function startReview(r: Review) {
   card.value = review.value.take();
 }
 
-const dbQuery = router.currentRoute.value.query.db?.toString() ?? "allHiragana";
-if (dbQuery == "allHiragana") { startReview(createReview(db.hiragana.all)); }
-if (dbQuery == "allMonographs") { startReview(createReview(db.hiragana.monographs.all)); }
-if (dbQuery == "allDiacritics") { startReview(createReview(db.hiragana.diacritics.all)); }
-if (dbQuery == "wkLevel1") { startReview(createReview(db.kanji.wanikani[0], "hiragana")); }
-if (dbQuery == "wkLevel2") { startReview(createReview(db.kanji.wanikani[1], "hiragana")); }
-if (dbQuery == "test") { startReview(createReview(db.kanji.wanikani[0].slice(0, 2), "hiragana")); }
+// TODO: Move this logic to the database selector (create a new class for that)
+const queryTable = router.currentRoute.value.query.db?.toString() ?? "allHiragana";
+if (queryTable == "wkLevel1") { startReview(createReview(db.vocabular.wanikani[0], "hiragana")); }
+if (queryTable == "wkLevel2") { startReview(createReview(db.vocabular.wanikani[1], "hiragana")); }
+if (queryTable == "test") { startReview(createReview(db.vocabular.wanikani[0].slice(0, 2), "hiragana")); }
 
+const queryEntries = router.currentRoute.value.query.entries?.toString().split(",") ?? [];
+if (queryEntries.length > 0) {
+  if (queryTable == "hiragana") { 
+    startReview(createReview(queryEntries
+      .map(q => (db.hiragana.alphabet as Record<string, any>)[q])
+      .reduce((l, r) => l.concat(r)))); 
+  }
+  if (queryTable == "katakana") { 
+    startReview(createReview(queryEntries
+      .map(q => (db.katakana.alphabet as Record<string, any>)[q])
+      .reduce((l, r) => l.concat(r)))); 
+  }
+}
 
 function onChange() {
   const inputText = input.value.split(" ").join("");
