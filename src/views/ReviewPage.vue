@@ -80,9 +80,7 @@ function checkAnswer(e: any) {
     input.value = "";
   }
 
-  if (rev.complete()) {
-    complete.value = true;
-  }
+  complete.value = rev.completed();
 }
 </script>
 
@@ -113,11 +111,11 @@ function checkAnswer(e: any) {
 
     <div class="stats-window mb-5">
       <div class="completed">
-        <i class="bi bi-circle"></i> {{ review.getCorrect() }} completed
+        <i class="bi bi-circle"></i> {{ review.getCorrectCards().length }} completed
       </div>
       <div class="">{{ Math.round(review.progress() * 100) }}%</div>
       <div class="mistakes">
-        <i class="bi bi-x-lg"></i> {{ review.getIncorrect() }} mistakes
+        <i class="bi bi-x-lg"></i> {{ review.getIncorrectCards().length }} mistakes
       </div>
     </div>
   </div>

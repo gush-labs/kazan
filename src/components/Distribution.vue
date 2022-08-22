@@ -3,30 +3,29 @@
 const props = defineProps<{ values: number[] }>();
 const input: number[] = props.values;
 
+// Initialize distribution array
 const resolution: number = 40;
 const distribution: number[] = [];
 for (var i = 0; i < resolution + 1; i++) { distribution.push(0); }
 
-var maxTime = input[0];
-var minTime = input[0];
-input.forEach(t => { if (t > maxTime) maxTime = t; })
-input.forEach(t => { if (t < minTime) minTime = t; })
-if (input.length == 1) { minTime = 0; maxTime = input[0]; }
+// Init and normalize maxTime
+const meanTime = input.reduce((l, r) => l + r) / input.length;
+const maxTime = (Math.floor(input.reduce((l, r) => l > r ? l : r)/5) + 1) * 5;
+const minTime = 0;
 
-var mean = 0;
-input.forEach(t => {
-  mean += t;
-  const i = Math.floor((t - minTime) / (maxTime - minTime) * resolution);
-  distribution[i] += 1;
-});
+var c = 0;
+input.forEach(t => { if (t > meanTime) { c += 1; }});
+console.log("HARD: " + c);
 
-var maxCount = distribution[0];
-var minCount = distribution[0];
-distribution.forEach(n => { if (n > maxCount) maxCount = n; })
-distribution.forEach(n => { if (n < minCount) minCount = n; })
+// Calculate the actual distribution
+input
+  .map(v => Math.floor((v - minTime) / (maxTime - minTime) * resolution))
+  .forEach(v => distribution[v] += 1);
 
-const values: number[] = [];
-distribution.forEach(v => { values.push(((v - minCount) / (maxCount - minCount)) * 100); });
+const maxCount = distribution.reduce((l, r) => l > r ? l : r);
+const minCount = distribution.reduce((l, r) => l < r ? l : r);
+
+const values = distribution.map(v => ((v - minCount) / (maxCount - minCount)) * 100 );
 </script>
 
 <template>
@@ -38,7 +37,7 @@ distribution.forEach(v => { values.push(((v - minCount) / (maxCount - minCount))
     <div class="max text-muted">{{ Math.round(maxTime * 10) / 10 }} sec.</div>
   </div>
   <div class="dist-container">
-    <div v-for="value in values" class="value-store d-flex flex-column justify-content-end">
+    <div v-for="value, i in values" class="value-store d-flex flex-column justify-content-end">
       <div class="value" :style="{ 'height': value + '%' }"></div>
     </div>
   </div>

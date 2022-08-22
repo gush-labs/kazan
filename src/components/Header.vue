@@ -31,6 +31,7 @@ const profile = db.wanikaniProfile;
         <ul class="profile-links">
           <Link v-if="profile == undefined" :to="{name: 'login'}" class="dropdown-item">Sign in</Link>
           <Button class="dropdown-item disabled" href="#">Settings</Button>
+          <Button v-if="profile != undefined" class="dropdown-item disabled">Sign out</Button>
         </ul>
       </div>
     </div>

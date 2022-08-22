@@ -36,7 +36,6 @@ watch(selected, (m) => {
 
   kanaToReview.value = [];
   m.forEach((v, k) => { if (v) { kanaToReview.value.push(k); }});
-  console.log(kanaToReview.value);
 });
 
 monographs.forEach(k => selected.set(k, false));
