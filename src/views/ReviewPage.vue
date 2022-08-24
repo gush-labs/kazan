@@ -105,6 +105,7 @@ function checkAnswer(e: any) {
           @input="onChange"
           class="answer-form form-control"
           placeholder=""
+          spellcheck="false"
         />
       </form>
     </div>
