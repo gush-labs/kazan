@@ -26,11 +26,19 @@ import Header from "./components/Header.vue";
   display: grid;
   grid-template-rows: auto 1fr auto;
 }
+
 @media screen and (max-width: 650px) {
   .app-container {
     margin-left: 1em;
     margin-right: 1em;
   }
+}
+
+.japanese {
+  /* Honestly, this is terrible font. I don't like it.
+     but fonts.google doesn't have anything better. Maybe adobe will have
+     something nicer to offer. */
+  font-family: 'Noto Sans JP', sans-serif;
 }
 
 /* Styles to properly size text related to parent elements.

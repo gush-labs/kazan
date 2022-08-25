@@ -87,12 +87,10 @@ function checkAnswer(e: any) {
 <template>
   <div v-if="!complete" class="d-flex flex-column justify-content-center">
     <div :class="{ wrong: wrong }" class="review-window text-center">
-      <div class="review-title d-flex flex-column justify-content-end">
-        <div></div>
-      </div>
-      <div>
-        <h1 class="review-target">{{ card.target }}</h1>
-      </div>
+      <div class="review-title d-flex flex-column justify-content-end"><div>
+        <!-- Here will be the type of the card -->
+      </div></div>
+      <div><h1 class="review-target japanese">{{ card.target }}</h1></div>
       <div class="review-answer d-flex flex-column justify-content-start">
         <div v-if="wrong">{{ card.answer() }}</div>
       </div>
@@ -155,7 +153,7 @@ function checkAnswer(e: any) {
 }
 .review-window .review-target {
   font-size: 4.5em;
-  font-weight: normal;
+  font-weight: 400;
   margin: 0;
 }
 .review-window .review-answer {
