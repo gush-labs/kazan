@@ -2,46 +2,45 @@
 
 Web-app for kana, vocabularity, kanji, and reading practice.
 
-## Project Setup
+# Development
+You can run local dev server either by using `npm` directly or by using docker container.
 
+## Using Docker
+
+Start local dev server using `docker-compose`.
+```sh
+docker-compose up
+```
+It will bind your current directory to the content of the docker container allowing you to make changes interactively.
+
+Stop running local dev server:
+```sh
+docker-compose down
+```
+
+## Using npm
+
+Install all required dependencies:
 ```sh
 npm install
 ```
 
-### Compile and Hot-Reload for Development
-
+Compile and Hot-Reload for Development
 ```sh
 npm run dev
 ```
 
-### Type-Check, Compile and Minify for Production
+Type-Check, Compile and Minify for Production
 
 ```sh
 npm run build
 ```
 
-### Lint with [ESLint](https://eslint.org/)
+Lint with [ESLint](https://eslint.org/)
 
 ```sh
 npm run lint
 ```
-### Docker Setup
 
 
-##### Custom build 
-```sh
-docker build -t <image name> .
-```
-image name can be as per your choice 
-```sh
-docker build -t kazan .
-```
-
-##### Run created image 
-```sh
-docker run  <image name>
-```
-app will run on port `:5173` 
-Use `-it` or `-d` flag to specify interactive or detached mode respectively
-For Development use bind mount with `-v' or '--mount' flag
 

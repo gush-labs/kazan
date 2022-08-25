@@ -1,7 +1,7 @@
-# base image
+# Base image
 FROM node
 
-#Work Directory in container
+# Work Directory in container
 WORKDIR /usr/app
 
 # COPY package.json and source code files
