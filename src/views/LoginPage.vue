@@ -1,22 +1,25 @@
 <script setup lang="ts">
 import Button from "@/components/Button.vue";
-import auth from "@/storage/Auth";
+import { Storage, User } from "@/storage/Database";
+import { Auth } from "@/storage/Auth";
 import { ref } from "vue";
-import { database } from "@/storage/Database";
 import router from "@/router";
-const profile = database.wanikaniProfile;
 
 const input = ref("");
 const loading = ref(false);
 const error = ref("");
+const user = Storage.read<User>("user");
 
 function signIn() {
   if (input.value.length == 0) { return; }
-  auth.login(input.value).then(complete => { 
-    loading.value = false; 
-    error.value = "Failed to login. Make sure that API key is correct."
-    if (complete) { setTimeout(() => router.push({ name: "home" }), 5000); }
+
+  Storage.save("wanikani", input.value);
+  Auth.login().then(success => {
+    loading.value = false;
+    if (success) { setTimeout(() => router.push({ name: "home"}), 5000); }
+    else { error.value = "Failed to login. Make sure that API key is correct"; }
   });
+
   loading.value = true;
 }
 </script>
@@ -25,7 +28,7 @@ function signIn() {
 <div class="d-flex flex-column justify-content-center text-center mb-3">
   <div class="d-flex flex-row justify-content-center">
 
-    <div v-if="!profile" class="profile-container">
+    <div v-if="!user" class="profile-container">
       <h4> Sign in</h4>
       <p :class="{ error: error, 'text-muted': !error }">
         <i v-if="error" class="bi bi-exclamation-circle"></i>
@@ -41,12 +44,12 @@ function signIn() {
 
   </div>
 
-  <div v-if="profile">
-    <h4>Hello, {{ profile.username }}!</h4>
+  <div v-if="user">
+    <h4>Hello, {{ user.username }}!</h4>
     <p>初めまして</p>
   </div>
 
-  <div v-if="profile" class="redirect-progress w-100 d-flex flex-row justify-content-start mt-3">
+  <div v-if="user" class="redirect-progress w-100 d-flex flex-row justify-content-start mt-3">
     <div class="redirect-progress-line"></div>
   </div>
 

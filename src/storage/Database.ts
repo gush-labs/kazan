@@ -1,6 +1,7 @@
+import { WaniKani } from "@/storage/WaniKani";
+import { watch, type Ref } from "vue";
+import { ref } from "vue";
 import Card from "./Card";
-import { reactive, ref } from "vue";
-import type { Ref } from "vue";
 
 type Word = {
   japanese: string; // full word in japanese using kanji, hiragana and katakana
@@ -493,21 +494,21 @@ class Database {
   wordsReadings(words: string[]) {
     return this.findData(words, (word) => {
       const entry = vocabular.get(word);
-      return entry ? Card.create(entry.japanese, [entry.reading]) : undefined;
+      return entry ? Card.create("Reading", entry.japanese, [entry.reading]) : undefined;
     });
   };
 
   wordsMeanings(words: string[]) {
     return this.findData(words, (word) => {
       const entry = vocabular.get(word);
-      return entry ? Card.create(entry.japanese, entry.meanings) : undefined;
+      return entry ? Card.create("Meaning", entry.japanese, entry.meanings) : undefined;
     });
   };
 
   meaningsWords(meanings: string[]): Card[] {
     return this.findData(meanings, (meaning) => {
       const words = vocabularMeaning.get(meaning);
-      if (words) { return Card.create(meaning, words.map(e => e.japanese).concat(words.map(e => e.reading))); }
+      if (words) { return Card.create("Japanese", meaning, words.map(e => e.japanese).concat(words.map(e => e.reading))); }
       return undefined;
     });
   };
@@ -522,12 +523,258 @@ class Database {
   }
 
   kanaToCards(kana: string[][]) {
-    return kana.map(entry => Card.create(entry[0], [entry[1]]));
+    return kana.map(entry => Card.create("Reading", entry[0], [entry[1]]));
   };
 };
+
 
 export const database = new Database();
 
 export function generateCards(entries: Array<Array<string>>): Card[] {
-  return entries.map(entry => Card.create(entry[0], [entry[1]]));
+  return entries.map(entry => Card.create("", entry[0], [entry[1]]));
 }
+
+// NEW API FOR DATABASE
+
+export class User {
+  apiKey: string = "";
+  username: string = "";
+  level: number = 0;
+  paid: boolean = false;
+}
+
+type StorageRef<T> = Ref<T | undefined>;
+
+/**
+ * Completely reactive storage. Allows you 
+ * to wait for values to appear in the storage and react
+ * to their changes.
+ */
+export class Storage {
+
+  // in-memory cache of references
+  static cache = new Map<string, Ref<any>>();
+
+  /**
+   * Reads entry from the database and if there is no such entry,
+   * will read value of that entry from the retriever and save it to
+   * the database.
+   * 
+   * @param key key of entry 
+   * @param retriever promise that will return an object to store
+   */
+  static readOrRequest<T>(key: string, retriever: () => Promise<T>): Promise<Ref<T | undefined>> {
+    // Look at saved data
+    const saved = Storage.read<T>(key);
+    if (saved.value) { return Promise.resolve(saved); }
+
+    // Wait for the value 
+    return retriever().then(v => { return Storage.save(key, v); });
+  }
+
+  /**
+   * Saves entry to the database
+   * @param key key of entry
+   * @param value actual value of that entry
+   */
+  static save<T>(key: string, value: T): StorageRef<T> {
+    const valueRef = Storage.getCachedRef<T>(key);
+    valueRef.value = value;
+    localStorage.setItem(key, JSON.stringify(value));
+    return valueRef;
+  }
+
+  /**
+   * Reads data from the database and tries 
+   * to return it immidiately (or returns undefined if entry is not found)
+   */
+  static read<T>(key: string): StorageRef<T> {
+    // Look for the reference in the in-memory cache
+    const valueRef = Storage.getCachedRef<T>(key);
+    if (valueRef.value) { return valueRef; }
+
+    // Now let's look at what browser stores in LocalStorage
+    const storageEntry = localStorage.getItem(key);
+    if (storageEntry) {
+      const value = JSON.parse(storageEntry);
+      // if we found something, we will update in-memory
+      // reference for that entry
+      valueRef.value = value;
+    }
+
+    // And return whatever we have in-memory currently
+    return valueRef;
+  }
+
+  /**
+   * Removes any data from both in-memory cache and from the local storage
+   */
+  static delete(key: string) {
+    const valueRef = Storage.getCachedRef(key);
+    valueRef.value = undefined;
+    localStorage.removeItem(key);
+  }
+
+  /**
+   * Removes all data from the storage
+   */
+  static clear() {
+    localStorage.clear();
+    this.cache.forEach((value) => { value.value = undefined; })
+  }
+
+  private static getCachedRef<T>(key: string): StorageRef<T> {
+    const cachedRef = this.cache.get(key);
+    if (cachedRef) { return cachedRef; }
+    
+    const newRef = ref<T | undefined>(undefined);
+    this.cache.set(key, newRef);
+    return newRef as StorageRef<T>;
+  }
+
+}
+
+export class Word2 {
+  id: number = 0;
+  japanese: string = "";
+  meanings: string[] = [];
+  readings: string[] = [];
+  speechParts: string[] = [];
+  level: number = 0;
+
+  get primaryMeaning(): string { return this.meanings[0]; } 
+  get primaryReading(): string { return this.readings[0]; }
+}
+
+export class Dictionary {
+
+  // This is version of our current vocabulary format
+  // whenever there is a change to the format of stored vocabulary
+  // this value should be incremented
+  static databaseRevision: number = 1;
+
+  static vocabulary = new Map<number, Word2>();
+  static wanikaniLevels = new Map<number, number[]>();
+
+  /**
+   * Loads dictionary from WaniKani (requires user, because it should be logged in)
+   */
+  static load() {
+    // Check if user is logged in
+    const userRef = Storage.read<User>("user");
+    // If we already have all required data, then 
+    // there is no need to perform an update
+    if (!userRef.value || this.vocabulary.size > 0) { return; }
+    const user = userRef.value!;
+
+    // Get vocabulary
+    const rev = this.databaseRevision;
+    Storage.readOrRequest("vocabulary-" + rev, () => this.requestVocabulary(user))
+      .then(vocabRef => {
+        if (vocabRef.value == undefined) { return; }
+
+        // Get every word from vocabulary and move it to 
+        // different structures
+        const vocab = vocabRef.value!;
+        vocab.forEach(word => { 
+          this.vocabulary.set(word.id, word as Word2); 
+          const level = word.level;
+          if (!this.wanikaniLevels.get(level)) { this.wanikaniLevels.set(level, []); }
+          this.wanikaniLevels.get(level)!.push(word.id);
+        });
+        console.log("Dictionary: loaded " + this.vocabulary.size + " words");
+      });
+  }
+
+  private static requestVocabulary(user: User): Promise<Word2[]> {
+    // WaniKani unable to return all database
+    // so we need to request vocabulary page by page
+    return new Promise(resolver => {
+      const pageRequests: Promise<Word2[]>[] = [];
+
+      // Request the first page
+      pageRequests.push(this.requestVocabularyWithPage(user, "0", (nextPage) => {
+        // Request the next page if it exists
+        if (nextPage) {
+          pageRequests.push(nextPage);
+          return;
+        }
+        
+        // If there are no more pages, we need to take all pages
+        // that we have and combine them into one collection of words
+        Promise.all(pageRequests).then((responses) => {
+          var result: Word2[] = [];
+          responses.forEach(response => result = result.concat(response));
+          resolver(result);
+        });
+      }));
+    });
+  }
+
+  private static requestVocabularyWithPage(user: User, pageId: string, 
+      nextPageHandler: (p: Promise<Word2[]> | undefined) => void): Promise<Word2[]> {
+    const query = { types: "vocabulary", levels: user.paid ? undefined : "1,2,3", page_after_id: pageId};
+    
+    return WaniKani.request("subjects", query)
+      .then(response => {
+
+        const nextUrl: string = response.pages.next_url;
+        if (nextUrl) {
+          const id = nextUrl.split("?")[1].split("&")[0].split("=")[1];
+          nextPageHandler(this.requestVocabularyWithPage(user, id, nextPageHandler));
+        } else {
+          nextPageHandler(undefined);
+        }
+
+        const result: Word2[] = [];
+        for (var wordData of response.data) {
+          result.push(this.parseWordData(wordData));
+        }
+        return result;
+      });
+  }
+
+  private static parseWordData(wordData: any): Word2 {
+    const id = wordData.id;
+    const data = wordData.data;
+    const word = new Word2();
+    word.id = id;
+    word.japanese = data.characters;
+    word.level = data.level;
+        
+    var primary = "";
+    for (var reading of data.readings) {
+      if (!reading.primary) { word.readings.push(reading.reading); }
+      else { primary = reading.reading; }
+    }
+    word.readings = [ primary ].concat(word.readings);
+
+    for (var part of data.parts_of_speech) {
+      word.speechParts.push(part);
+    }
+
+    primary = "";
+    for (var meaning of data.meanings) {
+      if (!meaning.primary) { word.meanings.push(meaning.meaning); }
+      else { primary = meaning.meaning; }
+    }
+    word.meanings = [ primary ].concat(word.meanings);
+    console.log(word);
+    return word;
+  }
+
+  /**
+   * Creates a collection of cards to review from the content
+   * of the dictionary.
+   * 
+   * @param query - might be a name of the review that should be performed 
+   * @param params - different params for different queries
+   * @returns collection of cards to review
+   */
+  static review(query: string, params: any[]): Card[] { return []; }
+}
+
+// In case if user is logged in, we want to load all 
+// his vocabulary from WaniKani
+const userRef = Storage.read<User>("user");
+watch(userRef, () => { Dictionary.load(); });

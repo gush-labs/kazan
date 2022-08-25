@@ -10,27 +10,22 @@ for (var i = 0; i < resolution + 1; i++) { distribution.push(0); }
 
 // Init and normalize maxTime
 const meanTime = input.reduce((l, r) => l + r) / input.length;
-const maxTime = (Math.floor(input.reduce((l, r) => l > r ? l : r)/5) + 1) * 5;
+const maxTime = (Math.floor(input.reduce((l, r) => Math.max(l, r)) / 5) + 1) * 5;
 const minTime = 0;
-
-var c = 0;
-input.forEach(t => { if (t > meanTime) { c += 1; }});
-console.log("HARD: " + c);
 
 // Calculate the actual distribution
 input
   .map(v => Math.floor((v - minTime) / (maxTime - minTime) * resolution))
   .forEach(v => distribution[v] += 1);
 
-const maxCount = distribution.reduce((l, r) => l > r ? l : r);
-const minCount = distribution.reduce((l, r) => l < r ? l : r);
+const maxCount = distribution.reduce((l, r) => Math.max(l, r));
+const minCount = distribution.reduce((l, r) => Math.min(l, r));
 
 const values = distribution.map(v => ((v - minCount) / (maxCount - minCount)) * 100 );
 </script>
 
 <template>
 <div class="graph-container">
-
   <div class="title-container d-flex flex-row justify-content-between">
     <div class="min text-muted">{{ Math.round(minTime * 10) / 10 }} sec.</div>
     <div class="text-muted pb-1"><i class="bi bi-stopwatch"></i> Answer time</div>

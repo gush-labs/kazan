@@ -34,10 +34,8 @@ import Header from "./components/Header.vue";
   }
 }
 
+/* Fonts for japanese texts (not great, but better than default ones) */
 .japanese {
-  /* Honestly, this is terrible font. I don't like it.
-     but fonts.google doesn't have anything better. Maybe adobe will have
-     something nicer to offer. */
   font-family: 'Noto Sans JP', sans-serif;
 }
 

@@ -1,38 +1,47 @@
-import { database, WanikaniProfile } from "@/storage/Database";
+import { Storage, User } from "@/storage/Database";
+import { WaniKani } from "@/storage/WaniKani";
 
-class Auth {
+export class Auth {
 
-  loadSaved() {
-    const userRaw = localStorage.getItem("user");
-    if (userRaw) {
-      const user = JSON.parse(userRaw);
-      this.login(user.api);
+  /**
+   * Parses incoming data from WaniKani
+   * @param response response from WaniKani
+   * @returns if parsing is successfull, then return a new user, otherwse undefined
+   */
+  private static parse(response: any): User | undefined {
+    const data = response.data;
+    if (response.data && data.username && data.level) {
+      const user = new User();
+      user.username = data.username;
+      user.level = data.level;
+      user.paid = data.subscription.active;
+      return user;
     }
+    return undefined;
   }
 
-  login(api: string): Promise<boolean> {
-    const request = new Request("https://api.wanikani.com/v2/user");
-    request.headers.set("Wanikani-Revision", "20170710");
-    request.headers.set("Authorization", "Bearer " + api);
+  /**
+   * Uses currently saved WaniKani API key in order to sign in.
+   * @returns user if sign in is complete, otherwise undefined
+   */
+  static login(): Promise<boolean> {
+    return WaniKani.request("user").then(response => {
+      const apiKey = Storage.read<string>("wanikani").value;
+      if (response == undefined) { return false; };
+      
+      const user = Auth.parse(response);
+      if (user) { 
+        user.apiKey = apiKey!; 
+        Storage.save("user", user);
+      }
+      return user != undefined;
+    });
+  }
 
-    return fetch(request)
-      .then(response => response.json())
-      .then(data => {
-        if (data.data && data.data.username && data.data.level) {
-          const profile = new WanikaniProfile();
-          profile.username = data.data.username;
-          profile.level = data.data.level;
-          profile.api = api;
-          database.wanikaniProfile.value = profile;
-          localStorage.setItem("user", JSON.stringify(profile));
-          return true;
-        }
-        return false;
-      });
+  static logout() {
+    Storage.clear();
   }
 }
 
-const auth = new Auth();
-auth.loadSaved();
-
-export default auth;
+// And we will try to login on the startup
+Auth.login();

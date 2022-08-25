@@ -2,11 +2,13 @@
 import router from "@/router";
 import Button from "@/components/Button.vue";
 import Link from "@/components/Link.vue";
-import { database } from "@/storage/Database";
+import { Storage, User } from "@/storage/Database";
+import { Auth } from "@/storage/Auth";
 
 function goHome() { router.push({ name: "home" }); }
-const db = database;
-const profile = db.wanikaniProfile;
+const user = Storage.read<User>("user");
+
+function signOut() { Auth.logout(); }
 </script>
 
 <template>
@@ -25,13 +27,13 @@ const profile = db.wanikaniProfile;
 
     <div class="dropdown profile">
       <Button dropdown plain icon="person-circle">
-        {{ profile ? profile.username : "Profile" }}
+        {{ user ? user.username : "Profile" }}
       </Button>
       <div class="dropdown-menu dropdown-menu-end profile-menu">
         <ul class="profile-links">
-          <Link v-if="profile == undefined" :to="{name: 'login'}" class="dropdown-item">Sign in</Link>
+          <Link v-if="user == undefined" :to="{name: 'login'}" class="header-link dropdown-item">Sign in</Link>
           <Button class="dropdown-item disabled" href="#">Settings</Button>
-          <Button v-if="profile != undefined" class="dropdown-item disabled">Sign out</Button>
+          <Button v-if="user != undefined" @click="signOut" class="header-link dropdown-item">Sign out</Button>
         </ul>
       </div>
     </div>
@@ -54,9 +56,6 @@ const profile = db.wanikaniProfile;
 .header-link {
   text-decoration: none;
   color: black;
-}
-.header-link:hover {
-  cursor: pointer;
 }
 .logo {
   position: absolute;
