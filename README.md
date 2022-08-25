@@ -32,7 +32,7 @@ npm run lint
 ```sh
 docker build -t <image name> .
 ```
-<image name> can be as per your choice 
+image name can be as per your choice 
 ```sh
 docker build -t kazan .
 ```
