@@ -37,7 +37,7 @@ image name can be as per your choice
 docker build -t kazan .
 ```
 
-##### image
+##### Run created image 
 ```sh
 docker run  <image name>
 ```
