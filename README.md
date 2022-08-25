@@ -27,18 +27,21 @@ npm run lint
 ```
 ### Docker Setup
 
-##### Start container with docker-compose
-```sh
-docker-compose up
-```
-##### Stop container with docker-compose
-```sh
-docker-compose down
-```
-##### Custom build and run
+
+##### Custom build 
 ```sh
 docker build -t <image name> .
 ```
+<image name> can be as per your choice 
 ```sh
-docker run -v <local directory>:/usr/app <image name>
+docker build -t kazan .
 ```
+
+##### image
+```sh
+docker run  <image name>
+```
+app will run on port `:5173` 
+Use `-it` or `-d` flag to specify interactive or detached mode respectively
+For Development use bind mount with `-v' or '--mount' flag
+
