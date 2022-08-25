@@ -759,7 +759,6 @@ export class Dictionary {
       else { primary = meaning.meaning; }
     }
     word.meanings = [ primary ].concat(word.meanings);
-    console.log(word);
     return word;
   }
 
