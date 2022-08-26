@@ -1,14 +1,17 @@
 # Base image
-FROM node
+FROM node:16
 
 # Work Directory in container
 WORKDIR /usr/app
 
-# COPY package.json and source code files
-COPY ./ /usr/app
+# Install app dependencies
+COPY package*.json ./
+RUN npm ci
 
-# Install dependencies
-RUN npm install
+# Copy source code
+COPY . .
+
+EXPOSE 5173
 
 # Set up a default command
-CMD [ "npm","run","dev" ]
+CMD [ "npm", "run", "dev", "--", "--host" ]
