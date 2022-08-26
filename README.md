@@ -7,11 +7,13 @@ You can run local dev server either by using `npm` directly or by using docker c
 
 ## Using Docker
 
-Start local dev server using `docker-compose`.
+Start local dev server with `docker-compose` by using the current state
+of the source code:
 ```sh
 docker-compose up
 ```
-It will bind your current directory to the content of the docker container allowing you to make changes interactively.
+Please keep in mind that in order to see your changes, you need
+to rebuild the docker image.
 
 Stop running local dev server:
 ```sh
