@@ -11,17 +11,23 @@ const props = defineProps<{
   switched?: boolean;
 }>();
 
+function click(e: any) {
+  (document.activeElement as HTMLElement).blur();
+  emits('click', e);
+}
 </script>
 
 <template>
   <button
-    @click="(e) => emits('click', e)"
+    @click="click"
+    class="kz-text"
     :class="{ 
       plain: plain, 
       btn: !plain, 
-      disabled: props.disabled, 
+      'kz-button': !plain,
+      'kz-button-disabled': props.disabled, 
       'dropdown-toggle': dropdown, 
-      switched: props.switch && props.switched }"
+      'kz-button-active': props.switch && props.switched }"
     :data-bs-toggle="dropdown ? 'dropdown' : ''">
     <div v-if="props.label" class="m">{{ props.label }}</div>
     <i v-if="props.icon" :class="'bi bi-' + props.icon"></i> <slot />
@@ -29,23 +35,12 @@ const props = defineProps<{
 </template>
 
 <style scoped>
-.switched {
-  background-color: rgba(0,0,0,0.5) !important;
-  color: white !important;
-}
 .plain {
   border: none;
   margin: 0;
   padding: 0;
   background-color: rgba(0,0,0,0);
   outline: none;
-}
-.btn {
-  position: relative;
-  border: 1px solid rgba(0, 0, 0, 0.1);
-}
-.btn:hover {
-  border-color: rgba(0, 0, 0, 0.25);
 }
 .m {
   position: absolute;

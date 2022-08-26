@@ -1,4 +1,4 @@
-import { WaniKani } from "@/storage/WaniKani";
+import { WaniKani } from "@/core/WaniKani";
 import { watch, type Ref } from "vue";
 import { ref } from "vue";
 import Card from "./Card";
@@ -546,59 +546,65 @@ export class User {
 type StorageRef<T> = Ref<T | undefined>;
 
 /**
- * Completely reactive storage. Allows you 
- * to wait for values to appear in the storage and react
- * to their changes.
+ * Completely reactive persistant storage 
+ * powered by browser local storage.
  */
 export class Storage {
 
-  // in-memory cache of references
+  // In memory storage which stores everything
+  // loaded from (or saved to) local storage.
   static cache = new Map<string, Ref<any>>();
 
   /**
-   * Reads entry from the database and if there is no such entry,
-   * will read value of that entry from the retriever and save it to
-   * the database.
+   * Reads a value from the storage, and if it doesn't exist
+   * calls retriever and saves its result as a new value.
    * 
-   * @param key key of entry 
-   * @param retriever promise that will return an object to store
+   * @param key key for value
+   * @param retriever promise that will return a value to store
    */
   static readOrRequest<T>(key: string, retriever: () => Promise<T>): Promise<Ref<T | undefined>> {
-    // Look at saved data
+    // Get saved value
     const saved = Storage.read<T>(key);
     if (saved.value) { return Promise.resolve(saved); }
 
-    // Wait for the value 
+    // If doesn't exist, call the retriever
     return retriever().then(v => { return Storage.save(key, v); });
   }
 
   /**
-   * Saves entry to the database
-   * @param key key of entry
-   * @param value actual value of that entry
+   * Saves the value in the storage
+   * 
+   * @param key key for value 
+   * @param value value to save
    */
   static save<T>(key: string, value: T): StorageRef<T> {
+    // Save to in-memory storage
     const valueRef = Storage.getCachedRef<T>(key);
     valueRef.value = value;
+    // Save to the browser local storage
     localStorage.setItem(key, JSON.stringify(value));
+
+    // Every time when this value is updated
+    // we should save those updates to permament storage (localStorage)
+    watch(valueRef, value => localStorage.setItem(key, JSON.stringify(value)));
+
     return valueRef;
   }
 
   /**
-   * Reads data from the database and tries 
-   * to return it immidiately (or returns undefined if entry is not found)
+   * Reads a value from the storage.
+   * @param key key for the value
    */
   static read<T>(key: string): StorageRef<T> {
-    // Look for the reference in the in-memory cache
+    // Look for the value in in-memory storage
     const valueRef = Storage.getCachedRef<T>(key);
     if (valueRef.value) { return valueRef; }
 
-    // Now let's look at what browser stores in LocalStorage
+    // Otherwise read value from the browser local storage
     const storageEntry = localStorage.getItem(key);
     if (storageEntry) {
       const value = JSON.parse(storageEntry);
-      // if we found something, we will update in-memory
-      // reference for that entry
+      // Update in-memory value
       valueRef.value = value;
     }
 
@@ -607,11 +613,14 @@ export class Storage {
   }
 
   /**
-   * Removes any data from both in-memory cache and from the local storage
+   * Removes any data from both in-memory storage 
+   * and from the local storage
    */
   static delete(key: string) {
+    // Remove from in-memory storage
     const valueRef = Storage.getCachedRef(key);
     valueRef.value = undefined;
+    // Remove from the browser local storage
     localStorage.removeItem(key);
   }
 
@@ -623,6 +632,11 @@ export class Storage {
     this.cache.forEach((value) => { value.value = undefined; })
   }
 
+  /**
+   * Gets a reference for a value in the in-memory storage.
+   * @param key key of the value
+   * @returns reference to the value
+   */
   private static getCachedRef<T>(key: string): StorageRef<T> {
     const cachedRef = this.cache.get(key);
     if (cachedRef) { return cachedRef; }
@@ -631,7 +645,6 @@ export class Storage {
     this.cache.set(key, newRef);
     return newRef as StorageRef<T>;
   }
-
 }
 
 export class Word2 {

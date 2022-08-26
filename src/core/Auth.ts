@@ -1,5 +1,5 @@
-import { Storage, User } from "@/storage/Database";
-import { WaniKani } from "@/storage/WaniKani";
+import { Storage, User } from "@/core/Database";
+import { WaniKani } from "@/core/WaniKani";
 
 export class Auth {
 

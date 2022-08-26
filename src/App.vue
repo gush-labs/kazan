@@ -34,6 +34,43 @@ import Header from "./components/Header.vue";
   }
 }
 
+/* THEME  */
+:root {
+  --text-base-color: #212529;
+  --text-light-color: white;
+  --border-base-color: rgba(0,0,0,0.1);
+  --border-hover-color: rgba(0,0,0,0.25);
+  --button-active-color: rgba(0,0,0,0.5);
+  --button-disabled-opacity: 0.65;
+}
+.kz-text {
+  color: var(--text-base-color);
+}
+.kz-button {
+  position: relative;
+  border: 1px solid var(--border-base-color);
+}
+.kz-button:hover {
+  border: 1px solid var(--border-hover-color);
+}
+.kz-button:focus {
+  border: 1px solid var(--border-hover-color);
+}
+.kz-button-active {
+  color: var(--text-light-color) !important;
+  background-color: var(--button-active-color) !important;
+}
+.kz-button-disabled {
+  opacity: var(--button-disabled-opacity);
+}
+.kz-button-disabled:focus {
+  border: 1px solid var(--border-base-color) !important;
+}
+.kz-button-disabled:hover {
+  cursor: default;
+  border: 1px solid var(--border-base-color) !important;
+}
+
 /* Fonts for japanese texts (not great, but better than default ones) */
 .japanese {
   font-family: 'Noto Sans JP', sans-serif;

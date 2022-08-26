@@ -11,13 +11,23 @@ const props = defineProps<{
   to: any;
 }>();
 
-
+function click(e: any) {
+  (document.activeElement as HTMLElement).blur();
+  emits('click', e);
+}
 </script>
 
 <template>
   <router-link :to="to"
-    @click="(e) => emits('click', e)"
-    :class="{ plain: plain, btn: !plain, disabled: props.disabled, 'dropdown-toggle': dropdown }"
+    @click="click"
+    class="kz-text"
+    :class="{ 
+      plain: plain, 
+      btn: !plain, 
+      'kz-button': !plain,
+      'kz-button-disabled': props.disabled, 
+      'dropdown-toggle': dropdown 
+    }"
     :data-bs-toggle="dropdown ? 'dropdown' : ''">
     <div v-if="props.label" class="m">{{ props.label }}</div>
     <i v-if="props.icon" :class="'bi bi-' + props.icon"></i> <slot />
@@ -31,13 +41,6 @@ const props = defineProps<{
   padding: 0;
   background-color: rgba(0,0,0,0);
   outline: none;
-}
-.btn {
-  position: relative;
-  border: 1px solid rgba(0, 0, 0, 0.1);
-}
-.btn:hover {
-  border-color: rgba(0, 0, 0, 0.25);
 }
 .m {
   position: absolute;

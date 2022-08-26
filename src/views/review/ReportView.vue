@@ -1,7 +1,7 @@
 <script setup lang="ts">
-import type { Review } from "@/storage/Review";
-import Button from "../../components/Button.vue";
 import Distribution from "@/components/Distribution.vue";
+import Button from "@/components/Button.vue";
+import type { Review } from "@/core/Review";
 import router from "@/router";
 
 const emits = defineEmits(["start"]);

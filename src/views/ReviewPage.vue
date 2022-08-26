@@ -1,10 +1,10 @@
 <script setup lang="ts">
-import { ref } from "vue";
-import { database, generateCards } from "@/storage/Database";
-import { Review, RandomPicker } from "@/storage/Review";
+import { database, generateCards } from "@/core/Database";
+import { Review, RandomPicker } from "@/core/Review";
 import ReportView from "@/views/review/ReportView.vue";
 import translator from "@/language/Translator.js";
 import router from "@/router";
+import { ref } from "vue";
 
 function createReview(collection: Array<Array<string>>, kana = "romanji"): Review {
   return new Review(new RandomPicker(generateCards(collection)), kana);

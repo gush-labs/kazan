@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import Button from "../components/Button.vue";
+import Button from "@/components/Button.vue";
 import router from "@/router";
 
 const links = [
@@ -30,7 +30,7 @@ const links = [
 </script>
 
 <template>
-<div class="d-flex flex-column justify-content-center pt-2 mt-5 mb-5">
+<div class="d-flex flex-column justify-content-center pt-5 mt-5 mb-5">
   <div class="list-container">
 
     <div class="d-flex flex-row justify-content-center">

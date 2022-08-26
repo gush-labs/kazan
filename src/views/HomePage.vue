@@ -1,8 +1,8 @@
 <script setup lang="ts">
-import router from "@/router";
-import { ref, watch } from "vue";
 import Link from "@/components/Link.vue";
+import { ref, watch } from "vue";
 import type { Ref } from "vue";
+import router from "@/router";
 
 class ButtonItem {
   name: string = "";
@@ -89,7 +89,7 @@ watch(() => router.currentRoute.value.params.page, (newPage) => {
               {{ parentPage.name }}
             </Link>
           </div>
-          <Link :to="{ name: 'learning' }" class="text-muted" plain>Learning resources</Link>
+          <Link :to="{ name: 'learning' }" class="text-muted" icon="book" plain>Learning resources</Link>
         </div>
         <div>
           <h4>{{ currentPage.title }}</h4>

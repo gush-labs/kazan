@@ -1,4 +1,4 @@
-import { Storage } from "@/storage/Database";
+import { Storage } from "@/core/Database";
 
 export class WaniKani {
 

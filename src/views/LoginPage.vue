@@ -1,9 +1,9 @@
 <script setup lang="ts">
+import { Storage, User } from "@/core/Database";
 import Button from "@/components/Button.vue";
-import { Storage, User } from "@/storage/Database";
-import { Auth } from "@/storage/Auth";
-import { ref } from "vue";
+import { Auth } from "@/core/Auth";
 import router from "@/router";
+import { ref } from "vue";
 
 const input = ref("");
 const loading = ref(false);

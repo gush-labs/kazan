@@ -1,4 +1,4 @@
-import { database } from "@/storage/Database";
+import { database } from "@/core/Database";
 
 const hiragana: Map<string, string> = new Map(); // romaji -> hiragana
 const katakana: Map<string, string> = new Map(); // romaji -> katakana

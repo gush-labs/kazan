@@ -1,10 +1,10 @@
 <script setup lang="ts">
-import { reactive, ref, watch } from "vue";
-import router from "@/router";
-import { database } from "@/storage/Database";
-import type { Ref } from "vue";
 import Button from "@/components/Button.vue";
+import { database } from "@/core/Database";
+import { reactive, ref, watch } from "vue";
 import Link from "@/components/Link.vue";
+import router from "@/router";
+import type { Ref } from "vue";
 
 const monographs: string[] = [
   "a", "ka", "sa", "ta", "na", 
@@ -83,7 +83,6 @@ function allDiacritics(switched: boolean) {
   <Link 
     :to="{name: 'review', query: {entries: kanaToReview.toString(), db: name.toLowerCase() }}" 
     class="mt-3" 
-    :class="{ 'fw-bold': someSelected }"
     :disabled="!someSelected">
     {{ someSelected ? "Start!" : "Select kana to practice"}}
   </Link>

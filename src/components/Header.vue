@@ -1,9 +1,9 @@
 <script setup lang="ts">
-import router from "@/router";
+import { Storage, User } from "@/core/Database";
 import Button from "@/components/Button.vue";
 import Link from "@/components/Link.vue";
-import { Storage, User } from "@/storage/Database";
-import { Auth } from "@/storage/Auth";
+import { Auth } from "@/core/Auth";
+import router from "@/router";
 
 function goHome() { router.push({ name: "home" }); }
 const user = Storage.read<User>("user");
@@ -55,7 +55,6 @@ function signOut() { Auth.logout(); }
 }
 .header-link {
   text-decoration: none;
-  color: black;
 }
 .logo {
   position: absolute;
