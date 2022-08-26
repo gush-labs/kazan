@@ -89,7 +89,7 @@ watch(() => router.currentRoute.value.params.page, (newPage) => {
               {{ parentPage.name }}
             </Link>
           </div>
-          <div>Learning resources</div>
+          <Link :to="{ name: 'learning' }" class="text-muted" plain>Learning resources</Link>
         </div>
         <div>
           <h4>{{ currentPage.title }}</h4>

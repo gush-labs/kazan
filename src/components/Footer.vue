@@ -1,10 +1,9 @@
 <template>
   <div class="footer d-flex flex-row justify-content-center text-muted">
     <div>
-      version 0.3 <i class="bi bi-dot"></i>
-      <a class="author-link text-muted" href="https://github.com/vadimgush"
-        >@vadimgush</a
-      >
+      version 0.4 
+      <i class="bi bi-dot"></i>
+      <a class="author-link text-muted" href="https://github.com/gush-labs">@gush-labs</a>
     </div>
   </div>
 </template>

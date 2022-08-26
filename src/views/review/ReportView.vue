@@ -35,8 +35,8 @@ const congrat = congrats[Math.floor(Math.random() * 3)]
 
   <div class="stats-window mb-3 pb-3">
     <div class="flex-fill completed"><i class="bi bi-circle"></i>&nbsp;{{ review.getCorrectCards().length }}&nbsp;completed</div>
-    <div class="flex-fill hard"><i class="bi bi-clock-history"></i> 5 hard</div>
-    <div class="flex-fill mistakes"><i class="bi bi-x-lg"></i> {{ review.getIncorrectCards().length }} mistakes</div>
+    <div class="flex-fill hard"><i class="bi bi-clock-history"></i>&nbsp;5&nbsp;slowest</div>
+    <div class="flex-fill mistakes"><i class="bi bi-x-lg"></i>&nbsp;{{ review.getIncorrectCards().length }}&nbsp;mistakes</div>
   </div>
 
   <div v-if="cards.length > 0" class="report mb-3">
@@ -52,10 +52,12 @@ const congrat = congrats[Math.floor(Math.random() * 3)]
     <Button  icon="arrow-repeat"
       @click="() => emits('start', review.repeat())">Repeat all</Button>
     <Button v-if="allCorrect" icon="clock-history"
-      @click="() => {}">Repeat hard</Button>
+      @click="() => {}" disabled>Repeat slowest</Button>
     <Button v-if="!allCorrect" 
       @click="() => emits('start', review.repeatIncorrect())">Repeat incorrect</Button>
-    <Button icon="arrow-return-left"
+  </div>
+  <div class="complete-container">
+    <Button icon="arrow-return-left" class="w-100"
       @click="() => router.back()">Complete</Button>
   </div>
 </div>
@@ -66,6 +68,9 @@ const congrat = congrats[Math.floor(Math.random() * 3)]
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(11em, 1fr));
   gap: 1em;
+}
+.complete-container .btn {
+  margin-top: 1em;
 }
 
 .report {
