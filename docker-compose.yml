@@ -2,7 +2,5 @@ version: "3.0"
 services:
   kazan:
     build: .
-    volumes:
-      - ./:/usr/app
     ports:
       - "5173:5173"
