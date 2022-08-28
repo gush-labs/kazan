@@ -8,7 +8,7 @@ import { ref } from "vue";
 const input = ref("");
 const loading = ref(false);
 const error = ref("");
-const user = Storage.read<User>("user");
+const user = Storage.read<User>(User.storageKey);
 
 function signIn() {
   if (input.value.length == 0) { return; }

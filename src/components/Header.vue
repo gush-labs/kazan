@@ -6,7 +6,7 @@ import { Auth } from "@/core/Auth";
 import router from "@/router";
 
 function goHome() { router.push({ name: "home" }); }
-const user = Storage.read<User>("user");
+const user = Storage.read<User>(User.storageKey);
 
 function signOut() { Auth.logout(); }
 </script>

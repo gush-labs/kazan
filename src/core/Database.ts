@@ -534,13 +534,16 @@ export function generateCards(entries: Array<Array<string>>): Card[] {
   return entries.map(entry => Card.create("", entry[0], [entry[1]]));
 }
 
-// NEW API FOR DATABASE
+// ================== NEW API FOR DATABASE =====================
+//         everything above this line should be removed
 
 export class User {
   apiKey: string = "";
   username: string = "";
   level: number = 0;
   paid: boolean = false;
+
+  static get storageKey(): string { return "user"; }
 }
 
 type StorageRef<T> = Ref<T | undefined>;
@@ -603,11 +606,15 @@ export class Storage {
     if (valueRef.value) { return valueRef; }
 
     // Otherwise read value from the browser local storage
-    const storageEntry = localStorage.getItem(key);
-    if (storageEntry) {
-      const value = JSON.parse(storageEntry);
-      // Update in-memory value
-      valueRef.value = value;
+    try {
+      const storageEntry = localStorage.getItem(key);
+      if (storageEntry) {
+        const value = JSON.parse(storageEntry);
+        // Update in-memory value
+        valueRef.value = value;
+      }
+    } catch (error) {
+      console.error("Failed to read data from the storage", error);
     }
 
     // And return whatever we have in-memory currently
@@ -768,8 +775,6 @@ export class Dictionary {
     
     return WaniKani.request("subjects", query)
       .then(response => {
-
-        console.log("Requesting subjects");
         const nextUrl: string = response.pages.next_url;
         if (nextUrl) {
           const id = nextUrl.split("?")[1].split("&")[0].split("=")[1];
@@ -827,4 +832,4 @@ export class Dictionary {
 
 // As soon as user will login
 // we will load a dictionary from WaniKani
-Storage.onChange<User>("user", (user) => Dictionary.load(user));
+Storage.onChange<User>(User.storageKey, (user) => Dictionary.load(user));
