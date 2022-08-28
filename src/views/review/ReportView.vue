@@ -8,13 +8,9 @@ const emits = defineEmits(["start"]);
 const props = defineProps<{ review: Review; }>();
 
 const review = props.review;
-// const picker = review.picker;
-
 const cards: Array<any> = review.getIncorrectCards()
   .map(card => { return { target: card.target, correct: false }});
 const allCorrect = review.getIncorrectCards().length == 0;
-
-// picker.getIncorrect().forEach(card => cards.push({ target: card.target, correct: false }));
 
 const congrats = [
   "No mistakes! Good job!",

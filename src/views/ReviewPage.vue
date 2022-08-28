@@ -112,7 +112,7 @@ function checkAnswer(e: any) {
       <div class="completed">
         <i class="bi bi-circle"></i> {{ review.getCorrectCards().length }} completed
       </div>
-      <div class="">{{ Math.round(review.progress() * 100) }}%</div>
+      <div class="">{{ Math.floor(review.progress() * 100) }}%</div>
       <div class="mistakes">
         <i class="bi bi-x-lg"></i> {{ review.getIncorrectCards().length }} mistakes
       </div>

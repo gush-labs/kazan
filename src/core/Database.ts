@@ -586,7 +586,9 @@ export class Storage {
 
     // Every time when this value is updated
     // we should save those updates to permament storage (localStorage)
-    watch(valueRef, value => localStorage.setItem(key, JSON.stringify(value)));
+    watch(valueRef, value => {
+      if (value) {localStorage.setItem(key, JSON.stringify(value)) }
+    });
 
     return valueRef;
   }
@@ -625,11 +627,34 @@ export class Storage {
   }
 
   /**
+   * Triggers a certain action when value with a certain
+   * key is removed from the storage 
+   * @param key key of the stored value
+   * @param action action to perform on remove
+   */
+  static onRemove<T>(key: string, action: () => void) {
+    const ref = this.read<T>(key);
+    watch(ref, (value) => { if (value == undefined) { action(); }})
+  }
+
+  /**
+   * Triggers a certain action when value with a certain
+   * key is updated in the storage (if removed this method 
+   * will not be called)
+   * @param key  key of the stored value
+   * @param action action to perform on update
+   */
+  static onChange<T>(key: string, action: (newValue: T) => void) {
+    const ref = this.read<T>(key);
+    watch(ref, (value) => { if (value) { action(value); }})
+  }
+
+  /**
    * Removes all data from the storage
    */
   static clear() {
-    localStorage.clear();
     this.cache.forEach((value) => { value.value = undefined; })
+    localStorage.clear();
   }
 
   /**
@@ -659,6 +684,11 @@ export class Word2 {
   get primaryReading(): string { return this.readings[0]; }
 }
 
+enum DictionaryState {
+  READY,
+  EMPTY
+}
+
 export class Dictionary {
 
   // This is version of our current vocabulary format
@@ -666,37 +696,45 @@ export class Dictionary {
   // this value should be incremented
   static databaseRevision: number = 1;
 
+  static state = DictionaryState.EMPTY;
   static vocabulary = new Map<number, Word2>();
   static wanikaniLevels = new Map<number, number[]>();
 
   /**
    * Loads dictionary from WaniKani (requires user, because it should be logged in)
    */
-  static load() {
-    // Check if user is logged in
-    const userRef = Storage.read<User>("user");
-    // If we already have all required data, then 
-    // there is no need to perform an update
-    if (!userRef.value || this.vocabulary.size > 0) { return; }
-    const user = userRef.value!;
+  static load(user: User) {
+    const vocabStorageName = "vocabulary-" + this.databaseRevision;
 
-    // Get vocabulary
-    const rev = this.databaseRevision;
-    Storage.readOrRequest("vocabulary-" + rev, () => this.requestVocabulary(user))
+    // If dictionary is already filled with data
+    // then there is nothing to load
+    if (this.state == DictionaryState.READY) { return; }
+
+    // Get vocabulary and save to the storage
+    Storage.readOrRequest(vocabStorageName, () => this.requestVocabulary(user))
       .then(vocabRef => {
-        if (vocabRef.value == undefined) { return; }
+        const vocab = vocabRef.value;
+        if (vocab == undefined) { return; }
 
         // Get every word from vocabulary and move it to 
         // different structures
-        const vocab = vocabRef.value!;
         vocab.forEach(word => { 
           this.vocabulary.set(word.id, word as Word2); 
           const level = word.level;
           if (!this.wanikaniLevels.get(level)) { this.wanikaniLevels.set(level, []); }
           this.wanikaniLevels.get(level)!.push(word.id);
         });
+
+        // Mark dictionary as ready to use
+        this.state = DictionaryState.READY;
         console.log("Dictionary: loaded " + this.vocabulary.size + " words");
       });
+  
+    // If vocab is removed from the storage
+    // then dictionary should be marked as empty
+    Storage.onRemove(vocabStorageName, () => {
+      this.state = DictionaryState.EMPTY;
+    });
   }
 
   private static requestVocabulary(user: User): Promise<Word2[]> {
@@ -731,6 +769,7 @@ export class Dictionary {
     return WaniKani.request("subjects", query)
       .then(response => {
 
+        console.log("Requesting subjects");
         const nextUrl: string = response.pages.next_url;
         if (nextUrl) {
           const id = nextUrl.split("?")[1].split("&")[0].split("=")[1];
@@ -786,7 +825,6 @@ export class Dictionary {
   static review(query: string, params: any[]): Card[] { return []; }
 }
 
-// In case if user is logged in, we want to load all 
-// his vocabulary from WaniKani
-const userRef = Storage.read<User>("user");
-watch(userRef, () => { Dictionary.load(); });
+// As soon as user will login
+// we will load a dictionary from WaniKani
+Storage.onChange<User>("user", (user) => Dictionary.load(user));
