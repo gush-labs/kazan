@@ -1,4 +1,3 @@
-
 class Card {
   id: number = 0;
   type: string = "";
@@ -13,7 +12,7 @@ class Card {
     return card;
   }
 
-  answer(): string {
+  get answer(): string {
     return this.answers[0];
   }
 

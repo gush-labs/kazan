@@ -86,13 +86,13 @@ function checkAnswer(e: any) {
 
 <template>
   <div v-if="!complete" class="d-flex flex-column justify-content-center">
-    <div :class="{ wrong: wrong }" class="review-window text-center">
-      <div class="review-title d-flex flex-column justify-content-end"><div>
-        <!-- Here will be the type of the card -->
-      </div></div>
+    <div :class="{ 'kz-text-dunger': wrong }" class="review-window text-center">
+      <div class="d-flex flex-column justify-content-end fw-bold">
+        <div>{{ card.type }}</div>
+      </div>
       <div><h1 class="review-target japanese">{{ card.target }}</h1></div>
       <div class="review-answer d-flex flex-column justify-content-start">
-        <div v-if="wrong">{{ card.answer() }}</div>
+        <div v-if="wrong">{{ card.answer }}</div>
       </div>
     </div>
 
@@ -101,7 +101,7 @@ function checkAnswer(e: any) {
         <input
           v-model="input"
           @input="onChange"
-          class="answer-form form-control"
+          class="answer-form form-control japanese"
           placeholder=""
           spellcheck="false"
         />
@@ -109,13 +109,9 @@ function checkAnswer(e: any) {
     </div>
 
     <div class="stats-window mb-5">
-      <div class="completed">
-        <i class="bi bi-circle"></i> {{ review.getCorrectCards().length }} completed
-      </div>
-      <div class="">{{ Math.floor(review.progress() * 100) }}%</div>
-      <div class="mistakes">
-        <i class="bi bi-x-lg"></i> {{ review.getIncorrectCards().length }} mistakes
-      </div>
+      <div class="kz-text-success"><i class="bi bi-circle"></i> {{ review.getCorrectCards().length }} completed</div>
+      <div>{{ Math.floor(review.progress() * 100) }}%</div>
+      <div class="kz-text-error"><i class="bi bi-x-lg"></i> {{ review.getIncorrectCards().length }} mistakes</div>
     </div>
   </div>
 
@@ -123,28 +119,11 @@ function checkAnswer(e: any) {
 </template>
 
 <style scoped>
-.progress {
-  background-color: #e1d7c0;
-  border-radius: 10px 10px 0px 0px;
-}
-.progress-bar {
-  background-color: #b6ab90;
-}
-.wrong {
-  color: rgb(176, 56, 56) !important;
-}
-
 .stats-window {
   border-radius: 10px;
   text-align: center;
   display: grid;
   grid-template-columns: 1fr 1fr 1fr;
-}
-.stats-window .completed {
-  color: rgb(25, 79, 13);
-}
-.stats-window .mistakes {
-  color: rgb(82, 17, 17);
 }
 
 .review-window {
@@ -162,14 +141,13 @@ function checkAnswer(e: any) {
 }
 
 .answer-container .answer-form {
-  border: 1px solid rgba(0, 0, 0, 0.1);
+  border: 1px solid var(--border-base-color);
   border-radius: 0px;
   text-align: center;
   font-size: 2em;
 }
 
-textarea:focus,
-input:focus {
+textarea:focus, input:focus {
   outline: none;
 }
 </style>

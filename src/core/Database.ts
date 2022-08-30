@@ -1,7 +1,8 @@
+import { watchUpdate, watchRemove } from "@/core/Utils";
+import { ref, watch, type Ref } from "vue";
 import { WaniKani } from "@/core/WaniKani";
-import { watch, type Ref } from "vue";
-import { ref } from "vue";
-import Card from "./Card";
+import { Status } from "@/core/Status";
+import Card from "@/core/Card";
 
 type Word = {
   japanese: string; // full word in japanese using kanji, hiragana and katakana
@@ -379,12 +380,6 @@ const jlpt_l1_vocabular = [
   "食べる"
 ]
 
-export class WanikaniProfile {
-  username: string = "";
-  level: number = 0;
-  api: string = "";
-}
-
 class Database {
   hiragana = {
     alphabet: {
@@ -489,8 +484,6 @@ class Database {
     jlpt: [ jlpt_l1_vocabular ]
   };
 
-  wanikaniProfile: Ref<WanikaniProfile | undefined> = ref(undefined);
-
   wordsReadings(words: string[]) {
     return this.findData(words, (word) => {
       const entry = vocabular.get(word);
@@ -531,22 +524,24 @@ class Database {
 export const database = new Database();
 
 export function generateCards(entries: Array<Array<string>>): Card[] {
-  return entries.map(entry => Card.create("", entry[0], [entry[1]]));
+  return entries.map(entry => Card.create("Reading", entry[0], [entry[1]]));
 }
 
 // ================== NEW API FOR DATABASE =====================
 //         everything above this line should be removed
 
+
 export class User {
-  apiKey: string = "";
   username: string = "";
   level: number = 0;
   paid: boolean = false;
 
-  static get storageKey(): string { return "user"; }
+  static get ref(): StorageRef<User> { 
+    return Storage.get<User>("user"); 
+  }
 }
 
-type StorageRef<T> = Ref<T | undefined>;
+export type StorageRef<T> = Ref<T | undefined>;
 
 /**
  * Completely reactive persistant storage 
@@ -557,103 +552,63 @@ export class Storage {
   // In memory storage which stores everything
   // loaded from (or saved to) local storage.
   static cache = new Map<string, Ref<any>>();
+  static version: number = 2;
 
   /**
-   * Reads a value from the storage, and if it doesn't exist
-   * calls retriever and saves its result as a new value.
-   * 
-   * @param key key for value
-   * @param retriever promise that will return a value to store
+   * Verifies storage and clears it in case of any issues
    */
-  static readOrRequest<T>(key: string, retriever: () => Promise<T>): Promise<Ref<T | undefined>> {
-    // Get saved value
-    const saved = Storage.read<T>(key);
-    if (saved.value) { return Promise.resolve(saved); }
+  static verify() {
+    const rawVersion = localStorage.getItem("version");
+    if (rawVersion) {
+      const version = JSON.parse(rawVersion) as number;
+      if (version == this.version) { return; }
+    }
 
-    // If doesn't exist, call the retriever
-    return retriever().then(v => { return Storage.save(key, v); });
+    localStorage.clear();
+    localStorage.setItem("version", this.version + '');
   }
 
   /**
-   * Saves the value in the storage
-   * 
-   * @param key key for value 
-   * @param value value to save
+   * Get reference to the value in the storage.
+   * If value is missing, call the retriever to get a value.
    */
-  static save<T>(key: string, value: T): StorageRef<T> {
-    // Save to in-memory storage
-    const valueRef = Storage.getCachedRef<T>(key);
-    valueRef.value = value;
-    // Save to the browser local storage
-    localStorage.setItem(key, JSON.stringify(value));
+  static cached<T>(key: string, retriever: () => Promise<T>): Promise<Ref<T | undefined>> {
+    const ref = Storage.get<T>(key);
+    if (ref.value) { return Promise.resolve(ref); }
 
-    // Every time when this value is updated
-    // we should save those updates to permament storage (localStorage)
-    watch(valueRef, value => {
-      if (value) {localStorage.setItem(key, JSON.stringify(value)) }
+    return retriever().then(v => { 
+      ref.value = v;
+      return ref;
     });
-
-    return valueRef;
   }
 
   /**
-   * Reads a value from the storage.
-   * @param key key for the value
+   * Get reference to the value in the storage
    */
-  static read<T>(key: string): StorageRef<T> {
+  static get<T>(key: string): StorageRef<T> {
     // Look for the value in in-memory storage
-    const valueRef = Storage.getCachedRef<T>(key);
-    if (valueRef.value) { return valueRef; }
+    const ref = Storage.getCachedRef<T>(key);
+    if (ref.value) { return ref; }
 
     // Otherwise read value from the browser local storage
     try {
       const storageEntry = localStorage.getItem(key);
       if (storageEntry) {
         const value = JSON.parse(storageEntry);
-        // Update in-memory value
-        valueRef.value = value;
+        ref.value = value;
       }
     } catch (error) {
       console.error("Failed to read data from the storage", error);
     }
 
-    // And return whatever we have in-memory currently
-    return valueRef;
+    return ref;
   }
 
   /**
-   * Removes any data from both in-memory storage 
-   * and from the local storage
+   * Remove value from the storage
    */
   static delete(key: string) {
-    // Remove from in-memory storage
-    const valueRef = Storage.getCachedRef(key);
-    valueRef.value = undefined;
-    // Remove from the browser local storage
-    localStorage.removeItem(key);
-  }
-
-  /**
-   * Triggers a certain action when value with a certain
-   * key is removed from the storage 
-   * @param key key of the stored value
-   * @param action action to perform on remove
-   */
-  static onRemove<T>(key: string, action: () => void) {
-    const ref = this.read<T>(key);
-    watch(ref, (value) => { if (value == undefined) { action(); }})
-  }
-
-  /**
-   * Triggers a certain action when value with a certain
-   * key is updated in the storage (if removed this method 
-   * will not be called)
-   * @param key  key of the stored value
-   * @param action action to perform on update
-   */
-  static onChange<T>(key: string, action: (newValue: T) => void) {
-    const ref = this.read<T>(key);
-    watch(ref, (value) => { if (value) { action(value); }})
+    Storage.getCachedRef(key).value = undefined;
   }
 
   /**
@@ -662,12 +617,11 @@ export class Storage {
   static clear() {
     this.cache.forEach((value) => { value.value = undefined; })
     localStorage.clear();
+    localStorage.setItem("version", this.version + '');
   }
 
   /**
-   * Gets a reference for a value in the in-memory storage.
-   * @param key key of the value
-   * @returns reference to the value
+   * Gets a reference for a specific value
    */
   private static getCachedRef<T>(key: string): StorageRef<T> {
     const cachedRef = this.cache.get(key);
@@ -675,6 +629,14 @@ export class Storage {
     
     const newRef = ref<T | undefined>(undefined);
     this.cache.set(key, newRef);
+
+    // Every time when this value is updated
+    // we should save those updates to permament storage (localStorage)
+    watch(newRef, value => {
+      if (value) { localStorage.setItem(key, JSON.stringify(value)) }
+      else { localStorage.removeItem(key); }
+    });
+
     return newRef as StorageRef<T>;
   }
 }
@@ -696,12 +658,20 @@ enum DictionaryState {
   EMPTY
 }
 
-export class Dictionary {
+class Vocabulary {
+  version: number = 0;
+  words: Word2[] = [];
 
-  // This is version of our current vocabulary format
-  // whenever there is a change to the format of stored vocabulary
-  // this value should be incremented
-  static databaseRevision: number = 1;
+  static get requiredVersion(): number {
+    return new Vocabulary().version;
+  }
+
+  static get ref(): StorageRef<Vocabulary> {
+    return Storage.get<Vocabulary>("vocabulary");
+  }
+}
+
+export class Dictionary {
 
   static state = DictionaryState.EMPTY;
   static vocabulary = new Map<number, Word2>();
@@ -711,40 +681,39 @@ export class Dictionary {
    * Loads dictionary from WaniKani (requires user, because it should be logged in)
    */
   static load(user: User) {
-    const vocabStorageName = "vocabulary-" + this.databaseRevision;
-
-    // If dictionary is already filled with data
-    // then there is nothing to load
+    // Do not update vocabulary which is already filled with data
     if (this.state == DictionaryState.READY) { return; }
 
-    // Get vocabulary and save to the storage
-    Storage.readOrRequest(vocabStorageName, () => this.requestVocabulary(user))
-      .then(vocabRef => {
-        const vocab = vocabRef.value;
-        if (vocab == undefined) { return; }
-
-        // Get every word from vocabulary and move it to 
-        // different structures
-        vocab.forEach(word => { 
-          this.vocabulary.set(word.id, word as Word2); 
-          const level = word.level;
-          if (!this.wanikaniLevels.get(level)) { this.wanikaniLevels.set(level, []); }
-          this.wanikaniLevels.get(level)!.push(word.id);
-        });
-
-        // Mark dictionary as ready to use
-        this.state = DictionaryState.READY;
-        console.log("Dictionary: loaded " + this.vocabulary.size + " words");
+    const vocabRef = Vocabulary.ref;
+    if (!vocabRef.value || vocabRef.value.version != Vocabulary.requiredVersion) {
+      // If there is no vocabulary or it's outdated
+      // we should request it
+      this.requestVocabulary(user).then(vocabulary => { 
+        vocabRef.value = vocabulary; 
+        this.loadFromVocabulary(vocabulary);
       });
-  
-    // If vocab is removed from the storage
-    // then dictionary should be marked as empty
-    Storage.onRemove(vocabStorageName, () => {
-      this.state = DictionaryState.EMPTY;
-    });
+    } else {
+      this.loadFromVocabulary(vocabRef.value);
+    }
+
+    watchRemove(vocabRef, () => { this.state = DictionaryState.EMPTY; });
   }
 
-  private static requestVocabulary(user: User): Promise<Word2[]> {
+  private static loadFromVocabulary(vocabulary: Vocabulary) {
+    vocabulary.words.forEach(word => { 
+      this.vocabulary.set(word.id, word as Word2); 
+      const level = word.level;
+      if (!this.wanikaniLevels.get(level)) { this.wanikaniLevels.set(level, []); }
+      this.wanikaniLevels.get(level)!.push(word.id);
+    });
+
+    this.state = DictionaryState.READY;
+    console.log("Dictionary: loaded " + this.vocabulary.size + " words");
+  }
+
+  private static requestVocabulary(user: User): Promise<Vocabulary> {
+    Status.processStart("wksync", "Syncing vocabulary with WaniKani...");
+
     // WaniKani unable to return all database
     // so we need to request vocabulary page by page
     return new Promise(resolver => {
@@ -761,9 +730,16 @@ export class Dictionary {
         // If there are no more pages, we need to take all pages
         // that we have and combine them into one collection of words
         Promise.all(pageRequests).then((responses) => {
-          var result: Word2[] = [];
-          responses.forEach(response => result = result.concat(response));
-          resolver(result);
+          var words: Word2[] = [];
+          responses.forEach(response => words = words.concat(response));
+
+          const vocabulary = new Vocabulary();
+          vocabulary.words = words;
+          Status.processComplete("wksync");
+          resolver(vocabulary);
+        }).catch(() => {
+          Status.processComplete("wksync")
+          Status.setError("Failed to connect to WaniKani. Try to refresh the page.")
         });
       }));
     });
@@ -830,6 +806,8 @@ export class Dictionary {
   static review(query: string, params: any[]): Card[] { return []; }
 }
 
-// As soon as user will login
-// we will load a dictionary from WaniKani
-Storage.onChange<User>(User.storageKey, (user) => Dictionary.load(user));
+// Verify storage on startup
+Storage.verify();
+
+// If user will logged in, we should load a dictionary
+watchUpdate(User.ref, (user) => Dictionary.load(user));

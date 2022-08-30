@@ -1,5 +1,6 @@
 import { Storage, User } from "@/core/Database";
 import { WaniKani } from "@/core/WaniKani";
+import { Status } from "@/core/Status";
 
 export class Auth {
 
@@ -8,16 +9,13 @@ export class Auth {
    * @param response response from WaniKani
    * @returns if parsing is successfull, then return a new user, otherwse undefined
    */
-  private static parse(response: any): User | undefined {
+  private static parse(response: any): User {
     const data = response.data;
-    if (response.data && data.username && data.level) {
-      const user = new User();
-      user.username = data.username;
-      user.level = data.level;
-      user.paid = data.subscription.active;
-      return user;
-    }
-    return undefined;
+    const user = new User();
+    user.username = data.username;
+    user.level = data.level;
+    user.paid = data.subscription.active;
+    return user;
   }
 
   /**
@@ -26,16 +24,22 @@ export class Auth {
    */
   static login(): Promise<boolean> {
     return WaniKani.request("user").then(response => {
-      const apiKey = Storage.read<string>("wanikani").value;
-      if (response == undefined) { return false; };
-      
-      const user = Auth.parse(response);
-      if (user) { 
-        user.apiKey = apiKey!; 
-        Storage.save("user", user);
+      const api = WaniKani.ref.value?.apiKey;
+
+      // If we'd tried to login using saved WaniKani API key
+      // but failed, it means that this API key is not valid anymore
+      if (response != undefined && response.code == 401 && User.ref.value) { 
+        Status.setError("WaniKani API key is not valid anymore. Please sign in again.");
+        this.logout();
+        return false;
       }
-      return user != undefined;
-    });
+
+      // If required data is not present in the response we should just fail
+      if (!api || response == undefined || !response.data) { return false; };
+      
+      User.ref.value = Auth.parse(response);
+      return true;
+    }).catch(() => false);
   }
 
   static logout() {
@@ -43,5 +47,5 @@ export class Auth {
   }
 }
 
-// And we will try to login on the startup
+// login on startup
 Auth.login();

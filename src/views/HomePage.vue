@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import Link from "@/components/Link.vue";
-import { ref, watch } from "vue";
-import type { Ref } from "vue";
+import { ref, watch, type Ref } from "vue";
 import router from "@/router";
 
 class ButtonItem {

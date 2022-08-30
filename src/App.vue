@@ -34,17 +34,31 @@ import Header from "./components/Header.vue";
   }
 }
 
-/* THEME  */
+/* THEME */
 :root {
   --text-base-color: #212529;
   --text-light-color: white;
+  --text-error-color: rgb(97, 33, 33);
+  --text-dunger-color: rgb(176, 56, 56);
+  --text-success-color: rgb(25, 79, 13);
   --border-base-color: rgba(0,0,0,0.1);
   --border-hover-color: rgba(0,0,0,0.25);
   --button-active-color: rgba(0,0,0,0.5);
   --button-disabled-opacity: 0.65;
 }
+
+/* BASIC CLASSES */
 .kz-text {
   color: var(--text-base-color);
+}
+.kz-text-error {
+  color: var(--text-error-color);
+}
+.kz-text-dunger {
+  color: var(--text-dunger-color);
+}
+.kz-text-success {
+  color: var(--text-success-color);
 }
 .kz-button {
   position: relative;

@@ -1,5 +1,5 @@
 import translator from "@/language/Translator";
-import type Card from "./Card";
+import type Card from "@/core/Card";
 
 type Collection = Array<Card>;
 
@@ -181,12 +181,12 @@ export class Review {
   }
 
   verify(card: Card, input: string): boolean {
-    const romanjiAnswer = translator.toRomaji(card.answer()); // what?
+    const romanjiAnswer = translator.toRomaji(card.answer); // what?
     const romanjiInput = translator.toRomaji(input);
 
     const correct =
-      card.answer() === input ||
-      card.answer() === romanjiInput ||
+      card.answer === input ||
+      card.answer === romanjiInput ||
       romanjiAnswer === input ||
       romanjiAnswer === romanjiInput;
 

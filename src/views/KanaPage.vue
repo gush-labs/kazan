@@ -1,10 +1,9 @@
 <script setup lang="ts">
+import { reactive, ref, watch, type Ref } from "vue";
 import Button from "@/components/Button.vue";
 import { database } from "@/core/Database";
-import { reactive, ref, watch } from "vue";
 import Link from "@/components/Link.vue";
 import router from "@/router";
-import type { Ref } from "vue";
 
 const monographs: string[] = [
   "a", "ka", "sa", "ta", "na", 

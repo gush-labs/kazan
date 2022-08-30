@@ -5,33 +5,31 @@ const katakana: Map<string, string> = new Map(); // romaji -> katakana
 const romaji: Map<string, string> = new Map(); // kana -> romaji
 const alphabet: Set<string> = new Set("a b c d e f g h i j k l m n o p q r s t u v w x y z".split(" "));
 
-// Fills collections above with the actual data from the database
-(() => {
-  function setToMapper(pair: string[], kana: Map<string, string>) {
-    if (pair[1] != ".") romaji.set(pair[0], pair[1]);
+function setToMapper(pair: string[], kana: Map<string, string>) {
+  if (pair[1] != ".") romaji.set(pair[0], pair[1]);
 
-    // normally じ is used instead of ぢ
-    // so we'll skip this hiragana
-    if (pair[0].split("")[0] === "ぢ") return;
-    if (pair[0].split("")[0] === "ヂ") return;
-    // we don't wanna mess づ and ず, ぢ and じ
-    if (pair[0] === "づ") return;
-    if (pair[0] === "ぢ") return;
+  // normally じ is used instead of ぢ
+  // so we'll skip this kana 
+  if (pair[0].split("")[0] === "ぢ") return;
+  if (pair[0].split("")[0] === "ヂ") return;
+  // we don't wanna mess づ and ず, ぢ and じ
+  if (pair[0] === "づ") return;
+  if (pair[0] === "ぢ") return;
 
-    if (pair[1] == "n") {
-      kana.set("nn", pair[0]);
-    } else {
-      kana.set(pair[1], pair[0]);
-    }
+  if (pair[1] == "n") {
+    kana.set("nn", pair[0]);
+  } else {
+    kana.set(pair[1], pair[0]);
   }
+}
 
-  database.hiragana.all.forEach((pair) => setToMapper(pair, hiragana));
-  setToMapper(["っ", "."], hiragana);
-  setToMapper(["こ", "co"], hiragana);
+database.hiragana.all.forEach((pair) => setToMapper(pair, hiragana));
+setToMapper(["っ", "."], hiragana);
+setToMapper(["こ", "co"], hiragana);
 
-  database.katakana.all.forEach((pair) => setToMapper(pair, katakana));
-  setToMapper(["ッ", "."], katakana);
-})();
+database.katakana.all.forEach((pair) => setToMapper(pair, katakana));
+setToMapper(["ッ", "."], katakana);
+
 
 class Translator {
   isRomanji(char: string): boolean {

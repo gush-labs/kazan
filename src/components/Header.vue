@@ -1,13 +1,13 @@
 <script setup lang="ts">
-import { Storage, User } from "@/core/Database";
+import { User } from "@/core/Database";
 import Button from "@/components/Button.vue";
 import Link from "@/components/Link.vue";
 import { Auth } from "@/core/Auth";
 import router from "@/router";
 
-function goHome() { router.push({ name: "home" }); }
-const user = Storage.read<User>(User.storageKey);
+const user = User.ref;
 
+function goHome() { router.push({ name: "home" }); }
 function signOut() { Auth.logout(); }
 </script>
 

@@ -30,15 +30,15 @@ const congrat = congrats[Math.floor(Math.random() * 3)]
   <Distribution :values="review.getTimers()" class="mb-3"></Distribution>
 
   <div class="stats-window mb-3 pb-3">
-    <div class="flex-fill completed"><i class="bi bi-circle"></i>&nbsp;{{ review.getCorrectCards().length }}&nbsp;completed</div>
+    <div class="flex-fill kz-text-success"><i class="bi bi-circle"></i>&nbsp;{{ review.getCorrectCards().length }}&nbsp;completed</div>
     <div class="flex-fill hard"><i class="bi bi-clock-history"></i>&nbsp;5&nbsp;slowest</div>
-    <div class="flex-fill mistakes"><i class="bi bi-x-lg"></i>&nbsp;{{ review.getIncorrectCards().length }}&nbsp;mistakes</div>
+    <div class="flex-fill kz-text-error"><i class="bi bi-x-lg"></i>&nbsp;{{ review.getIncorrectCards().length }}&nbsp;mistakes</div>
   </div>
 
   <div v-if="cards.length > 0" class="report mb-3">
     <div
       v-for="result in cards"
-      :class="{'card-correct': result.correct, 'card-incorrect': !result.correct}"
+      :class="{'card-incorrect': !result.correct}"
       class="card-item p-1">
       {{ result.target }}
     </div>
@@ -76,32 +76,21 @@ const congrat = congrats[Math.floor(Math.random() * 3)]
   gap: 0.5em;
 }
 .report .card-item {
-  color: white;
   text-align: center;
-  border: 1px solid white;
-}
-.report .card-correct {
-  border-color: rgb(107, 174, 107);
-  color: rgb(107, 174, 107);
 }
 .report .card-incorrect {
-  border-color: rgb(189, 108, 108);
-  color: rgb(189, 108, 108);
+  border: 1px solid var(--text-dunger-color);
+  color: var(--text-dunger-color);
+  opacity: 0.7;
 }
 
-.stats-window .completed {
-  color: rgb(25, 79, 13);
-}
-.stats-window .mistakes {
-  color: rgb(82, 17, 17);
-}
 .stats-window .hard {
-  color: rgb(82, 64, 17);
+  color: rgb(112, 86, 22);
 }
 
 .stats-window {
   text-align: center;
-  border-bottom: 1px solid rgba(0,0,0,0.1);
+  border-bottom: 1px solid var(--border-base-color);
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(8em, 1fr));
 }

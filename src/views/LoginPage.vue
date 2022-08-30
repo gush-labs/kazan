@@ -1,6 +1,8 @@
 <script setup lang="ts">
-import { Storage, User } from "@/core/Database";
+import LoadingCircle from "@/components/LoadingCircle.vue";
 import Button from "@/components/Button.vue";
+import { WaniKani } from "@/core/WaniKani";
+import { User } from "@/core/Database";
 import { Auth } from "@/core/Auth";
 import router from "@/router";
 import { ref } from "vue";
@@ -8,12 +10,12 @@ import { ref } from "vue";
 const input = ref("");
 const loading = ref(false);
 const error = ref("");
-const user = Storage.read<User>(User.storageKey);
+const user = User.ref;
 
 function signIn() {
   if (input.value.length == 0) { return; }
 
-  Storage.save("wanikani", input.value);
+  WaniKani.ref.value = new WaniKani(input.value);
   Auth.login().then(success => {
     loading.value = false;
     if (success) { setTimeout(() => router.push({ name: "home"}), 5000); }
@@ -36,8 +38,8 @@ function signIn() {
       </p>
       <input v-model="input" class="form-control font-monospace" placeholder="WaniKani API key" />
       <Button v-if="!loading" @click="signIn" icon="box-arrow-in-right" class="w-100 mt-3">Sign in</Button>
-      <div v-if="loading" class="loading-box mt-3 p-2">
-        <div class="load"><i class="load bi bi-arrow-clockwise"></i></div>
+      <div v-if="loading" class="mt-3 p-2">
+        <LoadingCircle />
         Signing up...
       </div>
     </div>
@@ -58,7 +60,7 @@ function signIn() {
 
 <style scoped>
 .error {
-  color: rgb(97, 33, 33);
+  color: var(--text-error-color);
 }
 .redirect-progress {
   background-color: rgba(0,0,0,0.1);
@@ -80,20 +82,6 @@ function signIn() {
   }
 }
 
-.load {
-  display: inline-block;
-  animation-duration: 1s;
-  animation-name: rotate;
-  animation-iteration-count: infinite;
-}
-@keyframes rotate {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(180deg);
-  }
-}
 
 .form-control {
   border-radius: 0px;
