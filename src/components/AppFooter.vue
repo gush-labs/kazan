@@ -17,11 +17,11 @@ const error = AppStatus.currentError;
     </div>
     <div v-if="process && !error">
       <LoadingCircle class="me-2" />
-      {{ process }}
+      {{ process.message }}
     </div>
     <div class="error" v-if="error">
       <i class="bi bi-exclamation-circle me-2"></i>
-      {{ error }}
+      {{ error.message }}
     </div>
   </div>
 </template>

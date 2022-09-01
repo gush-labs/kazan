@@ -986,7 +986,9 @@ export class Dictionary {
       };
 
       // Request the first page
-      pageRequests.push(this.requestPage(user, "0", () => requestNextPage()));
+      pageRequests.push(
+        this.requestPage(user, "0", (request) => requestNextPage(request))
+      );
     });
   }
 

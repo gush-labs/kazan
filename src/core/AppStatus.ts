@@ -53,11 +53,14 @@ const status = reactive(new ApplicationStatusState());
  * global errors which impact web-app functionality.
  */
 class AppStatus {
-  static processStart = status.pushProcess;
-  static processUpdate = status.updateProcess;
-  static processComplete = status.completeProcess;
-  static errorSet = status.pushError;
-  static errorClear = status.clearError;
+  static processStart = (key: string, message: string) =>
+    status.pushProcess(key, message);
+  static processUpdate = (key: string, message: string) =>
+    status.updateProcess(key, message);
+  static processComplete = (key: string) => status.completeProcess(key);
+  static errorSet = (key: string, message: string) =>
+    status.pushError(key, message);
+  static errorClear = (key: string) => status.clearError(key);
 
   static currentError = computed(() =>
     status.errors.length > 0 ? status.errors[0] : undefined
