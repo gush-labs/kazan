@@ -1,8 +1,8 @@
 <script setup lang="ts">
 import { reactive, ref, watch, type Ref } from "vue";
-import Button from "@/components/Button.vue";
+import ActionButton from "@/components/ActionButton.vue";
 import { database } from "@/core/Database";
-import Link from "@/components/Link.vue";
+import PageLink from "@/components/PageLink.vue";
 import router from "@/router";
 
 const monographs: string[] = [
@@ -48,7 +48,7 @@ function allMonographs() {
   monographs.forEach(v => selected.set(v, !monographsSelected.value));
 };
 
-function allDiacritics(switched: boolean) {
+function allDiacritics() {
   diacritics.forEach(v => selected.set(v, !diacriticsSelected.value));
 };
 </script>
@@ -56,35 +56,37 @@ function allDiacritics(switched: boolean) {
 <template>
 <div class="d-flex flex-column justify-content-center mb-5 mt-5 pt-5">
   <div class="d-flex flex-row justify-content-center mb-3">
-    <Link :to="{ name: 'home', params: { page: 'kana' }}" 
+    <PageLink :to="{ name: 'home', params: { page: 'kana' }}" 
       icon="arrow-left-short" 
-      class='text-muted' plain>Go back</Link>
+      class='text-muted' plain>Go back</PageLink>
   </div>
 
-  <Button class="mb-3" switch @click="allKana" :switched="allSelected">All {{ name }}</Button>
-  <Button class="mb-3" switch @click="allMonographs" :switched="monographsSelected">All Monographs</Button>
+  <ActionButton class="mb-3" switch @click="allKana" :switched="allSelected">All {{ name }}</ActionButton>
+  <ActionButton class="mb-3" switch @click="allMonographs" :switched="monographsSelected">All Monographs</ActionButton>
 
   <div class="kana-container">
-    <Button v-for="v in monographs" 
+    <ActionButton v-for="v, i in monographs"
+      :key="i"
       switch 
       :switched="selected.get(v)"
-      @click="() => selected.set(v, !selected.get(v)!)">{{ (kana.alphabet as Record<string, any>)[v][0][0] }}</Button>
+      @click="() => selected.set(v, !selected.get(v)!)">{{ (kana.alphabet as Record<string, any>)[v][0][0] }}</ActionButton>
   </div>
 
-  <Button class="mt-3" switch @click="allDiacritics" :switched="diacriticsSelected">All Diacritics</Button>
+  <ActionButton class="mt-3" switch @click="allDiacritics" :switched="diacriticsSelected">All Diacritics</ActionButton>
 
   <div class="kana-container mt-3">
-    <Button v-for="v in diacritics" 
+    <ActionButton v-for="v, i in diacritics" 
+      :key="i"
       switch 
       :switched="selected.get(v)"
-      @click="() => selected.set(v, !selected.get(v)!)">{{ (kana.alphabet as Record<string, any>)[v][0][0] }}</Button>
+      @click="() => selected.set(v, !selected.get(v)!)">{{ (kana.alphabet as Record<string, any>)[v][0][0] }}</ActionButton>
   </div>
-  <Link 
+  <PageLink 
     :to="{name: 'review', query: {entries: kanaToReview.toString(), db: name.toLowerCase() }}" 
     class="mt-3" 
     :disabled="!someSelected">
     {{ someSelected ? "Start!" : "Select kana to practice"}}
-  </Link>
+  </PageLink>
 </div>
 </template>
 

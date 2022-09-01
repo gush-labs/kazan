@@ -1,5 +1,5 @@
 <template>
-<div class="load"><i class="load bi bi-arrow-clockwise"></i></div>
+  <div class="load"><i class="load bi bi-arrow-clockwise"></i></div>
 </template>
 
 <style scoped>

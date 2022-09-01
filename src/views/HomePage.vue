@@ -1,10 +1,10 @@
 <script setup lang="ts">
-import Link from "@/components/Link.vue";
+import PageLink from "@/components/PageLink.vue";
 import { ref, watch, type Ref } from "vue";
 import router from "@/router";
 
 class ButtonItem {
-  name: string = "";
+  name = "";
   page?: string = "";
   link?: any = {};
 }
@@ -35,8 +35,8 @@ pages.set("kana", {
   parent: "home",
   title: "Which kana do you want to practice?",
   buttons: [
-    { name: "Hiragana", link: { name: "kana", params: { kana: "hiragana"} }},
-    { name: "Katakana", link: { name: "kana", params: { kana: "katakana"} }},
+    { name: "Hiragana", link: { name: "kana", params: { kana: "hiragana" } } },
+    { name: "Katakana", link: { name: "kana", params: { kana: "katakana" } } },
   ],
 });
 
@@ -55,8 +55,8 @@ pages.set("wk", {
   parent: "vocab",
   title: "Which WaniKani level to practice?",
   buttons: [
-    { name: "Level 1", link: { name: "review", query: { db: "wkLevel1" }} },
-    { name: "Level 2", link: { name: "review", query: { db: "wkLevel2"}} },
+    { name: "Level 1", link: { name: "review", query: { db: "wkLevel1" } } },
+    { name: "Level 2", link: { name: "review", query: { db: "wkLevel2" } } },
     { name: "Level 3" },
     { name: "Level 4" },
   ],
@@ -64,31 +64,44 @@ pages.set("wk", {
 
 const paramPage = router.currentRoute.value.params.page?.toString();
 const parentPage: Ref<Page | undefined> = ref(undefined);
-const currentPage = ref(paramPage && pages.has(paramPage) ? pages.get(paramPage)! : pages.get("home")!);
+const currentPage = ref(
+  paramPage && pages.has(paramPage) ? pages.get(paramPage)! : pages.get("home")!
+);
 parentPage.value = pages.get(currentPage.value.parent);
 
-watch(() => router.currentRoute.value.params.page, (newPage) => {
-  const page = pages.get(newPage?.toString());
-  parentPage.value = page ? pages.get(page.parent) : undefined;
-  currentPage.value = page ?? pages.get("home")!;
-});
+watch(
+  () => router.currentRoute.value.params.page,
+  (newPage) => {
+    const page = pages.get(newPage?.toString());
+    parentPage.value = page ? pages.get(page.parent) : undefined;
+    currentPage.value = page ?? pages.get("home")!;
+  }
+);
 </script>
 
 <template>
   <div class="menu-container pb-5">
     <div class="menu-center">
-
       <div class="title-container mb-2">
         <div class="title-control mb-3 text-muted">
           <div>
-            <Link v-if="parentPage" 
-              :to="{ name: 'home', params: { page: currentPage.parent }}" 
+            <PageLink
+              v-if="parentPage"
+              :to="{ name: 'home', params: { page: currentPage.parent } }"
               class="text-muted"
-              icon="arrow-left-short" plain>
+              icon="arrow-left-short"
+              plain
+            >
               {{ parentPage.name }}
-            </Link>
+            </PageLink>
           </div>
-          <Link :to="{ name: 'learning' }" class="text-muted" icon="book" plain>Learning resources</Link>
+          <PageLink
+            :to="{ name: 'learning' }"
+            class="text-muted"
+            icon="book"
+            plain
+            >Learning resources</PageLink
+          >
         </div>
         <div>
           <h4>{{ currentPage.title }}</h4>
@@ -96,15 +109,18 @@ watch(() => router.currentRoute.value.params.page, (newPage) => {
       </div>
 
       <div class="control-container mt-2">
-
         <div v-if="currentPage.buttons" class="control">
-          <Link v-for="b in currentPage.buttons" 
-            :disabled="b.link == undefined && (b.page == undefined || !pages.has(b.page))"
-            :to="b.page ? b.page : (b.link ? b.link : 'home')">
+          <PageLink
+            v-for="(b, i) in currentPage.buttons"
+            :key="i"
+            :disabled="
+              b.link == undefined && (b.page == undefined || !pages.has(b.page))
+            "
+            :to="b.page ? b.page : b.link ? b.link : 'home'"
+          >
             {{ b.name }}
-          </Link>
+          </PageLink>
         </div>
-
       </div>
     </div>
   </div>

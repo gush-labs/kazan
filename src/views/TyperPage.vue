@@ -96,12 +96,18 @@ function onChange() {
     <div class="text">
       <input @input="onChange" class="input" v-model="input" />
 
-      <div class="line-parent" v-for="(line, i) in text" ref="lineBlocks">
+      <div
+        class="line-parent"
+        v-for="(line, i) in text"
+        ref="lineBlocks"
+        :key="i"
+      >
         <div class="source-text">{{ line.sourceText }}</div>
         <div class="text-container d-flex flex-row">
           <div class="input-text">
             <span
-              v-for="element in line.validated"
+              v-for="(element, id) in line.validated"
+              :key="id"
               class="correct"
               :class="{ corrected: element.corrected }"
               >{{ element.text }}</span

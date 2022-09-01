@@ -1,14 +1,14 @@
 <script setup lang="ts">
 import { RouterView } from "vue-router";
-import Footer from "@/components/Footer.vue";
-import Header from "./components/Header.vue";
+import AppFooter from "@/components/AppFooter.vue";
+import AppHeader from "./components/AppHeader.vue";
 </script>
 
 <template>
   <div class="app-container">
-    <Header />
+    <AppHeader />
     <RouterView />
-    <Footer />
+    <AppFooter />
   </div>
 </template>
 
@@ -41,9 +41,9 @@ import Header from "./components/Header.vue";
   --text-error-color: rgb(97, 33, 33);
   --text-dunger-color: rgb(176, 56, 56);
   --text-success-color: rgb(25, 79, 13);
-  --border-base-color: rgba(0,0,0,0.1);
-  --border-hover-color: rgba(0,0,0,0.25);
-  --button-active-color: rgba(0,0,0,0.5);
+  --border-base-color: rgba(0, 0, 0, 0.1);
+  --border-hover-color: rgba(0, 0, 0, 0.25);
+  --button-active-color: rgba(0, 0, 0, 0.5);
   --button-disabled-opacity: 0.65;
 }
 
@@ -87,7 +87,7 @@ import Header from "./components/Header.vue";
 
 /* Fonts for japanese texts (not great, but better than default ones) */
 .japanese {
-  font-family: 'Noto Sans JP', sans-serif;
+  font-family: "Noto Sans JP", sans-serif;
 }
 
 /* Styles to properly size text related to parent elements.

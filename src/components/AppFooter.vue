@@ -1,20 +1,22 @@
 <script setup lang="ts">
 import LoadingCircle from "./LoadingCircle.vue";
-import { Status } from "@/core/Status";
+import AppStatus from "@/core/AppStatus";
 
-const process = Status.currentProcess;
-const error = Status.currentError;
+const process = AppStatus.currentProcess;
+const error = AppStatus.currentError;
 </script>
 
 <template>
   <div class="footer d-flex flex-row justify-content-center text-muted">
     <div v-if="!process && !error">
-      version 0.4 
+      version 0.4
       <i class="bi bi-dot"></i>
-      <a class="author-link text-muted" href="https://github.com/gush-labs">@gush-labs</a>
+      <a class="author-link text-muted" href="https://github.com/gush-labs"
+        >@gush-labs</a
+      >
     </div>
     <div v-if="process && !error">
-      <LoadingCircle class='me-2'/>
+      <LoadingCircle class="me-2" />
       {{ process }}
     </div>
     <div class="error" v-if="error">

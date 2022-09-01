@@ -1,20 +1,26 @@
 <script setup lang="ts">
+import Authentication from "@/core/Authentication";
+import ActionButton from "@/components/ActionButton.vue";
+import PageLink from "@/components/PageLink.vue";
 import { User } from "@/core/Database";
-import Button from "@/components/Button.vue";
-import Link from "@/components/Link.vue";
-import { Auth } from "@/core/Auth";
 import router from "@/router";
 
 const user = User.ref;
 
-function goHome() { router.push({ name: "home" }); }
-function signOut() { Auth.logout(); }
+function goHome() {
+  router.push({ name: "home" });
+}
+function signOut() {
+  Authentication.logout();
+}
 </script>
 
 <template>
   <div class="header d-flex flex-row justify-content-between">
     <div class="dropdown language">
-      <Button dropdown plain icon="translate" class="header-link">English</Button>
+      <ActionButton dropdown plain icon="translate" class="header-link"
+        >English</ActionButton
+      >
       <ul class="dropdown-menu language-links">
         <li><button class="dropdown-item active" href="#">English</button></li>
         <li><button class="dropdown-item disabled" href="#">日本語</button></li>
@@ -26,14 +32,26 @@ function signOut() { Auth.logout(); }
     </div>
 
     <div class="dropdown profile">
-      <Button dropdown plain icon="person-circle" class="header-link">
+      <ActionButton dropdown plain icon="person-circle" class="header-link">
         {{ user ? user.username : "Profile" }}
-      </Button>
+      </ActionButton>
       <div class="dropdown-menu dropdown-menu-end profile-menu">
         <ul class="profile-links">
-          <Link v-if="user == undefined" :to="{name: 'login'}" class="dropdown-item">Sign in</Link>
-          <Button class="dropdown-item disabled" href="#">Settings</Button>
-          <Button v-if="user != undefined" @click="signOut" class="dropdown-item">Sign out</Button>
+          <PageLink
+            v-if="user == undefined"
+            :to="{ name: 'login' }"
+            class="dropdown-item"
+            >Sign in</PageLink
+          >
+          <ActionButton class="dropdown-item disabled" href="#"
+            >Settings</ActionButton
+          >
+          <ActionButton
+            v-if="user != undefined"
+            @click="signOut"
+            class="dropdown-item"
+            >Sign out</ActionButton
+          >
         </ul>
       </div>
     </div>

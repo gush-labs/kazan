@@ -18,17 +18,17 @@ const router = createRouter({
     {
       path: "/login",
       name: "login",
-      component: LoginPage, 
+      component: LoginPage,
     },
     {
       path: "/learning",
       name: "learning",
-      component: LearningPage, 
+      component: LearningPage,
     },
     {
       path: "/kana/:kana",
       name: "kana",
-      component: KanaPage
+      component: KanaPage,
     },
     {
       path: "/typer",

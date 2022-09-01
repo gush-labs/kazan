@@ -3,13 +3,15 @@ import { database } from "@/core/Database";
 const hiragana: Map<string, string> = new Map(); // romaji -> hiragana
 const katakana: Map<string, string> = new Map(); // romaji -> katakana
 const romaji: Map<string, string> = new Map(); // kana -> romaji
-const alphabet: Set<string> = new Set("a b c d e f g h i j k l m n o p q r s t u v w x y z".split(" "));
+const alphabet: Set<string> = new Set(
+  "a b c d e f g h i j k l m n o p q r s t u v w x y z".split(" ")
+);
 
 function setToMapper(pair: string[], kana: Map<string, string>) {
   if (pair[1] != ".") romaji.set(pair[0], pair[1]);
 
   // normally じ is used instead of ぢ
-  // so we'll skip this kana 
+  // so we'll skip this kana
   if (pair[0].split("")[0] === "ぢ") return;
   if (pair[0].split("")[0] === "ヂ") return;
   // we don't wanna mess づ and ず, ぢ and じ
@@ -29,7 +31,6 @@ setToMapper(["こ", "co"], hiragana);
 
 database.katakana.all.forEach((pair) => setToMapper(pair, katakana));
 setToMapper(["ッ", "."], katakana);
-
 
 class Translator {
   isRomanji(char: string): boolean {

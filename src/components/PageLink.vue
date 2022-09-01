@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { RouterLink } from "vue-router";
 
 const emits = defineEmits(["click"]);
 const props = defineProps<{
@@ -7,31 +8,32 @@ const props = defineProps<{
   disabled?: boolean;
   plain?: boolean;
   dropdown?: boolean;
-  switch?: boolean;
-  switched?: boolean;
+  to: any;
 }>();
 
 function click(e: any) {
   (document.activeElement as HTMLElement).blur();
-  emits('click', e);
+  emits("click", e);
 }
 </script>
 
 <template>
-  <button
+  <router-link
+    :to="to"
     @click="click"
     class="kz-text"
-    :class="{ 
-      plain: plain, 
-      btn: !plain, 
+    :class="{
+      plain: plain,
+      btn: !plain,
       'kz-button': !plain,
-      'kz-button-disabled': props.disabled, 
-      'dropdown-toggle': dropdown, 
-      'kz-button-active': props.switch && props.switched }"
-    :data-bs-toggle="dropdown ? 'dropdown' : ''">
+      'kz-button-disabled': props.disabled,
+      'dropdown-toggle': dropdown,
+    }"
+    :data-bs-toggle="dropdown ? 'dropdown' : ''"
+  >
     <div v-if="props.label" class="m">{{ props.label }}</div>
     <i v-if="props.icon" :class="'bi bi-' + props.icon"></i> <slot />
-  </button>
+  </router-link>
 </template>
 
 <style scoped>
@@ -39,7 +41,7 @@ function click(e: any) {
   border: none;
   margin: 0;
   padding: 0;
-  background-color: rgba(0,0,0,0);
+  background-color: rgba(0, 0, 0, 0);
   outline: none;
 }
 .m {

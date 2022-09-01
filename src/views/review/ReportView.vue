@@ -1,62 +1,98 @@
 <script setup lang="ts">
-import Distribution from "@/components/Distribution.vue";
-import Button from "@/components/Button.vue";
+import DistributionView from "@/components/DistributionView.vue";
+import ActionButton from "@/components/ActionButton.vue";
+import TimeDistribution from "@/core/TimeDistribution";
 import type { Review } from "@/core/Review";
 import router from "@/router";
+import { ref } from "vue";
 
 const emits = defineEmits(["start"]);
-const props = defineProps<{ review: Review; }>();
+const props = defineProps<{ review: Review }>();
 
-const review = props.review;
-const cards: Array<any> = review.getIncorrectCards()
-  .map(card => { return { target: card.target, correct: false }});
-const allCorrect = review.getIncorrectCards().length == 0;
+const review = ref(props.review);
+type Card = { name: string; correct: boolean };
+const cards: Array<Card> = review.value.getIncorrectCards().map((card) => {
+  return { name: card.question, correct: false };
+});
+const allCorrect = review.value.getIncorrectCards().length == 0;
 
 const congrats = [
   "No mistakes! Good job!",
   "Everything is correct!",
   "Nice progress!",
-  "Keep it going!"]
-const congrat = congrats[Math.floor(Math.random() * 3)]
+  "Keep it going!",
+];
+const congrat = congrats[Math.floor(Math.random() * 3)];
+
+const timeDistribution = TimeDistribution.calculate(review.value.getTimers());
+const slowestCount = review.value
+  .getTimers()
+  .filter((v) => v > timeDistribution.slowThreshold).length;
 </script>
 
 <template>
-<div class="d-flex flex-column justify-content-center mt-5 mb-5 pt-5">
-  
-  <div v-if="cards.length == 0" class="text-center p-3">
-    <h4>{{ congrat }} <i class="bi bi-hand-thumbs-up"></i></h4>
-  </div>
+  <div class="d-flex flex-column justify-content-center mt-5 mb-5 pt-5">
+    <div v-if="cards.length == 0" class="text-center p-3">
+      <h4>{{ congrat }} <i class="bi bi-hand-thumbs-up"></i></h4>
+    </div>
 
-  <Distribution :values="review.getTimers()" class="mb-3"></Distribution>
+    <DistributionView :distribution="timeDistribution" class="mb-3" />
 
-  <div class="stats-window mb-3 pb-3">
-    <div class="flex-fill kz-text-success"><i class="bi bi-circle"></i>&nbsp;{{ review.getCorrectCards().length }}&nbsp;completed</div>
-    <div class="flex-fill hard"><i class="bi bi-clock-history"></i>&nbsp;5&nbsp;slowest</div>
-    <div class="flex-fill kz-text-error"><i class="bi bi-x-lg"></i>&nbsp;{{ review.getIncorrectCards().length }}&nbsp;mistakes</div>
-  </div>
+    <div class="stats-window mb-3 pb-3">
+      <div class="flex-fill kz-text-success">
+        <i class="bi bi-circle"></i>&nbsp;{{
+          review.getCorrectCards().length
+        }}&nbsp;completed
+      </div>
+      <div class="flex-fill hard">
+        <i class="bi bi-clock-history"></i>&nbsp;{{ slowestCount }}&nbsp;slowest
+      </div>
+      <div class="flex-fill kz-text-error">
+        <i class="bi bi-x-lg"></i>&nbsp;{{
+          review.getIncorrectCards().length
+        }}&nbsp;mistakes
+      </div>
+    </div>
 
-  <div v-if="cards.length > 0" class="report mb-3">
-    <div
-      v-for="result in cards"
-      :class="{'card-incorrect': !result.correct}"
-      class="card-item p-1">
-      {{ result.target }}
+    <div v-if="cards.length > 0" class="report mb-3">
+      <div
+        v-for="(result, id) in cards"
+        :key="id"
+        :class="{ 'card-incorrect': !result.correct }"
+        class="card-item p-1"
+      >
+        {{ result.name }}
+      </div>
+    </div>
+
+    <div class="buttons">
+      <ActionButton
+        icon="arrow-repeat"
+        @click="() => emits('start', review.repeat())"
+        >Repeat all</ActionButton
+      >
+      <ActionButton
+        v-if="allCorrect"
+        icon="clock-history"
+        @click="() => {}"
+        disabled
+        >Repeat slowest</ActionButton
+      >
+      <ActionButton
+        v-if="!allCorrect"
+        @click="() => emits('start', review.repeatIncorrect())"
+        >Repeat incorrect</ActionButton
+      >
+    </div>
+    <div class="complete-container">
+      <ActionButton
+        icon="arrow-return-left"
+        class="w-100"
+        @click="() => router.back()"
+        >Complete</ActionButton
+      >
     </div>
   </div>
-
-  <div class="buttons">
-    <Button  icon="arrow-repeat"
-      @click="() => emits('start', review.repeat())">Repeat all</Button>
-    <Button v-if="allCorrect" icon="clock-history"
-      @click="() => {}" disabled>Repeat slowest</Button>
-    <Button v-if="!allCorrect" 
-      @click="() => emits('start', review.repeatIncorrect())">Repeat incorrect</Button>
-  </div>
-  <div class="complete-container">
-    <Button icon="arrow-return-left" class="w-100"
-      @click="() => router.back()">Complete</Button>
-  </div>
-</div>
 </template>
 
 <style scoped>

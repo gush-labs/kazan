@@ -6,7 +6,10 @@ import translator from "@/language/Translator.js";
 import router from "@/router";
 import { ref } from "vue";
 
-function createReview(collection: Array<Array<string>>, kana = "romanji"): Review {
+function createReview(
+  collection: Array<Array<string>>,
+  kana = "romanji"
+): Review {
   return new Review(new RandomPicker(generateCards(collection)), kana);
 }
 
@@ -26,22 +29,38 @@ function startReview(r: Review) {
 }
 
 // TODO: Move this logic to the database selector (create a new class for that)
-const queryTable = router.currentRoute.value.query.db?.toString() ?? "allHiragana";
-if (queryTable == "wkLevel1") { startReview(createReview(db.vocabular.wanikani[0], "hiragana")); }
-if (queryTable == "wkLevel2") { startReview(createReview(db.vocabular.wanikani[1], "hiragana")); }
-if (queryTable == "test") { startReview(createReview(db.vocabular.wanikani[0].slice(0, 2), "hiragana")); }
+const queryTable =
+  router.currentRoute.value.query.db?.toString() ?? "allHiragana";
+if (queryTable == "wkLevel1") {
+  startReview(createReview(db.vocabular.wanikani[0], "hiragana"));
+}
+if (queryTable == "wkLevel2") {
+  startReview(createReview(db.vocabular.wanikani[1], "hiragana"));
+}
+if (queryTable == "test") {
+  startReview(createReview(db.vocabular.wanikani[0].slice(0, 2), "hiragana"));
+}
 
-const queryEntries = router.currentRoute.value.query.entries?.toString().split(",") ?? [];
+const queryEntries =
+  router.currentRoute.value.query.entries?.toString().split(",") ?? [];
 if (queryEntries.length > 0) {
-  if (queryTable == "hiragana") { 
-    startReview(createReview(queryEntries
-      .map(q => (db.hiragana.alphabet as Record<string, any>)[q])
-      .reduce((l, r) => l.concat(r)))); 
+  if (queryTable == "hiragana") {
+    startReview(
+      createReview(
+        queryEntries
+          .map((q) => (db.hiragana.alphabet as Record<string, string[][]>)[q])
+          .reduce((l, r) => l.concat(r))
+      )
+    );
   }
-  if (queryTable == "katakana") { 
-    startReview(createReview(queryEntries
-      .map(q => (db.katakana.alphabet as Record<string, any>)[q])
-      .reduce((l, r) => l.concat(r)))); 
+  if (queryTable == "katakana") {
+    startReview(
+      createReview(
+        queryEntries
+          .map((q) => (db.katakana.alphabet as Record<string, string[][]>)[q])
+          .reduce((l, r) => l.concat(r))
+      )
+    );
   }
 }
 
@@ -54,14 +73,16 @@ function onChange() {
   }
 }
 
-function checkAnswer(e: any) {
+function checkAnswer(e: Event) {
   e.preventDefault();
   const rev = review.value;
 
   // remove all spaces from the input
   let inputText = input.value.split(" ").join("");
-  if (rev.kana == "hiragana") inputText = translator.completeHiragana(inputText);
-  if (rev.kana == "katakana") inputText = translator.completeKatakana(inputText);
+  if (rev.kana == "hiragana")
+    inputText = translator.completeHiragana(inputText);
+  if (rev.kana == "katakana")
+    inputText = translator.completeKatakana(inputText);
 
   if (inputText != "" && !wrong.value) {
     // verify the current review card
@@ -90,7 +111,9 @@ function checkAnswer(e: any) {
       <div class="d-flex flex-column justify-content-end fw-bold">
         <div>{{ card.type }}</div>
       </div>
-      <div><h1 class="review-target japanese">{{ card.target }}</h1></div>
+      <div>
+        <h1 class="review-target japanese">{{ card.question }}</h1>
+      </div>
       <div class="review-answer d-flex flex-column justify-content-start">
         <div v-if="wrong">{{ card.answer }}</div>
       </div>
@@ -109,9 +132,15 @@ function checkAnswer(e: any) {
     </div>
 
     <div class="stats-window mb-5">
-      <div class="kz-text-success"><i class="bi bi-circle"></i> {{ review.getCorrectCards().length }} completed</div>
+      <div class="kz-text-success">
+        <i class="bi bi-circle"></i>
+        {{ review.getCorrectCards().length }} completed
+      </div>
       <div>{{ Math.floor(review.progress() * 100) }}%</div>
-      <div class="kz-text-error"><i class="bi bi-x-lg"></i> {{ review.getIncorrectCards().length }} mistakes</div>
+      <div class="kz-text-error">
+        <i class="bi bi-x-lg"></i>
+        {{ review.getIncorrectCards().length }} mistakes
+      </div>
     </div>
   </div>
 
@@ -147,7 +176,8 @@ function checkAnswer(e: any) {
   font-size: 2em;
 }
 
-textarea:focus, input:focus {
+textarea:focus,
+input:focus {
   outline: none;
 }
 </style>
