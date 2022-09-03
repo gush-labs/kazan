@@ -6,6 +6,7 @@ import NotFoundPage from "@/views/NotFoundPage.vue";
 import KanaPage from "@/views/KanaPage.vue";
 import LoginPage from "@/views/LoginPage.vue";
 import LearningPage from "@/views/LearningPage.vue";
+import VocabularyPage from "@/views/VocabularyPage.vue";
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -39,6 +40,11 @@ const router = createRouter({
       path: "/review",
       name: "review",
       component: ReviewPage,
+    },
+    {
+      path: "/vocabulary",
+      name: "vocabulary",
+      component: VocabularyPage,
     },
     {
       path: "/:path(.*)*",

@@ -5,13 +5,28 @@ class ReviewCard {
   id = 0;
   type = "";
   question = "";
-  answers: string[] = [];
 
-  static create(type: string, question: string, answers: string[]): ReviewCard {
+  shownAnswers: string[] = [];
+  answers: string[] = [];
+  kana = "";
+
+  static create(
+    type: string,
+    question: string,
+    answers: string[],
+    shownAnswers: string[] = [],
+    kana = ""
+  ): ReviewCard {
     const card = this.empty;
     card.type = type;
     card.question = question;
     card.answers = answers;
+    card.kana = kana;
+    if (shownAnswers.length == 0) {
+      card.shownAnswers = answers;
+    } else {
+      card.shownAnswers = shownAnswers;
+    }
     return card;
   }
 
@@ -20,7 +35,11 @@ class ReviewCard {
   }
 
   check(userAnswer: string): boolean {
-    return this.answers.find((answer) => answer == userAnswer) != undefined;
+    return (
+      this.answers.find(
+        (answer) => answer.toLowerCase() == userAnswer.toLowerCase()
+      ) != undefined
+    );
   }
 
   assignId(id: number) {

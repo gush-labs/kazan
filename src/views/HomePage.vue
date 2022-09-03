@@ -46,7 +46,14 @@ pages.set("vocab", {
   title: "Choose vocabulary",
   buttons: [
     { name: "WaniKani", page: "wk" },
-    { name: "JLPT", page: "jlpt" },
+    { name: "JLPT" },
+    {
+      name: "Test",
+      link: {
+        name: "review",
+        query: { query: "wanikani", params: "1,true,true,true" },
+      },
+    },
   ],
 });
 

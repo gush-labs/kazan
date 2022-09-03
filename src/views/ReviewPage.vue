@@ -1,6 +1,8 @@
 <script setup lang="ts">
 import { database, generateCards } from "@/core/Database";
+import { Dictionary } from "@/core/Dictionary";
 import { Review, RandomPicker } from "@/core/Review";
+import type ReviewCard from "@/core/ReviewCard";
 import ReportView from "@/views/review/ReportView.vue";
 import translator from "@/language/Translator.js";
 import router from "@/router";
@@ -15,7 +17,7 @@ function createReview(
 
 const db = database;
 const review = ref(createReview(db.hiragana.all));
-const card = ref(review.value.take());
+const card = ref<ReviewCard>(review.value.take());
 const input = ref("");
 const wrong = ref(false);
 const complete = ref(false);
@@ -26,6 +28,15 @@ function startReview(r: Review) {
   wrong.value = false;
   complete.value = false;
   card.value = review.value.take();
+}
+
+const query = router.currentRoute.value.query.query?.toString();
+const params = router.currentRoute.value.query.params?.toString();
+if (query && params) {
+  const review = Dictionary.review(query, params.split(","));
+  if (review) {
+    startReview(review);
+  }
 }
 
 // TODO: Move this logic to the database selector (create a new class for that)
@@ -65,10 +76,11 @@ if (queryEntries.length > 0) {
 }
 
 function onChange() {
-  const inputText = input.value.split(" ").join("");
-  if (review.value.kana == "hiragana") {
+  // const inputText = input.value.split(" ").join("");
+  const inputText = input.value;
+  if (card.value.kana == "hiragana") {
     input.value = translator.toHiragana(inputText);
-  } else if (review.value.kana == "katakana") {
+  } else if (card.value.kana == "katakana") {
     input.value = translator.toKatakana(inputText);
   }
 }
@@ -78,10 +90,11 @@ function checkAnswer(e: Event) {
   const rev = review.value;
 
   // remove all spaces from the input
-  let inputText = input.value.split(" ").join("");
-  if (rev.kana == "hiragana")
+  // let inputText = input.value.split(" ").join("");
+  let inputText = input.value;
+  if (card.value.kana == "hiragana")
     inputText = translator.completeHiragana(inputText);
-  if (rev.kana == "katakana")
+  if (card.value.kana == "katakana")
     inputText = translator.completeKatakana(inputText);
 
   if (inputText != "" && !wrong.value) {
@@ -114,8 +127,13 @@ function checkAnswer(e: Event) {
       <div>
         <h1 class="review-target japanese">{{ card.question }}</h1>
       </div>
-      <div class="review-answer d-flex flex-column justify-content-start">
-        <div v-if="wrong">{{ card.answer }}</div>
+      <div
+        class="review-answer d-flex flex-row justify-content-center flex-wrap"
+      >
+        <div v-if="!wrong" class="empty">empty</div>
+        <div v-if="wrong" v-for="answer in card.shownAnswers" class="ms-2 me-2">
+          {{ answer }}
+        </div>
       </div>
     </div>
 
@@ -157,7 +175,7 @@ function checkAnswer(e: Event) {
 
 .review-window {
   display: grid;
-  grid-template-rows: 2em 1fr 2em;
+  grid-template-rows: 2em 1fr auto;
 }
 .review-window .review-target {
   font-size: 4.5em;
@@ -167,6 +185,10 @@ function checkAnswer(e: Event) {
 .review-window .review-answer {
   font-weight: bold;
   font-size: 1.5em;
+}
+
+.review-answer .empty {
+  opacity: 0;
 }
 
 .answer-container .answer-form {

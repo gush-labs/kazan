@@ -1,7 +1,7 @@
 import translator from "@/language/Translator";
 import type ReviewCard from "@/core/ReviewCard";
 
-type Collection = Array<ReviewCard>;
+type Collection = ReviewCard[];
 
 /**
  * Picks cards to review
@@ -90,7 +90,6 @@ export class RandomPicker implements Picker {
  * implementation of the Picker.
  */
 export class Review {
-  kana: string;
   picker: Picker;
 
   // Monitors answer time for the current card
@@ -106,9 +105,8 @@ export class Review {
   // All cards that were answered with at least one mistake
   incorrectCardsIds = new Set<number>();
 
-  constructor(picker: Picker, kana: string) {
+  constructor(picker: Picker, kana = "") {
     this.picker = picker;
-    this.kana = kana;
   }
 
   completed(): boolean {
@@ -171,7 +169,7 @@ export class Review {
     this.completedCardsIds.forEach((id) =>
       collection.push(this.generatedCards.get(id)!)
     );
-    return new Review(new RandomPicker(collection), this.kana);
+    return new Review(new RandomPicker(collection));
   }
 
   /**
@@ -181,7 +179,7 @@ export class Review {
    */
   repeatIncorrect(): Review {
     const collection: Collection = this.getIncorrectCards();
-    return new Review(new RandomPicker(collection), this.kana);
+    return new Review(new RandomPicker(collection));
   }
 
   /**

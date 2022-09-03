@@ -1,9 +1,8 @@
 <script setup lang="ts">
 import LoadingCircle from "@/components/LoadingCircle.vue";
-import Authentication from "@/core/Authentication";
+import { Authentication, User } from "@/core/Authentication";
 import ActionButton from "@/components/ActionButton.vue";
 import WaniKani from "@/core/WaniKani";
-import { User } from "@/core/Database";
 import router from "@/router";
 import { ref } from "vue";
 
@@ -11,6 +10,10 @@ const input = ref("");
 const loading = ref(false);
 const error = ref("");
 const user = User.ref;
+
+if (user.value) {
+  router.push({ name: "home" });
+}
 
 function signIn() {
   if (input.value.length == 0) {
@@ -34,7 +37,7 @@ function signIn() {
 <template>
   <div class="d-flex flex-column justify-content-center text-center mb-3">
     <div class="d-flex flex-row justify-content-center">
-      <div v-if="!user" class="profile-container">
+      <div v-if="!user" class="profile-container d-flex flex-column">
         <h4>Sign in</h4>
         <p :class="{ error: error, 'text-muted': !error }">
           <i v-if="error" class="bi bi-exclamation-circle"></i>

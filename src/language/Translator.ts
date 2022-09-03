@@ -1,4 +1,4 @@
-import { database } from "@/core/Database";
+import { hiraganaData, katakanaData } from "@/core/data/kana";
 
 const hiragana: Map<string, string> = new Map(); // romaji -> hiragana
 const katakana: Map<string, string> = new Map(); // romaji -> katakana
@@ -25,11 +25,11 @@ function setToMapper(pair: string[], kana: Map<string, string>) {
   }
 }
 
-database.hiragana.all.forEach((pair) => setToMapper(pair, hiragana));
+hiraganaData.all.forEach((pair) => setToMapper(pair, hiragana));
 setToMapper(["っ", "."], hiragana);
 setToMapper(["こ", "co"], hiragana);
 
-database.katakana.all.forEach((pair) => setToMapper(pair, katakana));
+katakanaData.all.forEach((pair) => setToMapper(pair, katakana));
 setToMapper(["ッ", "."], katakana);
 
 class Translator {

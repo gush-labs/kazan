@@ -1,11 +1,21 @@
 import ApplicationStatus from "@/core/AppStatus";
-import { Storage, User } from "@/core/Database";
 import WaniKani from "@/core/WaniKani";
+import { Storage, type StorageRef } from "@/core/Storage";
+
+export class User {
+  username = "";
+  level = 0;
+  paid = false;
+
+  static get ref(): StorageRef<User> {
+    return Storage.get<User>("user");
+  }
+}
 
 /**
  * Authenticates user
  */
-class Authentication {
+export class Authentication {
   /**
    * Parses incoming data from WaniKani
    */
@@ -56,5 +66,3 @@ class Authentication {
 
 // login on startup
 Authentication.login();
-
-export default Authentication;

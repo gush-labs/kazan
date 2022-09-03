@@ -1,4 +1,4 @@
-import { Storage } from "@/core/Database";
+import { Storage } from "@/core/Storage";
 
 class WaniKani {
   apiKey: string;

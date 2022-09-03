@@ -1,8 +1,7 @@
 <script setup lang="ts">
-import Authentication from "@/core/Authentication";
+import { Authentication, User } from "@/core/Authentication";
 import ActionButton from "@/components/ActionButton.vue";
 import PageLink from "@/components/PageLink.vue";
-import { User } from "@/core/Database";
 import router from "@/router";
 
 const user = User.ref;
