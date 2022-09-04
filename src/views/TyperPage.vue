@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import translator from "@/language/Translator.js";
+import translator from "@/core/language/Translator.js";
 import { ref } from "vue";
 
 class Line {

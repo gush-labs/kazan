@@ -13,7 +13,9 @@ const review = ref(props.review);
 
 const uniqueCards = new Set<string>();
 review.value.getIncorrectCards().map((card) => uniqueCards.add(card.question));
-const cards = Array.from(uniqueCards.values()).map(card => { return { name: card, correct: false }});
+const cards = Array.from(uniqueCards.values()).map((card) => {
+  return { name: card, correct: false };
+});
 const allCorrect = review.value.getIncorrectCards().length == 0;
 
 const congrats = [

@@ -1,22 +1,25 @@
 import { Review, RandomPicker } from "../Review";
-import type ReviewCreator from "./ReviewCreator";
 import ReviewCard from "../ReviewCard";
+import type Creator from "./Creator";
 
-function createCard(meaning: string, note: string, japanese: string): ReviewCard {
+function createCard(
+  meaning: string,
+  note: string,
+  japanese: string
+): ReviewCard {
   const card = ReviewCard.empty;
   card.question = meaning;
-  card.answers = [ japanese ];
-  card.shownAnswers = [ japanese ];
+  card.answers = [japanese];
+  card.shownAnswers = [japanese];
   card.note = note;
   card.type = "In Japanese";
   card.kana = "hiragana";
   return card;
 }
 
-class JapaneseLessonsReview implements ReviewCreator {
-
-  id: string = "lessons";
-  name: string = "Japanese Lessons";
+class JapaneseLessonsReview implements Creator {
+  id = "lessons";
+  name = "Japanese Lessons";
 
   create(params: string[]): Review | undefined {
     const cards = [
@@ -42,7 +45,6 @@ class JapaneseLessonsReview implements ReviewCreator {
     ];
     return new Review(new RandomPicker(cards));
   }
-
 }
 
 export default JapaneseLessonsReview;

@@ -1,10 +1,10 @@
 <script setup lang="ts">
 import { database, generateCards } from "@/core/Database";
-import { Dictionary } from "@/core/Dictionary";
 import { Review, RandomPicker } from "@/core/Review";
+import ReviewCreator from "@/core/ReviewCreator";
 import type ReviewCard from "@/core/ReviewCard";
 import ReportView from "@/views/review/ReportView.vue";
-import translator from "@/language/Translator.js";
+import translator from "@/core/language/Translator.js";
 import router from "@/router";
 import { ref } from "vue";
 
@@ -30,10 +30,14 @@ function startReview(r: Review) {
   card.value = review.value.take();
 }
 
-const query = router.currentRoute.value.query.query?.toString();
-const params = router.currentRoute.value.query.params?.toString();
-if (query) {
-  const review = Dictionary.review(query, params ? params.split(",") : []);
+const reviewId = router.currentRoute.value.query.review?.toString();
+const reviewParams = router.currentRoute.value.query.params?.toString();
+if (reviewId) {
+  console.log("review id: " + reviewId);
+  const review = ReviewCreator.create(
+    reviewId,
+    reviewParams ? reviewParams.split(",") : []
+  );
   if (review) {
     startReview(review);
   }
@@ -121,9 +125,7 @@ function checkAnswer(e: Event) {
 <template>
   <div v-if="!complete" class="d-flex flex-column justify-content-center">
     <div :class="{ 'kz-text-dunger': wrong }" class="review-window text-center">
-      <div class="d-flex flex-column justify-content-end fw-bold">
-        <div>{{ card.type }}</div>
-      </div>
+      <div class="d-flex flex-column justify-content-end fw-bold"></div>
       <div>
         <h1 class="review-target japanese">{{ card.question }}</h1>
       </div>
@@ -131,19 +133,36 @@ function checkAnswer(e: Event) {
         class="review-answer d-flex flex-row justify-content-center flex-wrap"
       >
         <div v-if="!wrong && card.note == ''" class="empty">empty</div>
-        <div v-if="!wrong && card.note != ''" class="note text-muted">{{ card.note }}</div>
-        <div v-if="wrong" v-for="answer in card.shownAnswers" class="ms-2 me-2">
-          {{ answer }}
+        <div v-if="!wrong && card.note != ''" class="note text-muted">
+          {{ card.note }}
+        </div>
+        <div
+          v-if="wrong"
+          class="d-flex flex-row justify-content-center flex-wrap"
+        >
+          <div
+            v-for="answer in card.shownAnswers"
+            :key="answer"
+            class="ms-2 me-2"
+          >
+            {{ answer }}
+          </div>
         </div>
       </div>
     </div>
 
     <div class="answer-container mb-3 mt-3">
+      <div
+        class="card-type p-1"
+        :class="{ 'card-type-reading': card.type == 'Reading' }"
+      >
+        {{ card.type }}
+      </div>
       <form @submit="checkAnswer">
         <input
           v-model="input"
           @input="onChange"
-          class="answer-form form-control japanese"
+          class="answer-form japanese w-100 p-2"
           placeholder=""
           spellcheck="false"
         />
@@ -173,6 +192,17 @@ function checkAnswer(e: Event) {
   display: grid;
   grid-template-columns: 1fr 1fr 1fr;
 }
+.card-type {
+  display: block;
+  border: 1px solid var(--border-base-color);
+  border-bottom: none !important;
+  text-align: center;
+}
+.card-type-reading {
+  background-color: var(--button-active-color);
+  border: 1px solid rgba(0, 0, 0, 0);
+  color: white;
+}
 
 .review-window {
   display: grid;
@@ -197,6 +227,11 @@ function checkAnswer(e: Event) {
   border-radius: 0px;
   text-align: center;
   font-size: 2em;
+}
+.anwer-container .answer-form:focus {
+  border-color: inherit;
+  -webkit-box-shadow: none;
+  box-shadow: none;
 }
 
 textarea:focus,

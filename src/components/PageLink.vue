@@ -12,8 +12,10 @@ const props = defineProps<{
 }>();
 
 function click(e: any) {
-  (document.activeElement as HTMLElement).blur();
-  emits("click", e);
+  if (props.disabled == undefined || !props.disabled) {
+    (document.activeElement as HTMLElement).blur();
+    emits("click", e);
+  }
 }
 </script>
 
@@ -30,6 +32,7 @@ function click(e: any) {
       'dropdown-toggle': dropdown,
     }"
     :data-bs-toggle="dropdown ? 'dropdown' : ''"
+    :disabled="props.disabled"
   >
     <div v-if="props.label" class="m">{{ props.label }}</div>
     <i v-if="props.icon" :class="'bi bi-' + props.icon"></i> <slot />

@@ -1,9 +1,10 @@
 import type { Review } from "@/core/Review";
 
-interface ReviewCreator {
+interface Creator {
   id: string;
   name: string;
+
   create(params: string[]): Review | undefined;
 }
 
-export default ReviewCreator;
+export default Creator;

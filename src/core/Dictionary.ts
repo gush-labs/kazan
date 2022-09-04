@@ -1,10 +1,10 @@
 import { watchRemove, watchUpdate } from "@/core/Utils";
-import ReviewCreators from "./reviews/ReviewCreators";
 import { User } from "@/core/Authentication";
 import type { Review } from "@/core/Review";
 import AppStatus from "@/core/AppStatus";
 import { Storage } from "@/core/Storage";
 import WaniKani from "@/core/WaniKani";
+import ReviewCreator from "@/core/ReviewCreator";
 
 // TODO: Rename to Word
 export class Word2 {
@@ -201,17 +201,6 @@ export class Dictionary {
     }
     word.meanings = [primary].concat(word.meanings);
     return word;
-  }
-
-  // I don't it's a good idea to create reviews 
-  // through Vocabulary (just doesn't seem like obvious API)
-  /**
-   * Creates a collection of cards to review from
-   * the content of the dictionary.
-   */
-  static review(query: string, paramsRaw: string[]): Review | undefined {
-    console.log("lessons");
-    return ReviewCreators.get(query)?.create(paramsRaw);
   }
 }
 

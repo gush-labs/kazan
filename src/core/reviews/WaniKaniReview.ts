@@ -1,4 +1,4 @@
-import type ReviewCreator from "./ReviewCreator";
+import type Creator from "./Creator";
 import { Dictionary, Word2 } from "@/core/Dictionary";
 import ReviewCard from "@/core/ReviewCard";
 import { Review, RandomPicker } from "@/core/Review";
@@ -10,10 +10,9 @@ type WaniKaniQuery = {
   translation: boolean;
 };
 
-class WaniKaniReview implements ReviewCreator {
-
-  id: string = "wanikani";
-  name: string = "WaniKani";
+class WaniKaniReview implements Creator {
+  id = "wanikani";
+  name = "WaniKani";
 
   static parseWaniKaniQuery(paramsText: string[]): WaniKaniQuery | undefined {
     try {
@@ -31,52 +30,49 @@ class WaniKaniReview implements ReviewCreator {
   }
 
   create(paramsRaw: string[]): Review | undefined {
+    console.log("created: " + paramsRaw);
     const result: ReviewCard[] = [];
     const translation: string[] = [];
     const vocabulary = Dictionary.vocabulary;
     const wanikaniLevels = Dictionary.wanikaniLevels;
     const meanings = Dictionary.meanings;
 
-      const params = WaniKaniReview.parseWaniKaniQuery(paramsRaw);
-      if (!params) {
-        return undefined;
+    const params = WaniKaniReview.parseWaniKaniQuery(paramsRaw);
+    if (!params) {
+      return undefined;
+    }
+
+    const wordIds = wanikaniLevels.get(params.level);
+    if (!wordIds) {
+      return undefined;
+    }
+
+    wordIds.forEach((wordId) => {
+      const word = vocabulary.get(wordId);
+      if (!word) {
+        return;
       }
 
-      const wordIds = wanikaniLevels.get(params.level);
-      if (!wordIds) {
-        return undefined;
+      if (params.reading) {
+        const card = ReviewCard.create(
+          "Reading",
+          word.japanese,
+          word.readings.concat(word.japanese),
+          word.readings,
+          "hiragana"
+        );
+        result.push(card);
       }
 
-      wordIds.forEach((wordId) => {
-        const word = vocabulary.get(wordId);
-        if (!word) {
-          return;
-        }
+      if (params.meaning) {
+        const card = ReviewCard.create("Meaning", word.japanese, word.meanings);
+        result.push(card);
+      }
 
-        if (params.reading) {
-          const card = ReviewCard.create(
-            "Reading",
-            word.japanese,
-            word.readings.concat(word.japanese),
-            word.readings,
-            "hiragana"
-          );
-          result.push(card);
-        }
-
-        if (params.meaning) {
-          const card = ReviewCard.create(
-            "Meaning",
-            word.japanese,
-            word.meanings
-          );
-          result.push(card);
-        }
-
-        if (params.translation) {
-          translation.push(Word2.primaryMeaning(word));
-        }
-      });
+      if (params.translation) {
+        translation.push(Word2.primaryMeaning(word));
+      }
+    });
 
     translation.forEach((meaning) => {
       const wordIds = meanings.get(meaning);
@@ -110,7 +106,6 @@ class WaniKaniReview implements ReviewCreator {
 
     return new Review(new RandomPicker(result));
   }
-
 }
 
 export default WaniKaniReview;
