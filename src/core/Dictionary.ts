@@ -210,6 +210,7 @@ export class Dictionary {
    * the content of the dictionary.
    */
   static review(query: string, paramsRaw: string[]): Review | undefined {
+    console.log("lessons");
     return ReviewCreators.get(query)?.create(paramsRaw);
   }
 }

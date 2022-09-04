@@ -1,5 +1,6 @@
 import type ReviewCreator from "./ReviewCreator";
 import WaniKaniReview from "./WaniKaniReview";
+import JapaneseLessonsReview from "./JapaneseLessonsReview";
 
 const creators = new Map<string, ReviewCreator>();
 function set(review: WaniKaniReview) {
@@ -7,6 +8,7 @@ function set(review: WaniKaniReview) {
 }
 
 set(new WaniKaniReview());
+set(new JapaneseLessonsReview());
 
 class ReviewCreators {
   static getAll(): ReviewCreators[] {

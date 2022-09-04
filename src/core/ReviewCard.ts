@@ -4,10 +4,12 @@
 class ReviewCard {
   id = 0;
   type = "";
-  question = "";
 
+  question = "";
   shownAnswers: string[] = [];
   answers: string[] = [];
+
+  note = "";
   kana = "";
 
   static create(

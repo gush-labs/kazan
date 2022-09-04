@@ -10,10 +10,10 @@ const emits = defineEmits(["start"]);
 const props = defineProps<{ review: Review }>();
 
 const review = ref(props.review);
-type Card = { name: string; correct: boolean };
-const cards: Array<Card> = review.value.getIncorrectCards().map((card) => {
-  return { name: card.question, correct: false };
-});
+
+const uniqueCards = new Set<string>();
+review.value.getIncorrectCards().map((card) => uniqueCards.add(card.question));
+const cards = Array.from(uniqueCards.values()).map(card => { return { name: card, correct: false }});
 const allCorrect = review.value.getIncorrectCards().length == 0;
 
 const congrats = [

@@ -32,8 +32,8 @@ function startReview(r: Review) {
 
 const query = router.currentRoute.value.query.query?.toString();
 const params = router.currentRoute.value.query.params?.toString();
-if (query && params) {
-  const review = Dictionary.review(query, params.split(","));
+if (query) {
+  const review = Dictionary.review(query, params ? params.split(",") : []);
   if (review) {
     startReview(review);
   }
@@ -130,7 +130,8 @@ function checkAnswer(e: Event) {
       <div
         class="review-answer d-flex flex-row justify-content-center flex-wrap"
       >
-        <div v-if="!wrong" class="empty">empty</div>
+        <div v-if="!wrong && card.note == ''" class="empty">empty</div>
+        <div v-if="!wrong && card.note != ''" class="note text-muted">{{ card.note }}</div>
         <div v-if="wrong" v-for="answer in card.shownAnswers" class="ms-2 me-2">
           {{ answer }}
         </div>
