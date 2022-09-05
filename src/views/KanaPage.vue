@@ -58,17 +58,29 @@ function allDiacritics() {
   const select = diacriticsSelected.value;
   diacritics.forEach(v => set(state, v, !select));
 };
+
+function clearAll() {
+  monographs.concat(diacritics).forEach(k => set(state, k, false));
+}
 </script>
 
 <template>
 <div class="d-flex flex-column justify-content-center mb-5 mt-5 pt-5">
-  <div class="d-flex flex-row justify-content-center mb-2">
+
+  <div class="navigation-container d-flex flex-row justify-content-center mb-2">
     <PageLink :to="{ name: 'home', params: { page: 'kana' }}" 
       icon="arrow-left-short" 
       class='text-muted back-button' plain>Go back</PageLink>
   </div>
 
-  <div class="text-center mb-3"><h4>Select {{ name.toLowerCase() }}</h4></div>
+  <div class="header-container text-center mb-3 pb-1">
+    <div></div>
+    <div><h4 class="m-0">Select {{ name.toLowerCase() }}</h4></div>
+    <div>
+      <ActionButton class='text-muted h-100' plain @click="clearAll"><i class="bi bi-trash"></i></ActionButton>
+    </div>
+  </div>
+
   <ActionButton class="mb-3" switch @click="allMonographs" :switched="monographsSelected">All Monographs</ActionButton>
 
   <div class="kana-container">
@@ -88,6 +100,7 @@ function allDiacritics() {
       :switched="get(state, v)"
       @click="() => set(state, v, !get(state, v))">{{ (kana.alphabet as Record<string, any>)[v][0][0] }}</ActionButton>
   </div>
+
   <PageLink 
     :to="{name: 'review', query: {entries: kanaToReview.toString(), db: name.toLowerCase() }}" 
     class="mt-3 start-button" 
@@ -100,6 +113,10 @@ function allDiacritics() {
 <style scoped>
 .back-button {
   margin-right: 1.5em;
+}
+.header-container {
+  display: grid;
+  grid-template-columns: 3em 1fr 3em;
 }
 .kana-container {
   display: grid;

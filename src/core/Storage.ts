@@ -1,7 +1,6 @@
 import { ref, reactive, watch, type Ref, type WatchSource } from "vue";
 
 export type StorageRef<T> = Ref<T | undefined>;
-export type UniversalStorageRef = object | WatchSource<unknown>;
 
 /**
  * Completely reactive persistant storage powered by browser local storage.
@@ -35,7 +34,7 @@ export class Storage {
   static cached<T>(
     key: string,
     retriever: () => Promise<T>
-  ): Promise<Ref<T | undefined>> {
+  ): Promise<StorageRef<T>> {
     const ref = Storage.get<T>(key);
     if (ref.value) {
       return Promise.resolve(ref);
@@ -55,7 +54,10 @@ export class Storage {
     if (ref.value) {
       return ref;
     }
-    this.getLocalStorageItem<T>(key, (value) => (ref.value = value));
+    const saved = this.getLocalStorageItem<T>(key);
+    if (saved) { 
+      ref.value = saved; 
+    }
     return ref;
   }
 
@@ -63,14 +65,16 @@ export class Storage {
    * Get an object from the storage. If missing
    * initialize with provided object.
    */
-  static getObject<T>(key: string, init: object): T {
-    let saved: T | undefined = undefined;
+  static getObject<T extends object>(key: string, init: T): T {
+    let saved: T | undefined = undefined as T | undefined;
+
     if (!this.cacheObjects.has(key)) {
-      this.getLocalStorageItem<T>(key, (newValue) => (saved = newValue));
+      saved = this.getLocalStorageItem<T>(key);
     }
+
     const object = Storage.getCachedObject<T>(key, saved ? saved : init);
     this.localStorageSet(key, object);
-    return object as unknown as T;
+    return object;
   }
 
   /**
@@ -94,57 +98,55 @@ export class Storage {
   }
 
   private static getLocalStorageItem<T>(
-    key: string,
-    setter: (value: T) => void
-  ) {
+    key: string
+  ): T | undefined {
     try {
       const storageEntry = localStorage.getItem(key);
       if (storageEntry) {
         const value = JSON.parse(storageEntry);
-        setter(value);
+        return value;
       }
     } catch (error) {
-      console.error("Failed to read data from the storage", error);
+      console.error("Failed to read data from the local storage for key=" + key, error);
     }
+    return undefined;
   }
 
-  private static getCachedObject<T>(key: string, init: object): T {
-    return this.getCached<T>(key, this.cacheObjects, () =>
-      reactive<object>(init)
+  private static getCachedObject<T extends object>(key: string, init: object): T {
+    return this.getCached<T, T>(
+      key, 
+      this.cacheObjects, 
+      () => reactive<object>(init) as T,
+      (r, onChange) => watch(r, v => onChange(v)) 
     );
   }
 
-  /**
-   * Gets a reference for a specific value
-   */
   private static getCachedRef<T>(key: string): StorageRef<T> {
-    return this.getCached<StorageRef<T | undefined>>(
+    return this.getCached<StorageRef<T>, T | undefined>(
       key,
       this.cacheValues,
-      () => ref<T | undefined>(undefined)
+      () => ref<T | undefined>(undefined) as StorageRef<T>,
+      (r, onChange) => watch(r, v => onChange(v))
     );
   }
 
-  private static getCached<R>(
+  private static getCached<S, R>(
     key: string,
-    collection: Map<string, UniversalStorageRef>,
-    initializer: () => UniversalStorageRef
-  ): R {
+    collection: Map<string, S>,
+    initializer: () => S,
+    watcher: (r: S, onChange: (v: R) => void) => void
+  ): S {
     const cachedObject = collection.get(key);
     if (cachedObject) {
-      return cachedObject as unknown as R;
+      return cachedObject;
     }
 
     const newObject = initializer();
     collection.set(key, newObject);
-    // Watch is bound to the component and will be removed as component
-    // will not be rendered anymore. We want to avoid that, and retain working
-    // watcher for the lifetime of the app.
-    setTimeout(
-      () => watch(newObject, (value) => this.localStorageSet(key, value)),
-      0
-    );
-    return newObject as unknown as R;
+    // watch() is bound to the component lifetime by default
+    // we want to avoid that by calling watch in setTimeout() function
+    setTimeout(() => watcher(newObject, (v) => this.localStorageSet(key, v)), 0);
+    return newObject;
   }
 
   private static localStorageSet<T>(key: string, value: T) {
