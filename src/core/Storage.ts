@@ -137,7 +137,13 @@ export class Storage {
 
     const newObject = initializer();
     collection.set(key, newObject);
-    watch(newObject, (value) => this.localStorageSet(key, value));
+    // Watch is bound to the component and will be removed as component
+    // will not be rendered anymore. We want to avoid that, and retain working
+    // watcher for the lifetime of the app.
+    setTimeout(
+      () => watch(newObject, (value) => this.localStorageSet(key, value)),
+      0
+    );
     return newObject as unknown as R;
   }
 
