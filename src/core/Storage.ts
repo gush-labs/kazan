@@ -1,4 +1,8 @@
-import { ref, reactive, watch, type Ref, type WatchSource } from "vue";
+/**
+ * Stores data in persistent storage and updates its content
+ * according to any data changes.
+ */
+import { ref, reactive, watch, type Ref } from "vue";
 
 export type StorageRef<T> = Ref<T | undefined>;
 
@@ -9,22 +13,31 @@ export class Storage {
   // in memory storage
   static cacheValues = new Map<string, Ref<any>>();
   static cacheObjects = new Map<string, any>();
-  static version = 3;
+  static requiredVersion = 5;
 
   /**
    * Verifies that storage is not oudated
    * and if it is, then performs a full cleanup
    */
   static verify() {
-    const rawVersion = localStorage.getItem("version");
-    if (rawVersion) {
-      const version = JSON.parse(rawVersion) as number;
-      if (version == this.version) {
-        return;
+    try {
+      const rawVersion = localStorage.getItem("version");
+      if (rawVersion) {
+        const version = JSON.parse(rawVersion) as number;
+        if (version === this.requiredVersion) {
+          return;
+        }
       }
+    } catch (e) {
+      console.error("Failed to parse storage version", e);
     }
+    this.clearStorage();
+    console.info("Storage is cleared due to not being valid.");
+  }
+
+  private static clearStorage() {
     localStorage.clear();
-    localStorage.setItem("version", this.version + "");
+    localStorage.setItem("version", this.requiredVersion + "");
   }
 
   /**
@@ -55,8 +68,8 @@ export class Storage {
       return ref;
     }
     const saved = this.getLocalStorageItem<T>(key);
-    if (saved) { 
-      ref.value = saved; 
+    if (saved) {
+      ref.value = saved;
     }
     return ref;
   }
@@ -93,13 +106,10 @@ export class Storage {
       value.value = undefined;
     });
     this.cacheObjects.clear();
-    localStorage.clear();
-    localStorage.setItem("version", this.version + "");
+    this.clearStorage();
   }
 
-  private static getLocalStorageItem<T>(
-    key: string
-  ): T | undefined {
+  private static getLocalStorageItem<T>(key: string): T | undefined {
     try {
       const storageEntry = localStorage.getItem(key);
       if (storageEntry) {
@@ -107,17 +117,23 @@ export class Storage {
         return value;
       }
     } catch (error) {
-      console.error("Failed to read data from the local storage for key=" + key, error);
+      console.error(
+        "Failed to read data from the local storage for key=" + key,
+        error
+      );
     }
     return undefined;
   }
 
-  private static getCachedObject<T extends object>(key: string, init: object): T {
+  private static getCachedObject<T extends object>(
+    key: string,
+    init: object
+  ): T {
     return this.getCached<T, T>(
-      key, 
-      this.cacheObjects, 
+      key,
+      this.cacheObjects,
       () => reactive<object>(init) as T,
-      (r, onChange) => watch(r, v => onChange(v)) 
+      (r, onChange) => watch(r, (v) => onChange(v))
     );
   }
 
@@ -126,7 +142,7 @@ export class Storage {
       key,
       this.cacheValues,
       () => ref<T | undefined>(undefined) as StorageRef<T>,
-      (r, onChange) => watch(r, v => onChange(v))
+      (r, onChange) => watch(r, (v) => onChange(v))
     );
   }
 
@@ -145,7 +161,10 @@ export class Storage {
     collection.set(key, newObject);
     // watch() is bound to the component lifetime by default
     // we want to avoid that by calling watch in setTimeout() function
-    setTimeout(() => watcher(newObject, (v) => this.localStorageSet(key, v)), 0);
+    setTimeout(
+      () => watcher(newObject, (v) => this.localStorageSet(key, v)),
+      0
+    );
     return newObject;
   }
 
@@ -157,3 +176,5 @@ export class Storage {
     }
   }
 }
+
+Storage.verify();

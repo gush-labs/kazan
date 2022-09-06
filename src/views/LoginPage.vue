@@ -1,15 +1,15 @@
 <script setup lang="ts">
 import LoadingCircle from "@/components/LoadingCircle.vue";
-import { Authentication, User } from "@/core/Authentication";
+import { Authentication } from "@/core/Authentication";
 import ActionButton from "@/components/ActionButton.vue";
-import WaniKani from "@/core/WaniKani";
+import { WaniKaniClient } from "@/core/WaniKaniClient";
 import router from "@/router";
 import { ref } from "vue";
 
 const input = ref("");
 const loading = ref(false);
 const error = ref("");
-const user = User.ref;
+const user = Authentication.user;
 
 if (user.value) {
   router.push({ name: "home" });
@@ -20,7 +20,7 @@ function signIn() {
     return;
   }
 
-  WaniKani.ref.value = new WaniKani(input.value);
+  WaniKaniClient.setKey(input.value);
   Authentication.login().then((success) => {
     loading.value = false;
     if (success) {

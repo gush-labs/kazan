@@ -1,5 +1,7 @@
-import translator from "@/core/language/Translator";
-import type ReviewCard from "@/core/ReviewCard";
+/**
+ * Responsible for all logic related to reviews.
+ */
+import { Language } from "@/core/Language";
 
 type Collection = ReviewCard[];
 
@@ -186,9 +188,9 @@ export class Review {
 
   verify(card: ReviewCard, input: string): boolean {
     const rawInputMatchesAnswers = card.check(input);
-    const romanjiMatchesAnswers = card.check(translator.toRomaji(input));
-    const hiraganaMatchesAnsers = card.check(translator.toHiragana(input));
-    const katakanaMatchesAnswers = card.check(translator.toKatakana(input));
+    const romanjiMatchesAnswers = card.check(Language.toRomaji(input));
+    const hiraganaMatchesAnsers = card.check(Language.toHiragana(input));
+    const katakanaMatchesAnswers = card.check(Language.toKatakana(input));
 
     const correct =
       rawInputMatchesAnswers ||
@@ -217,5 +219,60 @@ export class Review {
     // Notify picker that card was answered incorrectly
     this.picker.incorrect(card.id);
     return false;
+  }
+}
+
+/**
+ * Represents a review card.
+ */
+export class ReviewCard {
+  id = 0;
+  type = "";
+
+  question = "";
+  shownAnswers: string[] = [];
+  answers: string[] = [];
+
+  note = "";
+  kana = "";
+
+  static create(
+    type: string,
+    question: string,
+    answers: string[],
+    shownAnswers: string[] = [],
+    kana = ""
+  ): ReviewCard {
+    const card = this.empty;
+    card.type = type;
+    card.question = question;
+    card.answers = answers;
+    card.kana = kana;
+    if (shownAnswers.length == 0) {
+      card.shownAnswers = answers;
+    } else {
+      card.shownAnswers = shownAnswers;
+    }
+    return card;
+  }
+
+  get answer(): string {
+    return this.answers[0];
+  }
+
+  check(userAnswer: string): boolean {
+    return (
+      this.answers.find(
+        (answer) => answer.toLowerCase() == userAnswer.toLowerCase()
+      ) != undefined
+    );
+  }
+
+  assignId(id: number) {
+    this.id = id;
+  }
+
+  static get empty(): ReviewCard {
+    return new ReviewCard();
   }
 }

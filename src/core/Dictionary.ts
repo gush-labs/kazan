@@ -1,13 +1,14 @@
-import { watchRemove, watchUpdate } from "@/core/Utils";
-import { User } from "@/core/Authentication";
-import type { Review } from "@/core/Review";
-import AppStatus from "@/core/AppStatus";
-import { Storage } from "@/core/Storage";
-import WaniKani from "@/core/WaniKani";
-import ReviewCreator from "@/core/ReviewCreator";
+/**
+ * Represents global application dictionary which is used
+ * to create different types of reviews.
+ */
+import { watchRemove } from "@/core/Utilities";
+import { Authentication } from "@/core/Authentication";
+import { Application } from "@/core/Application";
+import { Storage, type StorageRef } from "@/core/Storage";
+import { WaniKaniClient } from "@/core/WaniKaniClient";
 
-// TODO: Rename to Word
-export class Word2 {
+export class Word {
   id = 0;
   japanese = "";
   meanings: string[] = [];
@@ -15,10 +16,10 @@ export class Word2 {
   speechParts: string[] = [];
   level = 0;
 
-  static primaryMeaning(word: Word2): string {
+  static primaryMeaning(word: Word): string {
     return word.meanings[0];
   }
-  static primaryReading(word: Word2): string {
+  static primaryReading(word: Word): string {
     return word.readings[0];
   }
 }
@@ -28,55 +29,50 @@ enum DictionaryState {
   EMPTY,
 }
 
-class Vocabulary {
-  version = 0;
-  words: Word2[] = [];
-
+class DictionaryData {
   static requiredVersion = 0;
-  static get ref() {
-    return Storage.get<Vocabulary>("vocabulary");
-  }
+  version = 0;
+  words: Word[] = [];
 }
 
-type PageRequest = Promise<Word2[]>;
+type PageRequest = Promise<Word[]>;
 
 export class Dictionary {
   static state = DictionaryState.EMPTY;
-
-  static vocabulary = new Map<number, Word2>();
+  static vocabulary = new Map<number, Word>();
   static wanikaniLevels = new Map<number, number[]>();
   static meanings = new Map<string, number[]>();
 
-  static load(user: User) {
-    // Do not update vocabulary which is already filled with data
+  private static get data(): StorageRef<DictionaryData> {
+    return Storage.get<DictionaryData>("dictionary");
+  }
+
+  static load() {
     if (this.state == DictionaryState.READY) {
       return;
     }
 
-    const vocabRef = Vocabulary.ref;
-    if (
-      !vocabRef.value ||
-      vocabRef.value.version != Vocabulary.requiredVersion
-    ) {
-      // If there is no vocabulary or it's outdated
-      // we should request it
-      this.requestVocabulary(user).then((vocabulary) => {
-        vocabRef.value = vocabulary;
-        this.loadFromVocabularyData(vocabulary);
-      });
+    const dataIsMissing = !this.data.value;
+    const dataIsOutdated =
+      this.data.value?.version !== DictionaryData.requiredVersion;
+
+    if (dataIsMissing || dataIsOutdated) {
+      this.requestData().then((data) => this.loadFromData(data));
     } else {
-      this.loadFromVocabularyData(vocabRef.value);
+      this.loadFromData(this.data.value!);
     }
 
-    watchRemove(vocabRef, () => {
-      this.state = DictionaryState.EMPTY;
-    });
+    watchRemove(this.data, () => (this.state = DictionaryState.EMPTY));
   }
 
-  private static loadFromVocabularyData(vocabularyData: Vocabulary) {
-    vocabularyData.words.forEach((word) => {
+  private static loadFromData(data: DictionaryData) {
+    // Save vocabulary
+    this.data.value = data;
+
+    // Load everything in memory
+    data.words.forEach((word) => {
       // Add word to main vocabulary
-      this.vocabulary.set(word.id, word as Word2);
+      this.vocabulary.set(word.id, word as Word);
 
       // Store list of words for any WaniKani level
       const level = word.level;
@@ -98,12 +94,8 @@ export class Dictionary {
     console.log("Dictionary: loaded " + this.vocabulary.size + " words");
   }
 
-  private static requestVocabulary(user: User): Promise<Vocabulary> {
-    AppStatus.processStart("wksync", "Syncing vocabulary with WaniKani...");
-
-    // WaniKani unable to return all database
-    // so we need to request vocabulary page by page
-    return new Promise((resolver) => {
+  private static requestData(): Promise<DictionaryData> {
+    const request = new Promise<DictionaryData>((resolver) => {
       const pageRequests: PageRequest[] = [];
 
       // Request the next page
@@ -117,62 +109,66 @@ export class Dictionary {
         // that we have and combine them into one collection of words
         Promise.all(pageRequests)
           .then((responses) => {
-            let words: Word2[] = [];
-            responses.forEach((response) => (words = words.concat(response)));
-
-            const vocabulary = new Vocabulary();
-            vocabulary.words = words;
-            AppStatus.processComplete("wksync");
-            resolver(vocabulary);
+            const data = new DictionaryData();
+            data.words = responses.reduce((l, r) => l.concat(r));
+            resolver(data);
           })
           .catch(() => {
-            AppStatus.processComplete("wksync");
-            AppStatus.errorSet(
+            Application.status.errorSet(
               "wksync-error",
               "Failed to connect to WaniKani. Try to refresh the page."
             );
           });
       };
 
-      // Request the first page
-      pageRequests.push(
-        this.requestPage(user, "0", (request) => requestNextPage(request))
+      const firstPageRequest = this.requestPage("0", (request) =>
+        requestNextPage(request)
       );
+      pageRequests.push(firstPageRequest);
     });
+
+    Application.status.processSubmit(
+      "wksync",
+      "Loading vocabulary from WaniKani",
+      request
+    );
+    return request;
   }
 
   private static requestPage(
-    user: User,
     pageId: string,
     nextPageHandler: (p: PageRequest | undefined) => void
   ): PageRequest {
+    const wanikaniSubscription = Authentication.user.value?.paid === true;
     const query = {
       types: "vocabulary",
-      levels: user.paid ? undefined : "1,2,3",
+      levels: wanikaniSubscription ? undefined : "1,2,3",
       page_after_id: pageId,
     };
 
-    return WaniKani.request("subjects", query).then((response) => {
-      const nextUrl: string = response.pages.next_url;
-      if (nextUrl) {
-        const pageId = nextUrl.split("?")[1].split("&")[0].split("=")[1];
-        nextPageHandler(this.requestPage(user, pageId, nextPageHandler));
+    return WaniKaniClient.request("subjects", query).then((response) => {
+      const nextPageUrl: string = response.pages.next_url;
+      if (nextPageUrl) {
+        const nextPageId = nextPageUrl
+          .split("?")[1]
+          .split("&")[0]
+          .split("=")[1];
+        nextPageHandler(this.requestPage(nextPageId, nextPageHandler));
       } else {
         nextPageHandler(undefined);
       }
 
-      const vocabulary: Word2[] = [];
-      (response.data as any[])
-        .map((word) => this.parseWordData(word))
-        .forEach((word) => vocabulary.push(word));
-      return vocabulary;
+      const words = (response.data as any[]).map((word) =>
+        this.parseWordData(word)
+      );
+      return words;
     });
   }
 
-  private static parseWordData(wordData: any): Word2 {
+  private static parseWordData(wordData: any): Word {
     const id = wordData.id;
     const data = wordData.data;
-    const word = new Word2();
+    const word = new Word();
     word.id = id;
     word.japanese = data.characters;
     word.level = data.level;
@@ -204,8 +200,4 @@ export class Dictionary {
   }
 }
 
-// Verify storage on startup
-Storage.verify();
-
-// If user will logged in, we should load a dictionary
-watchUpdate(User.ref, (user) => Dictionary.load(user));
+Authentication.onLogin(() => Dictionary.load());

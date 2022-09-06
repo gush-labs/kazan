@@ -1,4 +1,28 @@
-class TimeDistribution {
+/**
+ * Different utils for just basically anything.
+ */
+import { watch, type Ref } from "vue";
+
+export function watchRemove<T>(ref: Ref<T>, action: () => void) {
+  watch(ref, (v) => {
+    if (v == undefined) {
+      action();
+    }
+  });
+}
+
+export function watchUpdate<T>(
+  ref: Ref<T | undefined>,
+  action: (value: T) => void
+) {
+  watch(ref, (v) => {
+    if (v) {
+      action(v!);
+    }
+  });
+}
+
+export class TimeDistribution {
   buckets: number[] = [];
   range: { start: number; end: number } = { start: 0, end: 0 };
   slowThreshold = 0;
@@ -57,5 +81,3 @@ class TimeDistribution {
     return values.reduce((l, r) => Math.max(l, r));
   }
 }
-
-export default TimeDistribution;

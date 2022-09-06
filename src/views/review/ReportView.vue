@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import DistributionView from "@/components/DistributionView.vue";
 import ActionButton from "@/components/ActionButton.vue";
-import TimeDistribution from "@/core/TimeDistribution";
+import { TimeDistribution } from "@/core/Utilities";
 import type { Review } from "@/core/Review";
 import router from "@/router";
 import { ref } from "vue";

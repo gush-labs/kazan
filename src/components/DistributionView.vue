@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import type TimeDistribution from "@/core/TimeDistribution";
+import type { TimeDistribution } from "@/core/Utilities";
 import { ref } from "vue";
 
 const props = defineProps<{ distribution: TimeDistribution }>();
@@ -8,33 +8,6 @@ const distribution: TimeDistribution = ref(props.distribution).value;
 const values = new Array(distribution.buckets.length);
 const maxCount = distribution.buckets.reduce((l, r) => Math.max(l, r));
 distribution.buckets.forEach((v, i) => (values[i] = (v / maxCount) * 100));
-
-/*
-// Initialize distribution array
-const resolution = 40;
-const distribution: number[] = [];
-for (let i = 0; i < resolution + 1; i++) {
-  distribution.push(0);
-}
-
-// Init and normalize maxTime
-// const meanTime = input.reduce((l, r) => l + r) / input.length;
-const maxTime =
-  (Math.floor(input.reduce((l, r) => Math.max(l, r)) / 5) + 1) * 5;
-const minTime = 0;
-
-// Calculate the actual distribution
-input
-  .map((v) => Math.floor(((v - minTime) / (maxTime - minTime)) * resolution))
-  .forEach((v) => (distribution[v] += 1));
-
-const maxCount = distribution.reduce((l, r) => Math.max(l, r));
-const minCount = distribution.reduce((l, r) => Math.min(l, r));
-
-const values = distribution.map(
-  (v) => ((v - minCount) / (maxCount - minCount)) * 100
-);
-*/
 </script>
 
 <template>

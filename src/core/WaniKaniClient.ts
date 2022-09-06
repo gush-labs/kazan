@@ -1,16 +1,27 @@
+/**
+ * Handles all communication between our application
+ * and WaniKani API.
+ */
 import { Storage } from "@/core/Storage";
 
-class WaniKani {
-  apiKey: string;
+class WaniKaniData {
+  apiKey: string | undefined = undefined;
+}
 
-  constructor(apiKey: string) {
-    this.apiKey = apiKey;
+export class WaniKaniClient {
+  private static data = Storage.getObject<WaniKaniData>(
+    "wanikani",
+    new WaniKaniData()
+  );
+
+  static setKey(key: string) {
+    this.data.apiKey = key;
   }
 
   static request(resource: string, query: any = {}): Promise<any> {
-    const api = this.ref.value?.apiKey;
-    if (api == undefined) {
-      return Promise.resolve(undefined);
+    const api = this.data.apiKey;
+    if (!api) {
+      return Promise.reject("There is no WaniKani API key present");
     }
 
     let q = "";
@@ -25,10 +36,4 @@ class WaniKani {
     request.headers.set("Authorization", "Bearer " + api);
     return fetch(request).then((response) => response.json());
   }
-
-  static get ref() {
-    return Storage.get<WaniKani>("wanikani");
-  }
 }
-
-export default WaniKani;

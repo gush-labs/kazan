@@ -1,4 +1,8 @@
-import { hiraganaData, katakanaData } from "@/core/data/kana";
+/**
+ * Responsible for all manipulation with Japanese text such as
+ * converting romaji to kana or other way around.
+ */
+import { hiraganaData, katakanaData } from "@/data/kana";
 
 const hiragana: Map<string, string> = new Map(); // romaji -> hiragana
 const katakana: Map<string, string> = new Map(); // romaji -> katakana
@@ -32,8 +36,8 @@ setToMapper(["こ", "co"], hiragana);
 katakanaData.all.forEach((pair) => setToMapper(pair, katakana));
 setToMapper(["ッ", "."], katakana);
 
-class Translator {
-  isRomanji(char: string): boolean {
+export class Language {
+  static isRomanji(char: string): boolean {
     return alphabet.has(char.toLowerCase());
   }
 
@@ -42,7 +46,7 @@ class Translator {
    * @param input string with hiragana text
    * @returns hiragana text represented in romaji
    */
-  toRomaji(input: string): string {
+  static toRomaji(input: string): string {
     let output = "";
     let prev = "";
 
@@ -79,23 +83,23 @@ class Translator {
    * @param input string with romanji text
    * @returns romanji text represented in hiragana
    */
-  toHiragana(input: string): string {
+  static toHiragana(input: string): string {
     return this.toKana(input, hiragana);
   }
 
-  completeHiragana(input: string): string {
+  static completeHiragana(input: string): string {
     return this.toKana(input, hiragana, true);
   }
 
-  toKatakana(input: string): string {
+  static toKatakana(input: string): string {
     return this.toKana(input, katakana);
   }
 
-  completeKatakana(input: string) {
+  static completeKatakana(input: string) {
     return this.toKana(input, katakana, true);
   }
 
-  toKana(input: string, kana: Map<string, string>, complete = false) {
+  static toKana(input: string, kana: Map<string, string>, complete = false) {
     let output = "";
     let prev = "";
     input.split("").forEach((i) => {
@@ -123,6 +127,3 @@ class Translator {
     return output + prev;
   }
 }
-
-const translator = new Translator();
-export default translator;

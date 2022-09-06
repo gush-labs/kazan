@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import SwitchOption from "@/components/SwitchOption.vue";
 import PageLink from "@/components/PageLink.vue";
-import ActionButton from "@/components/ActionButton.vue";
 import { Storage } from "@/core/Storage";
 import ReviewCreator from "@/core/ReviewCreator";
 
@@ -25,7 +24,7 @@ const select = Storage.getObject<VocabularySelectData>(
     <div class="vocabulary-container d-flex flex-column">
       <div class="text-center link-container mb-2">
         <PageLink
-          :to="{ name: 'home', params: { page: 'kana' } }"
+          :to="{ name: 'home', params: { page: 'home' } }"
           icon="arrow-left-short"
           class="text-muted"
           plain

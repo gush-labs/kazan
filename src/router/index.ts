@@ -1,5 +1,4 @@
 import { createRouter, createWebHistory } from "vue-router";
-import TyperPage from "@/views/TyperPage.vue";
 import HomePage from "@/views/HomePage.vue";
 import ReviewPage from "@/views/ReviewPage.vue";
 import NotFoundPage from "@/views/NotFoundPage.vue";
@@ -30,11 +29,6 @@ const router = createRouter({
       path: "/kana/:kana",
       name: "kana",
       component: KanaPage,
-    },
-    {
-      path: "/typer",
-      name: "typer",
-      component: TyperPage,
     },
     {
       path: "/review",

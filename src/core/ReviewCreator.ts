@@ -1,6 +1,6 @@
 import type { Review } from "@/core/Review";
 import type Creator from "./reviews/Creator";
-import JapaneseLessonsReview from "./reviews/JapaneseLessonsReview";
+import JapaneseBasicVerbs from "./reviews/JapaneseBasicVerbs";
 import WaniKaniReview from "./reviews/WaniKaniReview";
 import JapanesePhrases from "./reviews/JapanesePhrases";
 
@@ -15,7 +15,6 @@ abstract class ReviewCreator {
   }
 
   static create(id: string, params: string[]): Review | undefined {
-    console.log(this.creators);
     return this.creators.get(id)?.create(params);
   }
 }
@@ -25,7 +24,7 @@ function set(creator: Creator) {
 }
 
 set(new WaniKaniReview());
-set(new JapaneseLessonsReview());
+set(new JapaneseBasicVerbs());
 set(new JapanesePhrases());
 
 export default ReviewCreator;

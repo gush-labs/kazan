@@ -1,5 +1,4 @@
-import { Review, RandomPicker } from "../Review";
-import ReviewCard from "../ReviewCard";
+import { Review, RandomPicker, ReviewCard } from "@/core/Review";
 import type Creator from "./Creator";
 
 function createCard(
@@ -17,9 +16,9 @@ function createCard(
   return card;
 }
 
-class JapaneseLessonsReview implements Creator {
-  id = "lessons";
-  name = "Japanese Lessons";
+class JapaneseBasicVerbs implements Creator {
+  id = "verbs";
+  name = "Japanese Basic Verbs - lesson 1 [nihongoresources.com]";
 
   create(params: string[]): Review | undefined {
     const cards = [
@@ -47,4 +46,4 @@ class JapaneseLessonsReview implements Creator {
   }
 }
 
-export default JapaneseLessonsReview;
+export default JapaneseBasicVerbs;

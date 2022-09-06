@@ -27,7 +27,6 @@ type KanaPageState = {
 function set(state: KanaPageState, kana: string, selected: boolean) {
   const entry = state.raw.find(v => v.kana == kana);
   if (entry) {
-    console.log("update entry: " + kana);
     entry.selected = selected;
   } else {
     state.raw.push({kana, selected});

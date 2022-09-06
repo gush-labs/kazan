@@ -1,9 +1,9 @@
 <script setup lang="ts">
 import LoadingCircle from "./LoadingCircle.vue";
-import AppStatus from "@/core/AppStatus";
+import { Application } from "@/core/Application";
 
-const process = AppStatus.currentProcess;
-const error = AppStatus.currentError;
+const process = Application.status.currentProcess;
+const error = Application.status.currentError;
 </script>
 
 <template>

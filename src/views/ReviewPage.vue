@@ -1,10 +1,9 @@
 <script setup lang="ts">
 import { database, generateCards } from "@/core/Database";
-import { Review, RandomPicker } from "@/core/Review";
+import { Review, RandomPicker, ReviewCard } from "@/core/Review";
 import ReviewCreator from "@/core/ReviewCreator";
-import type ReviewCard from "@/core/ReviewCard";
 import ReportView from "@/views/review/ReportView.vue";
-import translator from "@/core/language/Translator.js";
+import { Language } from "@/core/Language";
 import router from "@/router";
 import { ref } from "vue";
 
@@ -33,7 +32,6 @@ function startReview(r: Review) {
 const reviewId = router.currentRoute.value.query.review?.toString();
 const reviewParams = router.currentRoute.value.query.params?.toString();
 if (reviewId) {
-  console.log("review id: " + reviewId);
   const review = ReviewCreator.create(
     reviewId,
     reviewParams ? reviewParams.split(",") : []
@@ -83,9 +81,9 @@ function onChange() {
   // const inputText = input.value.split(" ").join("");
   const inputText = input.value;
   if (card.value.kana == "hiragana") {
-    input.value = translator.toHiragana(inputText);
+    input.value = Language.toHiragana(inputText);
   } else if (card.value.kana == "katakana") {
-    input.value = translator.toKatakana(inputText);
+    input.value = Language.toKatakana(inputText);
   }
 }
 
@@ -97,9 +95,9 @@ function checkAnswer(e: Event) {
   // let inputText = input.value.split(" ").join("");
   let inputText = input.value;
   if (card.value.kana == "hiragana")
-    inputText = translator.completeHiragana(inputText);
+    inputText = Language.completeHiragana(inputText);
   if (card.value.kana == "katakana")
-    inputText = translator.completeKatakana(inputText);
+    inputText = Language.completeKatakana(inputText);
 
   if (inputText != "" && !wrong.value) {
     // verify the current review card

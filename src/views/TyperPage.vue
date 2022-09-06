@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import translator from "@/core/language/Translator.js";
+import { Language } from "@/core/Language";
 import { ref } from "vue";
 
 class Line {
@@ -23,7 +23,7 @@ class Line {
     let correctChars = 0;
     // Compare every character with target text
     inputCharacters.forEach((ch) => {
-      if (!translator.isRomanji(ch)) {
+      if (!Language.isRomanji(ch)) {
         if (ch === this.text[this.compareIterator + correctChars]) {
           this.validated.push({ text: ch, corrected: this.wasError });
           correctChars += 1;
@@ -69,7 +69,7 @@ function onChange() {
 
   // validate against the current line of text
   if (!currentLine.complete()) {
-    input.value = translator.toHiragana(input.value);
+    input.value = Language.toHiragana(input.value);
     const correctChars = currentLine.validate(input.value);
     input.value = input.value.slice(correctChars);
   }

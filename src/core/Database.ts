@@ -1,7 +1,7 @@
 // TODO: This file should be destroyed, disassembled, buried under the ground
 // every person who knows about existence of this file should be killed
-import ReviewCard from "@/core/ReviewCard";
-import { hiraganaData, katakanaData } from "@/core/data/kana";
+import { ReviewCard } from "@/core/Review";
+import { hiraganaData, katakanaData } from "@/data/kana";
 
 type Word = {
   japanese: string; // full word in japanese using kanji, hiragana and katakana

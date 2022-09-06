@@ -24,7 +24,7 @@ pages.set("home", {
   title: "What do you want to practice?",
   buttons: [
     { name: "Kana", page: "kana" },
-    { name: "Vocabulary", page: "vocab" },
+    { name: "Vocabulary", link: { name: "vocabulary" } },
     { name: "Grammar", page: "grammar" },
     { name: "Phonetics", page: "phonetics" },
   ],

@@ -1,7 +1,6 @@
+import { Review, RandomPicker, ReviewCard } from "@/core/Review";
+import { Dictionary, Word } from "@/core/Dictionary";
 import type Creator from "./Creator";
-import { Dictionary, Word2 } from "@/core/Dictionary";
-import ReviewCard from "@/core/ReviewCard";
-import { Review, RandomPicker } from "@/core/Review";
 
 type WaniKaniQuery = {
   level: number;
@@ -30,7 +29,6 @@ class WaniKaniReview implements Creator {
   }
 
   create(paramsRaw: string[]): Review | undefined {
-    console.log("created: " + paramsRaw);
     const result: ReviewCard[] = [];
     const translation: string[] = [];
     const vocabulary = Dictionary.vocabulary;
@@ -70,7 +68,7 @@ class WaniKaniReview implements Creator {
       }
 
       if (params.translation) {
-        translation.push(Word2.primaryMeaning(word));
+        translation.push(Word.primaryMeaning(word));
       }
     });
 
@@ -79,7 +77,7 @@ class WaniKaniReview implements Creator {
       if (!wordIds) {
         return;
       }
-      const words: Word2[] = [];
+      const words: Word[] = [];
 
       wordIds.forEach((wordId) => {
         const word = vocabulary.get(wordId);
