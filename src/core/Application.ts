@@ -1,6 +1,7 @@
 /**
- * Represents the meta information about state
- * of the application (such as application status and configuration)
+ * Module contains all high-level information about
+ * current state of the application like list of different
+ * outgoing processes or global app configuration.
  */
 import { computed, reactive } from "vue";
 import { Storage } from "./Storage";

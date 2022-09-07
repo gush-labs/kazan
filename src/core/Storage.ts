@@ -1,6 +1,7 @@
 /**
- * Stores data in persistent storage and updates its content
- * according to any data changes.
+ * Module responsible for everything related to 
+ * consistent storage. Used to create objects which
+ * are saved to the browser local storage on changes.
  */
 import { ref, reactive, watch, type Ref } from "vue";
 

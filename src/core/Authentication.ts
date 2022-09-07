@@ -1,6 +1,5 @@
 /**
- * Performs authentication required to get certain functionality.
- * In particular, responsible for singing in to WaniKani account.
+ * Module responsible for any type of authentication.
  */
 import { Application } from "@/core/Application";
 import { WaniKaniClient } from "@/core/WaniKaniClient";
@@ -17,6 +16,7 @@ class User {
  * Authenticates user
  */
 export class Authentication {
+
   static get user(): StorageRef<User> {
     return Storage.get<User>("user");
   }

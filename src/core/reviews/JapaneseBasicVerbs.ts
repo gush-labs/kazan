@@ -6,14 +6,13 @@ function createCard(
   note: string,
   japanese: string
 ): ReviewCard {
-  const card = ReviewCard.empty;
-  card.question = meaning;
-  card.answers = [japanese];
-  card.shownAnswers = [japanese];
-  card.note = note;
-  card.type = "In Japanese";
-  card.kana = "hiragana";
-  return card;
+  return new ReviewCard({
+    question: meaning,
+    answers: [japanese],
+    note: note,
+    type: "translation",
+    input: "hiragana"
+  });
 }
 
 class JapaneseBasicVerbs implements Creator {

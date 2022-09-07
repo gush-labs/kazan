@@ -6,14 +6,14 @@ function createCard(
   note: string,
   japanese: string[]
 ): ReviewCard {
-  const card = ReviewCard.empty;
-  card.question = meaning;
-  card.answers = japanese;
-  card.shownAnswers = [japanese[0]];
-  card.note = note;
-  card.type = "In Japanese";
-  card.kana = "hiragana";
-  return card;
+  return new ReviewCard({
+    question: meaning,
+    answers: japanese,
+    shownAnswers: [japanese[0]],
+    note: note,
+    type: "translation",
+    input: "hiragana"
+  });
 }
 
 class JapanesePhrases implements Creator {
@@ -34,7 +34,7 @@ class JapanesePhrases implements Creator {
       createCard("Excuse me", "", ["すみません"]),
       createCard("I'm sorry", "", ["ごめんなさい"]),
       createCard("Thank you", "", ["ありがとうございます", "ありがとう"]),
-      // createCard("You're welcome", "", ["どういたしまして"]),
+      createCard("You're welcome", "", ["どういたしまして"]),
     ];
     return new Review(new RandomPicker(cards));
   }

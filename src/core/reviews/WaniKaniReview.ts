@@ -52,19 +52,21 @@ class WaniKaniReview implements Creator {
       }
 
       if (params.reading) {
-        const card = ReviewCard.create(
-          "Reading",
-          word.japanese,
-          word.readings.concat(word.japanese),
-          word.readings,
-          "hiragana"
-        );
-        result.push(card);
+        result.push(new ReviewCard({
+          type: "reading",
+          question: word.japanese,
+          answers: word.readings.concat(word.japanese),
+          shownAnswers: word.readings,
+          input: "hiragana"
+        }));
       }
 
       if (params.meaning) {
-        const card = ReviewCard.create("Meaning", word.japanese, word.meanings);
-        result.push(card);
+        result.push(new ReviewCard({
+          type: "meaning",
+          question: word.japanese,
+          answers: word.meanings
+        }));
       }
 
       if (params.translation) {
@@ -92,14 +94,13 @@ class WaniKaniReview implements Creator {
         .reduce((l, r) => l.concat(r))
         .concat(japaneseWords);
 
-      const card = ReviewCard.create(
-        "In Japanese",
-        meaning,
-        allReadings,
-        japaneseWords,
-        "hiragana"
-      );
-      result.push(card);
+      result.push(new ReviewCard({
+        type: "translation",
+        question: meaning,
+        answers: allReadings.concat(japaneseWords),
+        shownAnswers: japaneseWords,
+        input: "hiragana"
+      }));
     });
 
     return new Review(new RandomPicker(result));

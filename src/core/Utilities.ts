@@ -1,5 +1,5 @@
 /**
- * Different utils for just basically anything.
+ * Different utilities for just basically anything
  */
 import { watch, type Ref } from "vue";
 

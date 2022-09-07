@@ -342,35 +342,15 @@ class Database {
   };
 
   wordsReadings(words: string[]) {
-    return this.findData(words, (word) => {
-      const entry = vocabular.get(word);
-      return entry
-        ? ReviewCard.create("Reading", entry.japanese, [entry.reading])
-        : undefined;
-    });
+    return [];
   }
 
   wordsMeanings(words: string[]) {
-    return this.findData(words, (word) => {
-      const entry = vocabular.get(word);
-      return entry
-        ? ReviewCard.create("Meaning", entry.japanese, entry.meanings)
-        : undefined;
-    });
+    return [];
   }
 
   meaningsWords(meanings: string[]): ReviewCard[] {
-    return this.findData(meanings, (meaning) => {
-      const words = vocabularMeaning.get(meaning);
-      if (words) {
-        return ReviewCard.create(
-          "Japanese",
-          meaning,
-          words.map((e) => e.japanese).concat(words.map((e) => e.reading))
-        );
-      }
-      return undefined;
-    });
+    return [];
   }
 
   private findData<T>(
@@ -392,9 +372,12 @@ class Database {
   }
 
   kanaToCards(kana: string[][]) {
-    return kana.map((entry) =>
-      ReviewCard.create("Reading", entry[0], [entry[1]])
-    );
+    return kana
+      .map(entry => new ReviewCard({
+        type: "reading",
+        question: entry[0],
+        answers: [entry[1]]
+      }));
   }
 }
 
@@ -402,6 +385,10 @@ export const database = new Database();
 
 export function generateCards(entries: Array<Array<string>>): ReviewCard[] {
   return entries.map((entry) =>
-    ReviewCard.create("Reading", entry[0], [entry[1]])
+    new ReviewCard({
+      type: "reading",
+      question: entry[0],
+      answers: [entry[1]]
+    })
   );
 }

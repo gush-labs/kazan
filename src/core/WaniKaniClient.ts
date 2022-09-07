@@ -1,6 +1,5 @@
 /**
- * Handles all communication between our application
- * and WaniKani API.
+ * Module contains an API to work with WaniKani integration
  */
 import { Storage } from "@/core/Storage";
 
@@ -9,10 +8,10 @@ class WaniKaniData {
 }
 
 export class WaniKaniClient {
-  private static data = Storage.getObject<WaniKaniData>(
-    "wanikani",
-    new WaniKaniData()
-  );
+
+  private static get data() { 
+    return Storage.getObject<WaniKaniData>("wanikani", new WaniKaniData());
+  }
 
   static setKey(key: string) {
     this.data.apiKey = key;

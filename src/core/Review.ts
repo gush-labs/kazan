@@ -1,5 +1,6 @@
 /**
- * Responsible for all logic related to reviews.
+ * Module contains everything related to reviews.
+ * Including reviews implementation, cards, and etc.
  */
 import { Language } from "@/core/Language";
 
@@ -44,7 +45,7 @@ export class RandomPicker implements CardPicker {
 
   constructor(collection: Collection) {
     collection.forEach((card, i) => {
-      card.assignId(i);
+      card.id = i;
       this.cardPicked.push(0);
       this.collection.push(card);
     });
@@ -222,42 +223,40 @@ export class Review {
   }
 }
 
+type ReviewCardType = "reading" | "meaning" | "translation";
+type ReviewCardInput = "romaji" | "hiragana" | "katakana";
+
+type ReviewCardParams = {
+  id?: number;
+  type: ReviewCardType;
+  question: string;
+  shownAnswers?: string[];
+  answers: string[];
+  note?: string;
+  input?: ReviewCardInput;
+}
+
 /**
- * Represents a review card.
+ * Represents a review card
  */
 export class ReviewCard {
-  id = 0;
-  type = "";
 
-  question = "";
-  shownAnswers: string[] = [];
-  answers: string[] = [];
+  id: number;
+  type: ReviewCardType;
+  question: string;
+  shownAnswers: string[];
+  answers: string[];
+  note: string;
+  input: ReviewCardInput;
 
-  note = "";
-  kana = "";
-
-  static create(
-    type: string,
-    question: string,
-    answers: string[],
-    shownAnswers: string[] = [],
-    kana = ""
-  ): ReviewCard {
-    const card = this.empty;
-    card.type = type;
-    card.question = question;
-    card.answers = answers;
-    card.kana = kana;
-    if (shownAnswers.length == 0) {
-      card.shownAnswers = answers;
-    } else {
-      card.shownAnswers = shownAnswers;
-    }
-    return card;
-  }
-
-  get answer(): string {
-    return this.answers[0];
+  constructor(params: ReviewCardParams) {
+    this.id = params.id ?? 0;
+    this.type = params.type;
+    this.question = params.question;
+    this.shownAnswers = params.shownAnswers ?? params.answers;
+    this.answers = params.answers;
+    this.note = params.note ?? "";
+    this.input = params.input ?? "romaji";
   }
 
   check(userAnswer: string): boolean {
@@ -266,13 +265,5 @@ export class ReviewCard {
         (answer) => answer.toLowerCase() == userAnswer.toLowerCase()
       ) != undefined
     );
-  }
-
-  assignId(id: number) {
-    this.id = id;
-  }
-
-  static get empty(): ReviewCard {
-    return new ReviewCard();
   }
 }

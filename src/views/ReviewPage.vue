@@ -80,9 +80,9 @@ if (queryEntries.length > 0) {
 function onChange() {
   // const inputText = input.value.split(" ").join("");
   const inputText = input.value;
-  if (card.value.kana == "hiragana") {
+  if (card.value.input == "hiragana") {
     input.value = Language.toHiragana(inputText);
-  } else if (card.value.kana == "katakana") {
+  } else if (card.value.input == "katakana") {
     input.value = Language.toKatakana(inputText);
   }
 }
@@ -94,9 +94,9 @@ function checkAnswer(e: Event) {
   // remove all spaces from the input
   // let inputText = input.value.split(" ").join("");
   let inputText = input.value;
-  if (card.value.kana == "hiragana")
+  if (card.value.input == "hiragana")
     inputText = Language.completeHiragana(inputText);
-  if (card.value.kana == "katakana")
+  if (card.value.input == "katakana")
     inputText = Language.completeKatakana(inputText);
 
   if (inputText != "" && !wrong.value) {
@@ -152,7 +152,7 @@ function checkAnswer(e: Event) {
     <div class="answer-container mb-3 mt-3">
       <div
         class="card-type p-1"
-        :class="{ 'card-type-reading': card.type == 'Reading' }"
+        :class="{ 'card-type-reading': card.type == 'reading' }"
       >
         {{ card.type }}
       </div>

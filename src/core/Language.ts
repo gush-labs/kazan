@@ -1,6 +1,7 @@
 /**
- * Responsible for all manipulation with Japanese text such as
- * converting romaji to kana or other way around.
+ * Module responsible for everything related to any
+ * manupiluations with text in Japanese. Like converting
+ * romaji to kana and other way around.
  */
 import { hiraganaData, katakanaData } from "@/data/kana";
 
