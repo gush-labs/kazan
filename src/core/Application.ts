@@ -6,12 +6,12 @@
 import { computed, reactive } from "vue";
 import { Storage } from "./Storage";
 
-type Process = {
+export type Process = {
   key: string;
   message: string;
 };
 
-type Error = {
+export type Error = {
   key: string;
   message: string;
 };

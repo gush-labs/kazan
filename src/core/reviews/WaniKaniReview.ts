@@ -13,6 +13,17 @@ class WaniKaniReview implements Creator {
   id = "wanikani";
   name = "WaniKani";
 
+  reading: boolean = true;
+  meaning: boolean = true;
+  translation: boolean = true;
+  shuffling: boolean = false;
+  levels = {
+    prefix: "Vocabulary Level ",
+    postfix: "",
+    start: 1,
+    end: 60,
+  }
+
   static parseWaniKaniQuery(paramsText: string[]): WaniKaniQuery | undefined {
     try {
       const params: WaniKaniQuery = {

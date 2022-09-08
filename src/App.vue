@@ -41,10 +41,24 @@ import AppHeader from "./components/AppHeader.vue";
   --text-error-color: rgb(97, 33, 33);
   --text-dunger-color: rgb(176, 56, 56);
   --text-success-color: rgb(25, 79, 13);
+
   --border-base-color: rgba(0, 0, 0, 0.1);
   --border-hover-color: rgba(0, 0, 0, 0.25);
+
   --button-active-color: rgba(0, 0, 0, 0.5);
+  --button-active-text-color: var(--text-light-color);
   --button-disabled-opacity: 0.65;
+  --button-border-radius: 4px;
+  --button-border-width: 1px;
+  --button-border-color: var(--border-base-color);
+
+  --input-border-radius: var(--button-border-radius);
+  --input-border-width: var(--button-border-width);
+  --input-border-color: var(--button-border-color);
+
+  --dropdown-border-radius: var(--button-border-radius);
+  --dropdown-border-width: var(--button-border-width);
+  --dropdown-border-color: var(--button-border-color);
 }
 
 /* BASIC CLASSES */
@@ -62,27 +76,29 @@ import AppHeader from "./components/AppHeader.vue";
 }
 .kz-button {
   position: relative;
-  border: 1px solid var(--border-base-color);
+  border: var(--button-border-width) solid var(--border-base-color);
+  border-radius: var(--button-border-radius);
 }
 .kz-button:hover {
-  border: 1px solid var(--border-hover-color);
+  border: var(--button-border-width) solid var(--border-hover-color);
 }
 .kz-button:focus {
-  border: 1px solid var(--border-hover-color);
+  border: var(--button-border-width) solid var(--border-hover-color);
 }
 .kz-button-active {
-  color: var(--text-light-color) !important;
+  color: var(--button-active-text-color) !important;
   background-color: var(--button-active-color) !important;
 }
 .kz-button-disabled {
   opacity: var(--button-disabled-opacity);
+  border-radius: var(--button-border-radius);
 }
 .kz-button-disabled:focus {
-  border: 1px solid var(--border-base-color) !important;
+  border: var(--button-border-width) solid var(--border-base-color) !important;
 }
 .kz-button-disabled:hover {
   cursor: default;
-  border: 1px solid var(--border-base-color) !important;
+  border: var(--button-border-width) solid var(--border-base-color) !important;
 }
 
 /* Fonts for japanese texts (not great, but better than default ones) */
@@ -106,8 +122,5 @@ h4 {
 }
 .dropdown-toggle::after {
   display: none;
-}
-.btn {
-  border-radius: 0px;
 }
 </style>

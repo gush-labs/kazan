@@ -48,8 +48,15 @@ distribution.buckets.forEach((v, i) => (values[i] = (v / maxCount) * 100));
 .value-store {
   background-color: rgba(0, 0, 0, 0.1);
 }
+.dist-container :last-child {
+  border-bottom-right-radius: var(--button-border-radius);
+}
+.dist-container :first-child {
+  border-bottom-left-radius: var(--button-border-radius);
+}
 .value-store .value {
   background-color: rgba(0, 0, 0, 0.2);
+  border-radius: 0px;
 }
 .dist-container {
   display: grid;

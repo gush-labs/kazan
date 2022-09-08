@@ -101,7 +101,8 @@ function signIn() {
 }
 
 .form-control {
-  border-radius: 0px;
+  border: var(--input-border-width) solid var(--input-border-color);
+  border-radius: var(--input-border-radius);
 }
 
 @media screen and (max-width: 650px) {

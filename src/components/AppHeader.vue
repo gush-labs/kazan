@@ -21,8 +21,8 @@ function signOut() {
         >English</ActionButton
       >
       <ul class="dropdown-menu language-links">
-        <li><button class="dropdown-item active" href="#">English</button></li>
-        <li><button class="dropdown-item disabled" href="#">日本語</button></li>
+        <li><ActionButton class="dropdown-item active">English</ActionButton></li>
+        <li><ActionButton class="dropdown-item disabled">日本語</ActionButton></li>
       </ul>
     </div>
 
@@ -63,6 +63,10 @@ function signOut() {
   list-style-type: none;
   padding: 0;
   margin: 0;
+}
+.dropdown-menu {
+  border-radius: var(--dropdown-border-radius);
+  border: var(--dropdown-border-width) solid var(--dropdown-border-color);
 }
 .dropdown-menu a {
   border: none;

@@ -5,7 +5,7 @@ import ReviewCreator from "@/core/ReviewCreator";
 import ReportView from "@/views/review/ReportView.vue";
 import { Language } from "@/core/Language";
 import router from "@/router";
-import { ref } from "vue";
+import { ref, computed } from "vue";
 
 function createReview(
   collection: Array<Array<string>>,
@@ -20,6 +20,13 @@ const card = ref<ReviewCard>(review.value.take());
 const input = ref("");
 const wrong = ref(false);
 const complete = ref(false);
+const typeName = computed(() => {
+  switch (card.value.type) {
+    case "meaning": return "Meaning";
+    case "reading": return "Reading";
+    case "translation": return "In Japanese";
+  }
+});
 
 function startReview(r: Review) {
   review.value = r;
@@ -154,7 +161,7 @@ function checkAnswer(e: Event) {
         class="card-type p-1"
         :class="{ 'card-type-reading': card.type == 'reading' }"
       >
-        {{ card.type }}
+        {{ typeName }}
       </div>
       <form @submit="checkAnswer">
         <input
@@ -192,16 +199,17 @@ function checkAnswer(e: Event) {
 }
 .card-type {
   display: block;
-  border: 1px solid var(--border-base-color);
+  border: var(--button-border-width) solid var(--border-base-color);
+  border-top-left-radius: var(--button-border-radius);
+  border-top-right-radius: var(--button-border-radius);
   border-bottom: none !important;
   text-align: center;
 }
 .card-type-reading {
   background-color: var(--button-active-color);
   border: 1px solid rgba(0, 0, 0, 0);
-  color: white;
+  color: var(--button-active-text-color);
 }
-
 .review-window {
   display: grid;
   grid-template-rows: 2em 1fr auto;
@@ -221,8 +229,9 @@ function checkAnswer(e: Event) {
 }
 
 .answer-container .answer-form {
-  border: 1px solid var(--border-base-color);
-  border-radius: 0px;
+  border: var(--input-border-width) solid var(--input-border-color);
+  border-bottom-left-radius: var(--input-border-radius);
+  border-bottom-right-radius: var(--input-border-radius);
   text-align: center;
   font-size: 2em;
 }

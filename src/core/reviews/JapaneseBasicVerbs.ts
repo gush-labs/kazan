@@ -19,27 +19,36 @@ class JapaneseBasicVerbs implements Creator {
   id = "verbs";
   name = "Japanese Basic Verbs - lesson 1 [nihongoresources.com]";
 
+  translation: boolean = true;
+  meaning: boolean = false;
+  shuffling: boolean = false;
+  reading: boolean = false;
+
   create(params: string[]): Review | undefined {
     const cards = [
-      createCard("to exist", "animate, casual, positive", "いる"),
+      createCard("to exist", "animate, casual, affirmative", "いる"),
       createCard("to exist", "animate, casual, negative", "いない"),
-      createCard("to exist", "animate, polite, positive", "います"),
+      createCard("to exist", "animate, polite, affirmative", "います"),
       createCard("to exist", "animate, polite, negative", "いません"),
 
-      createCard("to exist", "inanimate, casual, positive", "ある"),
+      createCard("to exist", "inanimate, casual, affirmative", "ある"),
       createCard("to exist", "inanimate, casual, negative", "ない"),
-      createCard("to exist", "inanimate, polite, positive", "あります"),
+      createCard("to exist", "inanimate, polite, affirmative", "あります"),
       createCard("to exist", "inanimate, polite, negative", "ありません"),
 
-      createCard("to do", "casual, positive", "する"),
+      createCard("to do", "casual, affirmative", "する"),
       createCard("to do", "casual, negative", "しない"),
-      createCard("to do", "polite, positive", "します"),
+      createCard("to do", "polite, affirmative", "します"),
       createCard("to do", "polite, negative", "しません"),
 
-      createCard("to become", "casual, positive", "なる"),
+      createCard("to become", "casual, affirmative", "なる"),
       createCard("to become", "casual, negative", "ならない"),
-      createCard("to become", "polite, positive", "なります"),
+      createCard("to become", "polite, affirmative", "なります"),
       createCard("to become", "polite, negative", "なりません"),
+
+      createCard("です", "casual, affirmative", "だ"),
+      createCard("です", "casual, negative", "じゃない"),
+      createCard("です", "polite, negative", "じゃありません"),
     ];
     return new Review(new RandomPicker(cards));
   }

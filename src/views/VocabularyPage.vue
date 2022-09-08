@@ -3,12 +3,14 @@ import SwitchOption from "@/components/SwitchOption.vue";
 import PageLink from "@/components/PageLink.vue";
 import { Storage } from "@/core/Storage";
 import ReviewCreator from "@/core/ReviewCreator";
+import { computed, watch, ref } from "vue";
 
 const vocabularyReviews = ReviewCreator.getAllReviews();
 class VocabularySelectData {
   meaning = false;
   reading = true;
   translation = false;
+  shuffle = true;
   level = 1;
   vocabulary: string = vocabularyReviews[0].id;
 }
@@ -17,6 +19,26 @@ const select = Storage.getObject<VocabularySelectData>(
   "vocabulary-select",
   new VocabularySelectData()
 );
+
+const vocabulary = computed(() => 
+  vocabularyReviews.filter(v => v.id == select.vocabulary)[0]);
+
+const levelsStart = computed(() => {
+  const l = vocabulary.value.levels;
+  return l ? l.start : 0;
+});
+
+const levels = computed(() => {
+  const l = vocabulary.value.levels;
+  if (l) {
+    const result: string[] = [];
+    for (var i = l.start; i <= l.end; i += 1) {
+      result.push(l.prefix + i + l.postfix);
+    }
+    return result;
+  }
+  return [];
+});
 </script>
 
 <template>
@@ -48,6 +70,20 @@ const select = Storage.getObject<VocabularySelectData>(
         </option>
       </select>
 
+      <select
+        class="form-select mb-3"
+        aria-label="Default select example"
+        v-model="select.level"
+        :disabled="levels.length == 0"
+      >
+        <option v-for="level, id in levels" 
+          :key="level"
+          :value="id + levelsStart">
+          {{ level }}
+        </option>
+      </select>
+
+      <!--
       <div class="level-container d-flex flex-row justify-content-between mb-3">
         <div class="button me-3"><i class="bi bi-dash-circle"></i></div>
         <div class="button me-3"><i class="bi bi-dash-circle-dotted"></i></div>
@@ -56,23 +92,33 @@ const select = Storage.getObject<VocabularySelectData>(
         </div>
         <div class="button ms-3"><i class="bi bi-plus-circle-dotted"></i></div>
         <div class="button ms-3"><i class="bi bi-plus-circle"></i></div>
-      </div>
+      </div>-->
 
-      <SwitchOption
-        :switch="select.meaning"
+      <div class="switch-container">
+      <SwitchOption :switch="select.meaning"
         @click="() => (select.meaning = !select.meaning)"
-        >Words meaning</SwitchOption
+        :disabled="!vocabulary.meaning"
+        >Meaning of words</SwitchOption
       >
       <SwitchOption
         :switch="select.reading"
         @click="() => (select.reading = !select.reading)"
-        >Words reading</SwitchOption
+        :disabled="!vocabulary.reading">
+        Reading of words</SwitchOption
       >
       <SwitchOption
         :switch="select.translation"
         @click="() => (select.translation = !select.translation)"
+        :disabled="!vocabulary.translation"
         >To Japanese translation</SwitchOption
       >
+      <SwitchOption
+        :switch="select.shuffle"
+        @click="() => (select.shuffle = !select.shuffle)"
+        :disabled="!vocabulary.shuffling"
+        >Shuffle cards</SwitchOption
+      >
+      </div>
 
       <PageLink
         :to="{
@@ -84,6 +130,7 @@ const select = Storage.getObject<VocabularySelectData>(
               select.reading,
               select.meaning,
               select.translation,
+              select.shuffle,
             ].toString(),
           },
         }"
@@ -99,11 +146,14 @@ const select = Storage.getObject<VocabularySelectData>(
   font-size: 2em;
 }
 .vocabulary-container .form-select {
-  border: 1px solid var(--border-base-color);
-  border-radius: 0px;
+  border: var(--button-border-width) solid var(--button-border-color);
+  border-radius: var(--button-border-radius);
 }
 .level-container h4 {
   margin: 0px;
+}
+.switch-container {
+  display: grid;
 }
 .vocabulary-container a {
   text-decoration: none;

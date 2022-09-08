@@ -3,7 +3,7 @@
  */
 import { watch, type Ref } from "vue";
 
-export function watchRemove<T>(ref: Ref<T>, action: () => void) {
+export function watchRemove<T>(ref: Ref<T | undefined>, action: () => void) {
   watch(ref, (v) => {
     if (v == undefined) {
       action();
@@ -16,8 +16,24 @@ export function watchUpdate<T>(
   action: (value: T) => void
 ) {
   watch(ref, (v) => {
-    if (v) {
-      action(v!);
+    if (v != undefined) {
+      action(v);
+    }
+  });
+}
+
+export function watchUpdateDelay<T>(ref: Ref<T | undefined>, action: (v: T) => void, delay: number) {
+  watch(ref, v => {
+    if (v != undefined) {
+      setTimeout(() => action(v), delay);
+    }
+  })
+}
+
+export function watchRemoveDelay<T>(ref: Ref<T | undefined>, action: () => void, delay: number) {
+  watch(ref, v => {
+    if (v == undefined) {
+      setTimeout(() => action(), delay);
     }
   });
 }

@@ -111,13 +111,14 @@ const slowestCount = review.value
   border-radius: 10px;
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(8em, 1fr));
-  gap: 0.5em;
+  gap: 1em;
 }
 .report .card-item {
   text-align: center;
 }
 .report .card-incorrect {
   border: 1px solid var(--text-dunger-color);
+  border-radius: var(--button-border-radius);
   color: var(--text-dunger-color);
   opacity: 0.7;
 }

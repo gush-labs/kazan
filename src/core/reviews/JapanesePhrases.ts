@@ -20,7 +20,12 @@ class JapanesePhrases implements Creator {
   id = "phrases";
   name = "Japanese Common Phrases";
 
-  create(params: string[]): Review | undefined {
+  meaning: boolean = false;
+  reading: boolean = false;
+  translation: boolean = true;
+  shuffling: boolean = false;
+
+  create(_: string[]): Review | undefined {
     const cards = [
       createCard("Glad to meet you", "", ["はじめまして"]),
       createCard("Look forward to work with you", "", [
