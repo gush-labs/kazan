@@ -1,5 +1,6 @@
 import { Review, RandomPicker, ReviewCard } from "@/core/Review";
-import type Creator from "./Creator";
+import type { CreatorParams, Creator, CreatorStatus } from "./Creator";
+import { ref, type Ref } from "vue";
 
 function createCard(
   meaning: string,
@@ -11,7 +12,7 @@ function createCard(
     answers: [japanese],
     note: note,
     type: "translation",
-    input: "hiragana"
+    input: "hiragana",
   });
 }
 
@@ -19,12 +20,12 @@ class JapaneseBasicVerbs implements Creator {
   id = "verbs";
   name = "Japanese Basic Verbs - lesson 1 [nihongoresources.com]";
 
-  translation: boolean = true;
-  meaning: boolean = false;
-  shuffling: boolean = false;
-  reading: boolean = false;
+  translation = true;
+  meaning = false;
+  shuffling = false;
+  reading = false;
 
-  create(params: string[]): Review | undefined {
+  create(params: CreatorParams, rawParams: string[]): Review | undefined {
     const cards = [
       createCard("to exist", "animate, casual, affirmative", "いる"),
       createCard("to exist", "animate, casual, negative", "いない"),
@@ -51,6 +52,14 @@ class JapaneseBasicVerbs implements Creator {
       createCard("です", "polite, negative", "じゃありません"),
     ];
     return new Review(new RandomPicker(cards));
+  }
+
+  levels(): string[] {
+    return [];
+  }
+
+  status(): Ref<CreatorStatus> {
+    return ref({ available: true, reason: "" });
   }
 }
 

@@ -1,5 +1,6 @@
 import { Review, RandomPicker, ReviewCard } from "@/core/Review";
-import type Creator from "./Creator";
+import type { CreatorParams, Creator, CreatorStatus } from "./Creator";
+import { type Ref, ref } from "vue";
 
 function createCard(
   meaning: string,
@@ -12,7 +13,7 @@ function createCard(
     shownAnswers: [japanese[0]],
     note: note,
     type: "translation",
-    input: "hiragana"
+    input: "hiragana",
   });
 }
 
@@ -20,12 +21,12 @@ class JapanesePhrases implements Creator {
   id = "phrases";
   name = "Japanese Common Phrases";
 
-  meaning: boolean = false;
-  reading: boolean = false;
-  translation: boolean = true;
-  shuffling: boolean = false;
+  meaning = false;
+  reading = false;
+  translation = true;
+  shuffling = false;
 
-  create(_: string[]): Review | undefined {
+  create(params: CreatorParams, rawParams: string[]): Review | undefined {
     const cards = [
       createCard("Glad to meet you", "", ["はじめまして"]),
       createCard("Look forward to work with you", "", [
@@ -42,6 +43,14 @@ class JapanesePhrases implements Creator {
       createCard("You're welcome", "", ["どういたしまして"]),
     ];
     return new Review(new RandomPicker(cards));
+  }
+
+  levels(): string[] {
+    return [];
+  }
+
+  status(): Ref<CreatorStatus> {
+    return ref({ available: true, reason: "" });
   }
 }
 

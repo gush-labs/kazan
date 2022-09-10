@@ -8,8 +8,7 @@ class WaniKaniData {
 }
 
 export class WaniKaniClient {
-
-  private static get data() { 
+  private static get data() {
     return Storage.getObject<WaniKaniData>("wanikani", new WaniKaniData());
   }
 

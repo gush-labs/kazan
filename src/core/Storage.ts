@@ -1,5 +1,5 @@
 /**
- * Module responsible for everything related to 
+ * Module responsible for everything related to
  * consistent storage. Used to create objects which
  * are saved to the browser local storage on changes.
  */

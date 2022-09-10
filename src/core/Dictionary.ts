@@ -1,6 +1,6 @@
 /**
  * Module contains full description of global app
- * vocabulary which is used to create different types of 
+ * vocabulary which is used to create different types of
  * review and in particular, reviews for WaniKani.
  */
 import { watchRemove } from "@/core/Utilities";

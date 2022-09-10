@@ -234,13 +234,12 @@ type ReviewCardParams = {
   answers: string[];
   note?: string;
   input?: ReviewCardInput;
-}
+};
 
 /**
  * Represents a review card
  */
 export class ReviewCard {
-
   id: number;
   type: ReviewCardType;
   question: string;

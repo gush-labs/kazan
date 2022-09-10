@@ -22,16 +22,24 @@ export function watchUpdate<T>(
   });
 }
 
-export function watchUpdateDelay<T>(ref: Ref<T | undefined>, action: (v: T) => void, delay: number) {
-  watch(ref, v => {
+export function watchUpdateDelay<T>(
+  ref: Ref<T | undefined>,
+  action: (v: T) => void,
+  delay: number
+) {
+  watch(ref, (v) => {
     if (v != undefined) {
       setTimeout(() => action(v), delay);
     }
-  })
+  });
 }
 
-export function watchRemoveDelay<T>(ref: Ref<T | undefined>, action: () => void, delay: number) {
-  watch(ref, v => {
+export function watchRemoveDelay<T>(
+  ref: Ref<T | undefined>,
+  action: () => void,
+  delay: number
+) {
+  watch(ref, (v) => {
     if (v == undefined) {
       setTimeout(() => action(), delay);
     }

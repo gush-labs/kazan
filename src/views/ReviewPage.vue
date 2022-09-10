@@ -22,10 +22,14 @@ const wrong = ref(false);
 const complete = ref(false);
 const typeName = computed(() => {
   switch (card.value.type) {
-    case "meaning": return "Meaning";
-    case "reading": return "Reading";
-    case "translation": return "In Japanese";
+    case "meaning":
+      return "Meaning";
+    case "reading":
+      return "Reading";
+    case "translation":
+      return "In Japanese";
   }
+  return "";
 });
 
 function startReview(r: Review) {

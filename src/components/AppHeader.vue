@@ -21,8 +21,12 @@ function signOut() {
         >English</ActionButton
       >
       <ul class="dropdown-menu language-links">
-        <li><ActionButton class="dropdown-item active">English</ActionButton></li>
-        <li><ActionButton class="dropdown-item disabled">日本語</ActionButton></li>
+        <li>
+          <ActionButton class="dropdown-item active">English</ActionButton>
+        </li>
+        <li>
+          <ActionButton class="dropdown-item disabled">日本語</ActionButton>
+        </li>
       </ul>
     </div>
 

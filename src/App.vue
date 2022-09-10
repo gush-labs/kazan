@@ -39,7 +39,7 @@ import AppHeader from "./components/AppHeader.vue";
   --text-base-color: #212529;
   --text-light-color: white;
   --text-error-color: rgb(97, 33, 33);
-  --text-dunger-color: rgb(176, 56, 56);
+  --text-danger-color: rgb(176, 56, 56);
   --text-success-color: rgb(25, 79, 13);
 
   --border-base-color: rgba(0, 0, 0, 0.1);
@@ -69,7 +69,7 @@ import AppHeader from "./components/AppHeader.vue";
   color: var(--text-error-color);
 }
 .kz-text-dunger {
-  color: var(--text-dunger-color);
+  color: var(--text-danger-color);
 }
 .kz-text-success {
   color: var(--text-success-color);

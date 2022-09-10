@@ -16,7 +16,6 @@ class User {
  * Authenticates user
  */
 export class Authentication {
-
   static get user(): StorageRef<User> {
     return Storage.get<User>("user");
   }
@@ -48,7 +47,7 @@ export class Authentication {
         if (response != undefined && response.code == 401 && this.user.value) {
           Application.status.errorSet(
             "wk-login-error",
-            "WaniKani API key is not valid anymore. Please sign in again."
+            "WaniKani API key is not valid. Please sign in again."
           );
           this.logout();
           return false;

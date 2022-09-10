@@ -1,12 +1,19 @@
 <script setup lang="ts">
 import LoadingCircle from "./LoadingCircle.vue";
-import { Application, type Process, type Error} from "@/core/Application";
+import { Application, type Process, type Error } from "@/core/Application";
 import { ref, computed } from "vue";
-import { watchRemove, watchUpdate, watchRemoveDelay, watchUpdateDelay } from "@/core/Utilities";
+import {
+  watchRemove,
+  watchUpdate,
+  watchRemoveDelay,
+  watchUpdateDelay,
+} from "@/core/Utilities";
 
 const showInfo = computed(() => {
-  return Application.status.currentProcess.value == undefined && 
-    Application.status.currentError.value == undefined;
+  return (
+    Application.status.currentProcess.value == undefined &&
+    Application.status.currentError.value == undefined
+  );
 });
 
 const showProcess = computed(() => {
@@ -18,23 +25,46 @@ const error = ref<Error | undefined>(undefined);
 const info = ref<boolean>(true);
 
 // Hide instantly general app info
-watchUpdate(Application.status.currentProcess, () => info.value = false);
-watchUpdate(Application.status.currentError, () => info.value = false);
+watchUpdate(Application.status.currentProcess, () => (info.value = false));
+watchUpdate(Application.status.currentError, () => (info.value = false));
 // Show general app info with delay to give other animations time to finish
-watchRemoveDelay(Application.status.currentProcess, () => info.value = showInfo.value, 550);
-watchRemoveDelay(Application.status.currentError, () => info.value = showInfo.value, 550);
+watchRemoveDelay(
+  Application.status.currentProcess,
+  () => (info.value = showInfo.value),
+  550
+);
+watchRemoveDelay(
+  Application.status.currentError,
+  () => (info.value = showInfo.value),
+  550
+);
 
 // We want to hide process view instantly in case if process is completed or there an error
-watchRemove(Application.status.currentProcess, () => process.value = undefined);
-watchUpdate(Application.status.currentError, () => process.value = undefined);
+watchRemove(
+  Application.status.currentProcess,
+  () => (process.value = undefined)
+);
+watchUpdate(Application.status.currentError, () => (process.value = undefined));
 // And show the process with some delay to give other animations time to finish
-watchUpdateDelay(Application.status.currentProcess, p => process.value = showProcess.value ? p : undefined, 550);
-watchRemoveDelay(Application.status.currentError, () => process.value = Application.status.currentProcess.value, 550);
+watchUpdateDelay(
+  Application.status.currentProcess,
+  (p) => (process.value = showProcess.value ? p : undefined),
+  550
+);
+watchRemoveDelay(
+  Application.status.currentError,
+  () => (process.value = Application.status.currentProcess.value),
+  550
+);
 
 // Instantly hide the error
-watchRemove(Application.status.currentError, () => error.value = undefined);
+watchRemove(Application.status.currentError, () => (error.value = undefined));
 // And show it with some delay
-watchUpdateDelay(Application.status.currentError, p => error.value = p, 550);
+watchUpdateDelay(
+  Application.status.currentError,
+  (p) => (error.value = p),
+  550
+);
 </script>
 
 <template>
@@ -50,13 +80,13 @@ watchUpdateDelay(Application.status.currentError, p => error.value = p, 550);
       </div>
     </Transition>
     <Transition name="process">
-      <div v-if="process" class="process-view ps-1 pe-4">
-        <LoadingCircle class="me-3" />
-        <div class="d-inline process-message">{{ process.message }}</div>
+      <div v-if="process" class="process-view ps-1 pe-3">
+        <LoadingCircle class="me-2" />
+        {{ process.message }}
       </div>
     </Transition>
     <Transition name="info">
-      <div class="error" v-if="error">
+      <div class="error-view ps-1 pe-3" v-if="error">
         <i class="bi bi-exclamation-circle me-2"></i>
         {{ error.message }}
       </div>
@@ -71,6 +101,11 @@ watchUpdateDelay(Application.status.currentError, p => error.value = p, 550);
 .process-view {
   background-color: var(--button-active-color);
   color: var(--button-active-text-color);
+  border-radius: 1em;
+}
+.error-view {
+  background-color: var(--text-danger-color);
+  color: var(--text-light-color);
   border-radius: 1em;
 }
 .error {
@@ -90,16 +125,16 @@ watchUpdateDelay(Application.status.currentError, p => error.value = p, 550);
 }
 
 .process-enter-active {
-  transition: all 500ms cubic-bezier(0.000, 1.310, 0.525, 0.995);
+  transition: all 500ms cubic-bezier(0, 1.31, 0.525, 0.995);
 }
 .process-leave-active {
-  transition: all 500ms cubic-bezier(0.790, 0.020, 0.885, 0.045);
+  transition: all 500ms cubic-bezier(0.79, 0.02, 0.885, 0.045);
 }
 
 .process-enter-from,
 .process-leave-to {
   transform: translateY(2em) scale(20%);
   opacity: 0;
-  color: rgba(0,0,0,0);
+  color: rgba(0, 0, 0, 0);
 }
 </style>

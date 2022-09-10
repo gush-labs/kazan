@@ -105,7 +105,9 @@ export class Language {
     let prev = "";
     input.split("").forEach((i) => {
       const l = i.toLowerCase();
-      if (!alphabet.has(l) || i == ".") {
+      if (l === "-") {
+        output += "ー";
+      } else if (!alphabet.has(l)) {
         output += l;
       } else if (kana.has(prev + l)) {
         output += kana.get(prev + l);

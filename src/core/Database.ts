@@ -372,23 +372,26 @@ class Database {
   }
 
   kanaToCards(kana: string[][]) {
-    return kana
-      .map(entry => new ReviewCard({
-        type: "reading",
-        question: entry[0],
-        answers: [entry[1]]
-      }));
+    return kana.map(
+      (entry) =>
+        new ReviewCard({
+          type: "reading",
+          question: entry[0],
+          answers: [entry[1]],
+        })
+    );
   }
 }
 
 export const database = new Database();
 
 export function generateCards(entries: Array<Array<string>>): ReviewCard[] {
-  return entries.map((entry) =>
-    new ReviewCard({
-      type: "reading",
-      question: entry[0],
-      answers: [entry[1]]
-    })
+  return entries.map(
+    (entry) =>
+      new ReviewCard({
+        type: "reading",
+        question: entry[0],
+        answers: [entry[1]],
+      })
   );
 }

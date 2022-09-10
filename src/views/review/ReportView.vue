@@ -117,9 +117,9 @@ const slowestCount = review.value
   text-align: center;
 }
 .report .card-incorrect {
-  border: 1px solid var(--text-dunger-color);
+  border: 1px solid var(--text-danger-color);
   border-radius: var(--button-border-radius);
-  color: var(--text-dunger-color);
+  color: var(--text-danger-color);
   opacity: 0.7;
 }
 
