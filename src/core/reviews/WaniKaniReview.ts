@@ -1,7 +1,6 @@
 import { Review, RandomPicker, ReviewCard } from "@/core/Review";
 import { Dictionary, Word } from "@/core/Dictionary";
 import type { Creator, CreatorParams, CreatorStatus } from "./Creator";
-import { computed, type Ref } from "vue";
 import { Authentication } from "@/core/Authentication";
 
 type WaniKaniQuery = {
@@ -14,11 +13,7 @@ type WaniKaniQuery = {
 class WaniKaniReview implements Creator {
   id = "wanikani";
   name = "WaniKani";
-
-  reading = true;
-  meaning = true;
-  translation = true;
-  shuffling = false;
+  fixedParams = {};
 
   static parseWaniKaniParams(
     creatorParams: CreatorParams,
@@ -58,7 +53,7 @@ class WaniKaniReview implements Creator {
     }
     // If user doesn't have WaniKani subscription, we can't show him
     // vocabulary from levels higher than 3
-    params.level = user.paid ? params.level : Math.min(params.level, 3);
+    params.level = (user.paid ? params.level : Math.min(params.level, 2)) + 1;
 
     const result: ReviewCard[] = [];
     const translation: string[] = [];
@@ -151,18 +146,16 @@ class WaniKaniReview implements Creator {
     return [];
   }
 
-  status(): Ref<CreatorStatus> {
-    return computed(() => {
-      const user = Authentication.user;
-      if (user.value) {
-        return { available: true, reasong: "" };
-      }
-      return {
-        available: false,
-        reason:
-          "Please sign in using your WaniKani account in order to get access to this review",
-      };
-    }) as Ref<CreatorStatus>;
+  status(): CreatorStatus {
+    const user = Authentication.user;
+    if (user.value) {
+      return { available: true, reason: "" };
+    }
+    return {
+      available: false,
+      reason:
+        "Please sign in using your WaniKani account in order to get access to this review",
+    };
   }
 }
 

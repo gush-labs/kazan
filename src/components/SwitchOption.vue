@@ -1,6 +1,7 @@
 <script setup lang="ts">
 const props = defineProps<{
   switch: boolean;
+  disabled?: boolean;
 }>();
 const emits = defineEmits(["click"]);
 </script>
@@ -8,7 +9,9 @@ const emits = defineEmits(["click"]);
 <template>
   <button
     class="switch-block d-flex flex-row align-items-center"
+    :class="{ 'text-muted': props.disabled }"
     @click="(e) => emits('click', e)"
+    :disabled="props.disabled"
   >
     <div class="toggle">
       <i

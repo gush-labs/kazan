@@ -3,7 +3,9 @@ import SwitchOption from "@/components/SwitchOption.vue";
 import PageLink from "@/components/PageLink.vue";
 import { Storage } from "@/core/Storage";
 import ReviewCreator from "@/core/ReviewCreator";
-import { computed, ref, watch } from "vue";
+import { type CreatorParams, exportParams } from "@/core/reviews/Creator";
+import { computed } from "vue";
+import ActionButton from "@/components/ActionButton.vue";
 
 const vocabularyReviews = ReviewCreator.getAllReviews();
 class VocabularyReviewSelectData {
@@ -24,10 +26,25 @@ const review = computed(
   () => vocabularyReviews.filter((v) => v.id == select.reviewId)[0]
 );
 const levels = computed(() => review.value.levels());
-// god dammit this doesn't work
-const status = ref(review.value.status());
-watch(review.value.status(), newStatus => status.value = newStatus)
+const status = computed(() => review.value.status());
+const fixedParams = computed<CreatorParams>(() => review.value.fixedParams);
 
+const reviewParams = computed(() => {
+  return exportParams(
+    {
+      meaning: fixedParams.value.meaning ?? select.meaning,
+      translation: fixedParams.value.translation ?? select.translation,
+      reading: fixedParams.value.reading ?? select.reading,
+      level: fixedParams.value.level ?? select.level,
+      shuffle: fixedParams.value.shuffle ?? select.shuffle,
+    },
+    []
+  );
+});
+
+function startReview() {
+  // TODO: Write implementation
+}
 </script>
 
 <template>
@@ -84,42 +101,28 @@ watch(review.value.status(), newStatus => status.value = newStatus)
 
         <div class="switch-container">
           <SwitchOption
-            :switch="select.meaning"
+            :switch="fixedParams.meaning ?? select.meaning"
             @click="() => (select.meaning = !select.meaning)"
-            :disabled="!review.meaning"
+            :disabled="fixedParams.meaning != undefined"
             >Meaning of words</SwitchOption
           >
           <SwitchOption
-            :switch="select.reading"
+            :switch="fixedParams.reading ?? select.reading"
             @click="() => (select.reading = !select.reading)"
-            :disabled="!review.reading"
+            :disabled="fixedParams.reading != undefined"
           >
             Reading of words</SwitchOption
           >
           <SwitchOption
-            :switch="select.translation"
+            :switch="fixedParams.translation ?? select.translation"
             @click="() => (select.translation = !select.translation)"
-            :disabled="!review.translation"
+            :disabled="fixedParams.translation != undefined"
             >To Japanese translation</SwitchOption
           >
         </div>
 
-        <PageLink
-          :to="{
-            name: 'review',
-            query: {
-              review: select.reviewId,
-              params: [
-                select.level,
-                select.reading,
-                select.meaning,
-                select.translation,
-                false,
-              ].toString(),
-            },
-          }"
-          class="mt-3"
-          >Start!</PageLink
+        <ActionButton class="mt-3" @click="() => startReview()"
+          >Start!</ActionButton
         >
       </div>
     </div>

@@ -1,6 +1,5 @@
 import { Review, RandomPicker, ReviewCard } from "@/core/Review";
 import type { CreatorParams, Creator, CreatorStatus } from "./Creator";
-import { ref, type Ref } from "vue";
 
 function createCard(
   meaning: string,
@@ -20,10 +19,12 @@ class JapaneseBasicVerbs implements Creator {
   id = "verbs";
   name = "Japanese Basic Verbs - lesson 1 [nihongoresources.com]";
 
-  translation = true;
-  meaning = false;
-  shuffling = false;
-  reading = false;
+  fixedParams = {
+    translation: true,
+    meaning: false,
+    reading: false,
+    shuffle: true,
+  };
 
   create(params: CreatorParams, rawParams: string[]): Review | undefined {
     const cards = [
@@ -58,8 +59,8 @@ class JapaneseBasicVerbs implements Creator {
     return [];
   }
 
-  status(): Ref<CreatorStatus> {
-    return ref({ available: true, reason: "" });
+  status(): CreatorStatus {
+    return { available: true, reason: "" };
   }
 }
 

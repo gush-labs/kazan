@@ -6,6 +6,7 @@ import ReportView from "@/views/review/ReportView.vue";
 import { Language } from "@/core/Language";
 import router from "@/router";
 import { ref, computed } from "vue";
+import { parseParams } from "@/core/reviews/Creator";
 
 function createReview(
   collection: Array<Array<string>>,
@@ -40,17 +41,23 @@ function startReview(r: Review) {
   card.value = review.value.take();
 }
 
+// Take the review ID and review parameters from URL parameters
 const reviewId = router.currentRoute.value.query.review?.toString();
 const reviewParams = router.currentRoute.value.query.params?.toString();
-if (reviewId) {
+if (reviewId && reviewParams) {
+  const [reviewCreatorParams, reviewCreatorRawParams] =
+    parseParams(reviewParams);
   const review = ReviewCreator.create(
     reviewId,
-    reviewParams ? reviewParams.split(",") : []
+    reviewCreatorParams,
+    reviewCreatorRawParams
   );
   if (review) {
     startReview(review);
   }
 }
+
+// ===> EVERYTHING BELOW SHOULD BE DELETED <===
 
 // TODO: Move this logic to the database selector (create a new class for that)
 const queryTable =

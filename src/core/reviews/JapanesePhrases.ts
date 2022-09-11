@@ -21,10 +21,12 @@ class JapanesePhrases implements Creator {
   id = "phrases";
   name = "Japanese Common Phrases";
 
-  meaning = false;
-  reading = false;
-  translation = true;
-  shuffling = false;
+  fixedParams = {
+    translation: true,
+    meaning: false,
+    reading: false,
+    shuffle: true,
+  };
 
   create(params: CreatorParams, rawParams: string[]): Review | undefined {
     const cards = [
@@ -49,8 +51,8 @@ class JapanesePhrases implements Creator {
     return [];
   }
 
-  status(): Ref<CreatorStatus> {
-    return ref({ available: true, reason: "" });
+  status(): CreatorStatus {
+    return { available: true, reason: "" };
   }
 }
 

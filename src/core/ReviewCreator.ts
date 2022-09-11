@@ -1,5 +1,5 @@
 import type { Review } from "@/core/Review";
-import type Creator from "./reviews/Creator";
+import type { Creator, CreatorParams } from "./reviews/Creator";
 import JapaneseBasicVerbs from "./reviews/JapaneseBasicVerbs";
 import WaniKaniReview from "./reviews/WaniKaniReview";
 import JapanesePhrases from "./reviews/JapanesePhrases";
@@ -14,8 +14,12 @@ abstract class ReviewCreator {
     return Array.from(this.creators.entries(), ([_, value]) => value);
   }
 
-  static create(id: string, params: string[]): Review | undefined {
-    return this.creators.get(id)?.create(params);
+  static create(
+    id: string,
+    params: CreatorParams,
+    rawParams: string[]
+  ): Review | undefined {
+    return this.creators.get(id)?.create(params, rawParams);
   }
 }
 
