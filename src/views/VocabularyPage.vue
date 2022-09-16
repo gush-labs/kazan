@@ -6,6 +6,7 @@ import ReviewCreator from "@/core/ReviewCreator";
 import { type CreatorParams, exportParams } from "@/core/reviews/Creator";
 import { computed } from "vue";
 import ActionButton from "@/components/ActionButton.vue";
+import router from "@/router";
 
 const vocabularyReviews = ReviewCreator.getAllReviews();
 class VocabularyReviewSelectData {
@@ -28,6 +29,13 @@ const review = computed(
 const levels = computed(() => review.value.levels());
 const status = computed(() => review.value.status());
 const fixedParams = computed<CreatorParams>(() => review.value.fixedParams);
+  
+const anySelected = computed(() => {
+  const meaning = fixedParams.value.meaning ?? select.meaning;
+  const reading = fixedParams.value.reading ?? select.reading;
+  const translation = fixedParams.value.translation ?? select.translation;
+  return meaning || reading || translation;
+});
 
 const reviewParams = computed(() => {
   return exportParams(
@@ -43,7 +51,9 @@ const reviewParams = computed(() => {
 });
 
 function startReview() {
-  // TODO: Write implementation
+  if (anySelected.value) {
+    router.push({ name: "review", query: { review: review.value.id, params: reviewParams.value } });
+  }
 }
 </script>
 
@@ -121,7 +131,9 @@ function startReview() {
           >
         </div>
 
-        <ActionButton class="mt-3" @click="() => startReview()"
+        <ActionButton class="mt-3" 
+          @click="() => startReview()"
+          :disabled="!anySelected"
           >Start!</ActionButton
         >
       </div>
