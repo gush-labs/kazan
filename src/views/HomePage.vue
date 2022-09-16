@@ -24,7 +24,7 @@ pages.set("home", {
   title: "What do you want to practice?",
   buttons: [
     { name: "Kana", page: "kana" },
-    { name: "Vocabulary", page: "vocab" },
+    { name: "Vocabulary", link: { name: "vocabulary" } },
     { name: "Grammar", page: "grammar" },
     { name: "Phonetics", page: "phonetics" },
   ],
@@ -46,7 +46,14 @@ pages.set("vocab", {
   title: "Choose vocabulary",
   buttons: [
     { name: "WaniKani", page: "wk" },
-    { name: "JLPT", page: "jlpt" },
+    { name: "JLPT" },
+    {
+      name: "Test",
+      link: {
+        name: "review",
+        query: { query: "wanikani", params: "1,true,true,true" },
+      },
+    },
   ],
 });
 

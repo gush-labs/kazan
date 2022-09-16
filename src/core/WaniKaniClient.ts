@@ -1,16 +1,25 @@
-import { Storage } from "@/core/Database";
+/**
+ * Module contains an API to work with WaniKani integration
+ */
+import { Storage } from "@/core/Storage";
 
-class WaniKani {
-  apiKey: string;
+class WaniKaniData {
+  apiKey: string | undefined = undefined;
+}
 
-  constructor(apiKey: string) {
-    this.apiKey = apiKey;
+export class WaniKaniClient {
+  private static get data() {
+    return Storage.getObject<WaniKaniData>("wanikani", new WaniKaniData());
+  }
+
+  static setKey(key: string) {
+    this.data.apiKey = key;
   }
 
   static request(resource: string, query: any = {}): Promise<any> {
-    const api = this.ref.value?.apiKey;
-    if (api == undefined) {
-      return Promise.resolve(undefined);
+    const api = this.data.apiKey;
+    if (!api) {
+      return Promise.reject("There is no WaniKani API key present");
     }
 
     let q = "";
@@ -25,10 +34,4 @@ class WaniKani {
     request.headers.set("Authorization", "Bearer " + api);
     return fetch(request).then((response) => response.json());
   }
-
-  static get ref() {
-    return Storage.get<WaniKani>("wanikani");
-  }
 }
-
-export default WaniKani;

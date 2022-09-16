@@ -1,23 +1,26 @@
 <script setup lang="ts">
 import LoadingCircle from "@/components/LoadingCircle.vue";
-import Authentication from "@/core/Authentication";
+import { Authentication } from "@/core/Authentication";
 import ActionButton from "@/components/ActionButton.vue";
-import WaniKani from "@/core/WaniKani";
-import { User } from "@/core/Database";
+import { WaniKaniClient } from "@/core/WaniKaniClient";
 import router from "@/router";
 import { ref } from "vue";
 
 const input = ref("");
 const loading = ref(false);
 const error = ref("");
-const user = User.ref;
+const user = Authentication.user;
+
+if (user.value) {
+  router.push({ name: "home" });
+}
 
 function signIn() {
   if (input.value.length == 0) {
     return;
   }
 
-  WaniKani.ref.value = new WaniKani(input.value);
+  WaniKaniClient.setKey(input.value);
   Authentication.login().then((success) => {
     loading.value = false;
     if (success) {
@@ -34,7 +37,7 @@ function signIn() {
 <template>
   <div class="d-flex flex-column justify-content-center text-center mb-3">
     <div class="d-flex flex-row justify-content-center">
-      <div v-if="!user" class="profile-container">
+      <div v-if="!user" class="profile-container d-flex flex-column">
         <h4>Sign in</h4>
         <p :class="{ error: error, 'text-muted': !error }">
           <i v-if="error" class="bi bi-exclamation-circle"></i>
@@ -98,7 +101,8 @@ function signIn() {
 }
 
 .form-control {
-  border-radius: 0px;
+  border: var(--input-border-width) solid var(--input-border-color);
+  border-radius: var(--input-border-radius);
 }
 
 @media screen and (max-width: 650px) {

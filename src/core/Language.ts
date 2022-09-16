@@ -1,4 +1,9 @@
-import { database } from "@/core/Database";
+/**
+ * Module responsible for everything related to any
+ * manupiluations with text in Japanese. Like converting
+ * romaji to kana and other way around.
+ */
+import { hiraganaData, katakanaData } from "@/data/kana";
 
 const hiragana: Map<string, string> = new Map(); // romaji -> hiragana
 const katakana: Map<string, string> = new Map(); // romaji -> katakana
@@ -25,15 +30,15 @@ function setToMapper(pair: string[], kana: Map<string, string>) {
   }
 }
 
-database.hiragana.all.forEach((pair) => setToMapper(pair, hiragana));
+hiraganaData.all.forEach((pair) => setToMapper(pair, hiragana));
 setToMapper(["っ", "."], hiragana);
 setToMapper(["こ", "co"], hiragana);
 
-database.katakana.all.forEach((pair) => setToMapper(pair, katakana));
+katakanaData.all.forEach((pair) => setToMapper(pair, katakana));
 setToMapper(["ッ", "."], katakana);
 
-class Translator {
-  isRomanji(char: string): boolean {
+export class Language {
+  static isRomanji(char: string): boolean {
     return alphabet.has(char.toLowerCase());
   }
 
@@ -42,7 +47,7 @@ class Translator {
    * @param input string with hiragana text
    * @returns hiragana text represented in romaji
    */
-  toRomaji(input: string): string {
+  static toRomaji(input: string): string {
     let output = "";
     let prev = "";
 
@@ -79,28 +84,30 @@ class Translator {
    * @param input string with romanji text
    * @returns romanji text represented in hiragana
    */
-  toHiragana(input: string): string {
+  static toHiragana(input: string): string {
     return this.toKana(input, hiragana);
   }
 
-  completeHiragana(input: string): string {
+  static completeHiragana(input: string): string {
     return this.toKana(input, hiragana, true);
   }
 
-  toKatakana(input: string): string {
+  static toKatakana(input: string): string {
     return this.toKana(input, katakana);
   }
 
-  completeKatakana(input: string) {
+  static completeKatakana(input: string) {
     return this.toKana(input, katakana, true);
   }
 
-  toKana(input: string, kana: Map<string, string>, complete = false) {
+  static toKana(input: string, kana: Map<string, string>, complete = false) {
     let output = "";
     let prev = "";
     input.split("").forEach((i) => {
       const l = i.toLowerCase();
-      if (!alphabet.has(l) || i == ".") {
+      if (l === "-") {
+        output += "ー";
+      } else if (!alphabet.has(l)) {
         output += l;
       } else if (kana.has(prev + l)) {
         output += kana.get(prev + l);
@@ -123,6 +130,3 @@ class Translator {
     return output + prev;
   }
 }
-
-const translator = new Translator();
-export default translator;

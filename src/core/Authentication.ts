@@ -1,11 +1,29 @@
-import ApplicationStatus from "@/core/AppStatus";
-import { Storage, User } from "@/core/Database";
-import WaniKani from "@/core/WaniKani";
+/**
+ * Module responsible for any type of authentication.
+ */
+import { Application } from "@/core/Application";
+import { WaniKaniClient } from "@/core/WaniKaniClient";
+import { Storage, type StorageRef } from "@/core/Storage";
+import { watchUpdate } from "@/core/Utilities";
+
+class User {
+  username = "";
+  level = 0;
+  paid = false;
+}
 
 /**
  * Authenticates user
  */
-class Authentication {
+export class Authentication {
+  static get user(): StorageRef<User> {
+    return Storage.get<User>("user");
+  }
+
+  static onLogin(action: (user: User) => void) {
+    watchUpdate(this.user, (user) => action(user));
+  }
+
   /**
    * Parses incoming data from WaniKani
    */
@@ -22,28 +40,26 @@ class Authentication {
    * Uses currently saved WaniKani API key in order to sign in.
    */
   static login(): Promise<boolean> {
-    return WaniKani.request("user")
+    return WaniKaniClient.request("user")
       .then((response) => {
-        const api = WaniKani.ref.value?.apiKey;
-
         // If we'd tried to login using saved WaniKani API key
         // but failed, it means that this API key is not valid anymore
-        if (response != undefined && response.code == 401 && User.ref.value) {
-          ApplicationStatus.errorSet(
+        if (response != undefined && response.code == 401 && this.user.value) {
+          Application.status.errorSet(
             "wk-login-error",
-            "WaniKani API key is not valid anymore. Please sign in again."
+            "WaniKani API key is not valid. Please sign in again."
           );
           this.logout();
           return false;
         }
 
         // If required data is not present in the response we should just fail
-        if (!api || response == undefined || !response.data) {
+        if (response == undefined || !response.data) {
           return false;
         }
 
-        User.ref.value = this.parse(response);
-        ApplicationStatus.errorClear("wk-login-error");
+        this.user.value = this.parse(response);
+        Application.status.errorClear("wk-login-error");
         return true;
       })
       .catch(() => false);
@@ -56,5 +72,3 @@ class Authentication {
 
 // login on startup
 Authentication.login();
-
-export default Authentication;

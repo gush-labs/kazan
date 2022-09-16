@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import DistributionView from "@/components/DistributionView.vue";
 import ActionButton from "@/components/ActionButton.vue";
-import TimeDistribution from "@/core/TimeDistribution";
+import { TimeDistribution } from "@/core/Utilities";
 import type { Review } from "@/core/Review";
 import router from "@/router";
 import { ref } from "vue";
@@ -10,9 +10,11 @@ const emits = defineEmits(["start"]);
 const props = defineProps<{ review: Review }>();
 
 const review = ref(props.review);
-type Card = { name: string; correct: boolean };
-const cards: Array<Card> = review.value.getIncorrectCards().map((card) => {
-  return { name: card.question, correct: false };
+
+const uniqueCards = new Set<string>();
+review.value.getIncorrectCards().map((card) => uniqueCards.add(card.question));
+const cards = Array.from(uniqueCards.values()).map((card) => {
+  return { name: card, correct: false };
 });
 const allCorrect = review.value.getIncorrectCards().length == 0;
 
@@ -109,14 +111,15 @@ const slowestCount = review.value
   border-radius: 10px;
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(8em, 1fr));
-  gap: 0.5em;
+  gap: 1em;
 }
 .report .card-item {
   text-align: center;
 }
 .report .card-incorrect {
-  border: 1px solid var(--text-dunger-color);
-  color: var(--text-dunger-color);
+  border: 1px solid var(--text-danger-color);
+  border-radius: var(--button-border-radius);
+  color: var(--text-danger-color);
   opacity: 0.7;
 }
 
