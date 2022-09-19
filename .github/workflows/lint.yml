@@ -2,7 +2,11 @@ name: Lint code
 
 on:
   push:
-  # pull_request: # Only makes sense if `push` is disabled or enabled only on some branches
+    branches:
+      - master
+  pull_request:
+    branches:
+      - master
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
 
