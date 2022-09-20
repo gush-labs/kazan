@@ -5,78 +5,46 @@
  */
 import { hiraganaData, katakanaData } from "@/data/kana";
 
-const hiragana: Map<string, string> = new Map(); // romaji -> hiragana
-const katakana: Map<string, string> = new Map(); // romaji -> katakana
-const romaji: Map<string, string> = new Map(); // kana -> romaji
-const alphabet: Set<string> = new Set(
-  "a b c d e f g h i j k l m n o p q r s t u v w x y z".split(" ")
-);
+const alphabet = {
+  romajiToHiragana: new Map<string, string>(),
+  romajiToKatakana: new Map<string, string>(),
+  kanaToRomaji: new Map<string, string>(),
+  english: new Set("a b c d e f g h i j k l m n o p q r s t u v w x y z".split(" "))
+}
 
-function setToMapper(pair: string[], kana: Map<string, string>) {
-  if (pair[1] != ".") romaji.set(pair[0], pair[1]);
+function updateAlphabet(pair: string[], romajiToKana: Map<string, string>) {
+  const kana = pair[0];
+  const romaji = pair[1];
+  alphabet.kanaToRomaji.set(kana, romaji);
 
-  // normally じ is used instead of ぢ
-  // so we'll skip this kana
-  if (pair[0].split("")[0] === "ぢ") return;
-  if (pair[0].split("")[0] === "ヂ") return;
+  if (kana.length > 1) {
+    alphabet.kanaToRomaji.set(kana[1], ".");
+  }
+
+  // normally じ is used instead of ぢ so we'll skip this kana
+  if (kana.split("")[0] === "ぢ") return;
+  if (kana.split("")[0] === "ヂ") return;
   // we don't wanna mess づ and ず, ぢ and じ
-  if (pair[0] === "づ") return;
-  if (pair[0] === "ぢ") return;
+  if (kana === "づ") return;
+  if (kana === "ぢ") return;
 
   if (pair[1] == "n") {
-    kana.set("nn", pair[0]);
+    romajiToKana.set("nn", kana);
   } else {
-    kana.set(pair[1], pair[0]);
+    romajiToKana.set(romaji, kana);
   }
 }
 
-hiraganaData.all.forEach((pair) => setToMapper(pair, hiragana));
-setToMapper(["っ", "."], hiragana);
-setToMapper(["こ", "co"], hiragana);
+hiraganaData.all.forEach((pair) => updateAlphabet(pair, alphabet.romajiToHiragana));
+updateAlphabet(["っ", "."], alphabet.romajiToHiragana);
+updateAlphabet(["こ", "co"], alphabet.romajiToHiragana);
 
-katakanaData.all.forEach((pair) => setToMapper(pair, katakana));
-setToMapper(["ッ", "."], katakana);
+katakanaData.all.forEach((pair) => updateAlphabet(pair, alphabet.romajiToKatakana));
+updateAlphabet(["ッ", "."], alphabet.romajiToKatakana);
 
 export class Language {
   static isRomanji(char: string): boolean {
-    return alphabet.has(char.toLowerCase());
-  }
-
-  /**
-   * Converts hiragana to romaji
-   * @param input string with hiragana text
-   * @returns hiragana text represented in romaji
-   */
-  static toRomaji(input: string): string {
-    let output = "";
-    let prev = "";
-
-    // TODO: Add handling of sokuon
-    input.split("").forEach((i) => {
-      const l = i.toLowerCase();
-      if (alphabet.has(l)) {
-        output += l;
-        return;
-      }
-
-      prev += l;
-      if (prev.length == 2) {
-        if (romaji.has(prev)) {
-          output += romaji.get(prev);
-        } else {
-          if (romaji.has(prev[0])) output += romaji.get(prev[0]);
-          else output += prev[0];
-
-          if (romaji.has(prev[1])) output += romaji.get(prev[1]);
-          else output += prev[1];
-        }
-        prev = "";
-      }
-    });
-    if (prev.length == 1 && romaji.has(prev)) {
-      output += romaji.get(prev);
-    }
-    return output;
+    return alphabet.english.has(char.toLowerCase());
   }
 
   /**
@@ -85,19 +53,33 @@ export class Language {
    * @returns romanji text represented in hiragana
    */
   static toHiragana(input: string): string {
-    return this.toKana(input, hiragana);
+    return this.toKana(input, alphabet.romajiToHiragana);
   }
 
   static completeHiragana(input: string): string {
-    return this.toKana(input, hiragana, true);
+    return this.toKana(input, alphabet.romajiToHiragana, true);
   }
 
   static toKatakana(input: string): string {
-    return this.toKana(input, katakana);
+    return this.toKana(input, alphabet.romajiToKatakana);
   }
 
   static completeKatakana(input: string) {
-    return this.toKana(input, katakana, true);
+    return this.toKana(input, alphabet.romajiToKatakana, true);
+  }
+
+  static kanaOnly(input: string): boolean {
+    return input.split("")
+      .filter(c => c != " ")
+      .filter(c => !alphabet.kanaToRomaji.has(c))
+      .length == 0;
+  }
+
+  static latinOnly(input: string): boolean {
+    return input.split("")
+      .filter(c => c != " ")
+      .filter(c => !alphabet.english.has(c.toLowerCase()))
+      .length == 0;
   }
 
   static toKana(input: string, kana: Map<string, string>, complete = false) {
@@ -107,7 +89,7 @@ export class Language {
       const l = i.toLowerCase();
       if (l === "-") {
         output += "ー";
-      } else if (!alphabet.has(l)) {
+      } else if (!alphabet.english.has(l)) {
         output += l;
       } else if (kana.has(prev + l)) {
         output += kana.get(prev + l);
