@@ -21,6 +21,7 @@ const card = ref<ReviewCard>(review.value.take());
 const input = ref("");
 const wrong = ref(false);
 const complete = ref(false);
+const error = ref<string | undefined>(undefined)
 const typeName = computed(() => {
   switch (card.value.type) {
     case "meaning":
@@ -95,13 +96,26 @@ if (queryEntries.length > 0) {
   }
 }
 
+// =============> EVERYTHING ABOVE SHOULD BE REMOVED <=================
+
 function onChange() {
-  // const inputText = input.value.split(" ").join("");
-  const inputText = input.value;
+  let inputText = input.value;
+  const kanaInput = card.value.input == "hiragana" || card.value.input == "katakana";
+
+  if (kanaInput) {
+    // remove spaces from kana input
+    const inputCharacters = input.value.split("").filter(c => c != " ");
+    inputText = inputCharacters.length > 0 ? inputCharacters.reduce((l, r) => l + r) : "";
+  }
+
   if (card.value.input == "hiragana") {
     input.value = Language.toHiragana(inputText);
   } else if (card.value.input == "katakana") {
     input.value = Language.toKatakana(inputText);
+  }
+
+  if (Language.kanaOnly(inputText) || Language.latinOnly(inputText)) {
+    error.value = undefined;
   }
 }
 
@@ -109,15 +123,31 @@ function checkAnswer(e: Event) {
   e.preventDefault();
   const rev = review.value;
 
-  // remove all spaces from the input
-  // let inputText = input.value.split(" ").join("");
-  let inputText = input.value;
-  if (card.value.input == "hiragana")
-    inputText = Language.completeHiragana(inputText);
-  if (card.value.input == "katakana")
-    inputText = Language.completeKatakana(inputText);
+  const inputCharacters = input.value.split(" ").filter(c => c != "")
+  let inputText = inputCharacters.length > 0 ? inputCharacters.reduce((l, r) => l + " " + r) : "";
 
-  if (inputText != "" && !wrong.value) {
+  if (card.value.input == "hiragana") {
+    inputText = Language.completeHiragana(inputText);
+  } else if (card.value.input == "katakana") {
+    inputText = Language.completeKatakana(inputText);
+  }
+
+  const kanaInput = card.value.input == "hiragana" || card.value.input == "katakana";
+
+  if (inputText.length == 0) {
+    error.value = "Answer can't be empty";
+    return;
+  } else if (kanaInput && !Language.kanaOnly(inputText)) {
+    error.value = "Answer should contain only kana";
+    return;
+  } else if (!Language.latinOnly(inputText)) {
+    error.value = "Answer should have only latin characters or spaces";
+    return;
+  } else {
+    error.value = undefined;
+  }
+
+  if (!wrong.value) {
     // verify the current review card
     const correct = rev.verify(card.value, inputText);
     if (correct) {
@@ -185,7 +215,12 @@ function checkAnswer(e: Event) {
       </form>
     </div>
 
-    <div class="stats-window mb-5">
+    <div v-if="error" class="error-window mb-5 text-center">
+      <i class="bi bi-exclamation-circle"></i>
+      {{ error }}
+    </div>
+
+    <div v-if="error == undefined" class="stats-window mb-5">
       <div class="kz-text-success">
         <i class="bi bi-circle"></i>
         {{ review.getCorrectCards().length }} completed
@@ -196,6 +231,7 @@ function checkAnswer(e: Event) {
         {{ review.getIncorrectCards().length }} mistakes
       </div>
     </div>
+
   </div>
 
   <ReportView v-if="complete" @start="startReview" :review="review" />

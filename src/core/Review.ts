@@ -188,18 +188,7 @@ export class Review {
   }
 
   verify(card: ReviewCard, input: string): boolean {
-    const rawInputMatchesAnswers = card.check(input);
-    const romanjiMatchesAnswers = card.check(Language.toRomaji(input));
-    const hiraganaMatchesAnsers = card.check(Language.toHiragana(input));
-    const katakanaMatchesAnswers = card.check(Language.toKatakana(input));
-
-    const correct =
-      rawInputMatchesAnswers ||
-      romanjiMatchesAnswers ||
-      hiraganaMatchesAnsers ||
-      katakanaMatchesAnswers;
-
-    if (correct) {
+    if (card.check(input)) {
       const timeToAnswer = (Date.now() - this.cardTimeStart) / 1000;
       this.cardAnswerTime.set(card.id, timeToAnswer);
 
