@@ -41,6 +41,7 @@ updateAlphabet(["こ", "co"], alphabet.romajiToHiragana);
 
 katakanaData.all.forEach((pair) => updateAlphabet(pair, alphabet.romajiToKatakana));
 updateAlphabet(["ッ", "."], alphabet.romajiToKatakana);
+updateAlphabet(["ー", "-"], alphabet.romajiToHiragana);
 
 export class Language {
   static isRomanji(char: string): boolean {
