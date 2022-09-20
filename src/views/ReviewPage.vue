@@ -140,7 +140,7 @@ function checkAnswer(e: Event) {
   } else if (kanaInput && !Language.kanaOnly(inputText)) {
     error.value = "Answer should contain only kana";
     return;
-  } else if (!Language.latinOnly(inputText)) {
+  } else if (!kanaInput && !Language.latinOnly(inputText)) {
     error.value = "Answer should have only latin characters or spaces";
     return;
   } else {
