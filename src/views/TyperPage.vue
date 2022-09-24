@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { Language } from "@/core/Language";
+import Language from "@/core/Language";
 import { ref } from "vue";
 
 class Line {

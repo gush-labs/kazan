@@ -3,7 +3,7 @@ import { database, generateCards } from "@/core/Database";
 import { Review, RandomPicker, ReviewCard } from "@/core/Review";
 import ReviewCreator from "@/core/ReviewCreator";
 import ReportView from "@/views/review/ReportView.vue";
-import { Language } from "@/core/Language";
+import Language from "@/core/Language";
 import router from "@/router";
 import { ref, computed } from "vue";
 import { parseParams } from "@/core/reviews/Creator";
@@ -21,7 +21,7 @@ const card = ref<ReviewCard>(review.value.take());
 const input = ref("");
 const wrong = ref(false);
 const complete = ref(false);
-const error = ref<string | undefined>(undefined)
+const error = ref<string | undefined>(undefined);
 const typeName = computed(() => {
   switch (card.value.type) {
     case "meaning":
@@ -100,12 +100,14 @@ if (queryEntries.length > 0) {
 
 function onChange() {
   let inputText = input.value;
-  const kanaInput = card.value.input == "hiragana" || card.value.input == "katakana";
+  const kanaInput =
+    card.value.input == "hiragana" || card.value.input == "katakana";
 
   if (kanaInput) {
     // remove spaces from kana input
-    const inputCharacters = input.value.split("").filter(c => c != " ");
-    inputText = inputCharacters.length > 0 ? inputCharacters.reduce((l, r) => l + r) : "";
+    const inputCharacters = input.value.split("").filter((c) => c != " ");
+    inputText =
+      inputCharacters.length > 0 ? inputCharacters.reduce((l, r) => l + r) : "";
   }
 
   if (card.value.input == "hiragana") {
@@ -123,8 +125,11 @@ function checkAnswer(e: Event) {
   e.preventDefault();
   const rev = review.value;
 
-  const inputCharacters = input.value.split(" ").filter(c => c != "")
-  let inputText = inputCharacters.length > 0 ? inputCharacters.reduce((l, r) => l + " " + r) : "";
+  const inputCharacters = input.value.split(" ").filter((c) => c != "");
+  let inputText =
+    inputCharacters.length > 0
+      ? inputCharacters.reduce((l, r) => l + " " + r)
+      : "";
 
   if (card.value.input == "hiragana") {
     inputText = Language.completeHiragana(inputText);
@@ -132,7 +137,8 @@ function checkAnswer(e: Event) {
     inputText = Language.completeKatakana(inputText);
   }
 
-  const kanaInput = card.value.input == "hiragana" || card.value.input == "katakana";
+  const kanaInput =
+    card.value.input == "hiragana" || card.value.input == "katakana";
 
   if (inputText.length == 0) {
     error.value = "Answer can't be empty";
@@ -179,6 +185,8 @@ function checkAnswer(e: Event) {
         class="review-answer d-flex flex-row justify-content-center flex-wrap"
       >
         <div v-if="!wrong && card.note == ''" class="empty">empty</div>
+
+        <!-- TODO: Don't take additional space if there are no cards with notes -->
         <div v-if="!wrong && card.note != ''" class="note text-muted">
           {{ card.note }}
         </div>
@@ -231,7 +239,6 @@ function checkAnswer(e: Event) {
         {{ review.getIncorrectCards().length }} mistakes
       </div>
     </div>
-
   </div>
 
   <ReportView v-if="complete" @start="startReview" :review="review" />

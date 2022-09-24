@@ -2,8 +2,6 @@
  * Module contains everything related to reviews.
  * Including reviews implementation, cards, and etc.
  */
-import { Language } from "@/core/Language";
-
 type Collection = ReviewCard[];
 
 /**

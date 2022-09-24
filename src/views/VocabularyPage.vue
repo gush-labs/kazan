@@ -29,7 +29,7 @@ const review = computed(
 const levels = computed(() => review.value.levels());
 const status = computed(() => review.value.status());
 const fixedParams = computed<CreatorParams>(() => review.value.fixedParams);
-  
+
 const anySelected = computed(() => {
   const meaning = fixedParams.value.meaning ?? select.meaning;
   const reading = fixedParams.value.reading ?? select.reading;
@@ -52,7 +52,10 @@ const reviewParams = computed(() => {
 
 function startReview() {
   if (anySelected.value) {
-    router.push({ name: "review", query: { review: review.value.id, params: reviewParams.value } });
+    router.push({
+      name: "review",
+      query: { review: review.value.id, params: reviewParams.value },
+    });
   }
 }
 </script>
@@ -131,7 +134,8 @@ function startReview() {
           >
         </div>
 
-        <ActionButton class="mt-3" 
+        <ActionButton
+          class="mt-3"
           @click="() => startReview()"
           :disabled="!anySelected"
           >Start!</ActionButton
