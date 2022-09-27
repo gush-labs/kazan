@@ -13,6 +13,10 @@ import AppHeader from "./components/AppHeader.vue";
 </template>
 
 <style>
+body {
+  background-color: white;
+}
+
 .app-container {
   position: relative;
 
