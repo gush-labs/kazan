@@ -1,3 +1,5 @@
+import Language from "./Language";
+
 /**
  * Module contains everything related to reviews.
  * Including reviews implementation, cards, and etc.
@@ -186,7 +188,18 @@ export class Review {
   }
 
   verify(card: ReviewCard, input: string): boolean {
-    if (card.check(input)) {
+    let correct = false;
+    card.answers.forEach((answer) => {
+      const i = input.toLowerCase();
+      const a = answer.toLowerCase();
+      if (card.type == "meaning" && Language.compare(a, i, 0.7)) {
+        correct = true;
+      } else if (a === i) {
+        correct = true;
+      }
+    });
+
+    if (correct) {
       const timeToAnswer = (Date.now() - this.cardTimeStart) / 1000;
       this.cardAnswerTime.set(card.id, timeToAnswer);
 
@@ -243,13 +256,5 @@ export class ReviewCard {
     this.answers = params.answers;
     this.note = params.note ?? "";
     this.input = params.input ?? "romaji";
-  }
-
-  check(userAnswer: string): boolean {
-    return (
-      this.answers.find(
-        (answer) => answer.toLowerCase() == userAnswer.toLowerCase()
-      ) != undefined
-    );
   }
 }

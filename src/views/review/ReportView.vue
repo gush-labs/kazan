@@ -82,6 +82,7 @@ const slowestCount = review.value
       >
       <ActionButton
         v-if="!allCorrect"
+        icon="x-circle"
         @click="() => emits('start', review.repeatIncorrect())"
         >Repeat incorrect</ActionButton
       >

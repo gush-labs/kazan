@@ -47,12 +47,14 @@ body {
   --text-success-color: rgb(25, 79, 13);
 
   --border-base-color: rgba(0, 0, 0, 0.1);
-  --border-hover-color: rgba(0, 0, 0, 0.25);
+  --border-hover-color: rgba(0, 0, 0, 0.1);
 
   --button-active-color: rgba(0, 0, 0, 0.5);
   --button-active-text-color: var(--text-light-color);
   --button-disabled-opacity: 0.65;
   --button-border-radius: 4px;
+  --button-bg-color: rgba(0, 0, 0, 0.04);
+  --button-hover-bg-color: rgba(0, 0, 0, 0.08);
   --button-border-width: 1px;
   --button-border-color: var(--border-base-color);
 
@@ -82,12 +84,15 @@ body {
   position: relative;
   border: var(--button-border-width) solid var(--border-base-color);
   border-radius: var(--button-border-radius);
+  background-color: var(--button-bg-color);
 }
 .kz-button:hover {
   border: var(--button-border-width) solid var(--border-hover-color);
+  background-color: var(--button-hover-bg-color);
 }
 .kz-button:focus {
   border: var(--button-border-width) solid var(--border-hover-color);
+  background-color: var(--button-bg-color);
 }
 .kz-button-active {
   color: var(--button-active-text-color) !important;
@@ -96,6 +101,7 @@ body {
 .kz-button-disabled {
   opacity: var(--button-disabled-opacity);
   border-radius: var(--button-border-radius);
+  color: rgba(0, 0, 0, 0.5);
 }
 .kz-button-disabled:focus {
   border: var(--button-border-width) solid var(--border-base-color) !important;
