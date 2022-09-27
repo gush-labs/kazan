@@ -4,7 +4,6 @@
   "scripts": {
     "dev": "vite",
     "build": "run-p type-check build-only",
-    "build-for-pages": "run-p type-check \"build-only -- --base=./\"",
     "preview": "vite preview --port 4173",
     "build-only": "vite build",
     "type-check": "vue-tsc --noEmit",
