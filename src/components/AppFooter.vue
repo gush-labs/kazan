@@ -68,7 +68,9 @@ watchUpdateDelay(
 </script>
 
 <template>
-  <div class="footer d-flex flex-row justify-content-center text-muted">
+  <div
+    class="footer d-flex flex-row justify-content-center text-muted align-items-end"
+  >
     <div class="empty">-</div>
     <Transition name="info">
       <div v-if="info">
@@ -113,6 +115,9 @@ watchUpdateDelay(
 }
 .footer .author-link {
   text-decoration: none;
+}
+.footer {
+  min-height: 4em;
 }
 
 .info-enter-active,

@@ -15,7 +15,9 @@ function signOut() {
 </script>
 
 <template>
-  <div class="header d-flex flex-row justify-content-between">
+  <div
+    class="header d-flex flex-row justify-content-between align-items-center"
+  >
     <div class="dropdown language">
       <ActionButton dropdown plain icon="translate" class="header-link"
         >English</ActionButton
@@ -80,17 +82,13 @@ function signOut() {
 }
 .header-link {
   text-decoration: none;
-}
-.logo {
-  position: absolute;
-  left: 50%;
-  transform: translateX(-50%);
+  border-radius: 0.5em;
 }
 .logo:hover {
   cursor: pointer;
 }
 .logo img {
-  max-height: 5em;
-  height: 5em;
+  max-height: 4em;
+  height: 4em;
 }
 </style>

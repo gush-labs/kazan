@@ -64,7 +64,7 @@ function clearAll() {
 </script>
 
 <template>
-<div class="d-flex flex-column justify-content-center mb-5 mt-5 pt-5">
+<div class="d-flex flex-column justify-content-center pt-4">
 
   <div class="navigation-container d-flex flex-row justify-content-center mb-2">
     <PageLink :to="{ name: 'home', params: { page: 'kana' }}" 
@@ -90,7 +90,7 @@ function clearAll() {
       @click="() => set(state, v, !get(state, v))">{{ (kana.alphabet as Record<string, any>)[v][0][0] }}</ActionButton>
   </div>
 
-  <ActionButton class="mt-3" switch @click="allDiacritics" :switched="diacriticsSelected">All Diacritics</ActionButton>
+  <ActionButton class="separate" switch @click="allDiacritics" :switched="diacriticsSelected">All Diacritics</ActionButton>
 
   <div class="kana-container mt-3">
     <ActionButton v-for="v, i in diacritics" 
@@ -102,7 +102,7 @@ function clearAll() {
 
   <PageLink 
     :to="{name: 'review', query: {entries: kanaToReview.toString(), db: name.toLowerCase() }}" 
-    class="mt-3 start-button" 
+    class="separate start-button" 
     :disabled="!anySelected">
     Start!
   </PageLink>
@@ -112,6 +112,10 @@ function clearAll() {
 <style scoped>
 .back-button {
   margin-right: 1.5em;
+}
+
+.separate {
+  margin-top: 2em;
 }
 .header-container {
   display: grid;

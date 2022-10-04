@@ -42,15 +42,17 @@ const slowestCount = review.value
 
     <div class="stats-window mb-3 pb-3">
       <div class="flex-fill kz-text-success">
-        <i class="bi bi-circle"></i>&nbsp;{{
+        <i class="bi bi-check-circle me-1"></i>&nbsp;{{
           review.getCorrectCards().length
         }}&nbsp;completed
       </div>
       <div class="flex-fill hard">
-        <i class="bi bi-clock-history"></i>&nbsp;{{ slowestCount }}&nbsp;slowest
+        <i class="bi bi-clock-history me-1"></i>&nbsp;{{
+          slowestCount
+        }}&nbsp;slowest
       </div>
       <div class="flex-fill kz-text-error">
-        <i class="bi bi-x-lg"></i>&nbsp;{{
+        <i class="bi bi-x-circle me-1"></i>&nbsp;{{
           review.getIncorrectCards().length
         }}&nbsp;mistakes
       </div>

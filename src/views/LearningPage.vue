@@ -39,7 +39,7 @@ const links = [
 </script>
 
 <template>
-  <div class="d-flex flex-column justify-content-center pt-5 mt-5 mb-5">
+  <div class="d-flex flex-column justify-content-center pt-4">
     <div class="list-container">
       <div class="d-flex flex-row justify-content-center">
         <ActionButton

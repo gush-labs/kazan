@@ -35,7 +35,7 @@ function signIn() {
 </script>
 
 <template>
-  <div class="d-flex flex-column justify-content-center text-center mb-3">
+  <div class="d-flex flex-column justify-content-center text-center">
     <div class="d-flex flex-row justify-content-center">
       <div v-if="!user" class="profile-container d-flex flex-column">
         <h4>Sign in</h4>

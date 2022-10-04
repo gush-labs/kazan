@@ -230,12 +230,12 @@ function checkAnswer(e: Event) {
 
     <div v-if="error == undefined" class="stats-window mb-5">
       <div class="kz-text-success">
-        <i class="bi bi-circle"></i>
+        <i class="bi bi-check-circle me-1"></i>
         {{ review.getCorrectCards().length }} completed
       </div>
       <div>{{ Math.floor(review.progress() * 100) }}%</div>
       <div class="kz-text-error">
-        <i class="bi bi-x-lg"></i>
+        <i class="bi bi-x-circle me-1"></i>
         {{ review.getIncorrectCards().length }} mistakes
       </div>
     </div>

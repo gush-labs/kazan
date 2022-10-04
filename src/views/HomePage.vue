@@ -87,7 +87,7 @@ watch(
 </script>
 
 <template>
-  <div class="menu-container pb-5">
+  <div class="menu-container">
     <div class="menu-center">
       <div class="title-container mb-2">
         <div class="title-control mb-3 text-muted">
