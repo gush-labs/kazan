@@ -1,6 +1,10 @@
-# [カザン - Kazan](https://kana.vadimgush.com)
+![Untitled](https://user-images.githubusercontent.com/6123702/194172737-2861adfa-d812-46c4-8e04-03582c3f5df7.png)
+
 
 Web-app for kana, vocabularity, kanji, and reading practice.
+
+![iPhone 12 Pro Max -- Silver](https://user-images.githubusercontent.com/6123702/194172375-9a630f5a-805b-4235-ba23-3a2bc7369d36.png)
+
 
 # Development
 You can run local dev server either by using `npm` directly or by using docker container.
