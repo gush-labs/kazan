@@ -1,5 +1,5 @@
-![Untitled](https://user-images.githubusercontent.com/6123702/194172737-2861adfa-d812-46c4-8e04-03582c3f5df7.png)
-
+![Untitled](https://user-images.githubusercontent.com/6123702/194173134-23fec594-76ed-44a9-88b5-26c33e396a28.png)
+# Kazan - Japanese learning assistant
 
 Web-app for kana, vocabularity, kanji, and reading practice.
 
