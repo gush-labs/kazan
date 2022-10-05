@@ -47,7 +47,7 @@ export class Authentication {
         if (response != undefined && response.code == 401 && this.user.value) {
           Application.status.errorSet(
             "wk-login-error",
-            "WaniKani API key is not valid. Please sign in again."
+            "Please sign in again"
           );
           this.logout();
           return false;

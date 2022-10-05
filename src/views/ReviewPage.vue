@@ -231,12 +231,14 @@ function checkAnswer(e: Event) {
     <div v-if="error == undefined" class="stats-window mb-5">
       <div class="kz-text-success">
         <i class="bi bi-check-circle me-1"></i>
-        {{ review.getCorrectCards().length }} completed
+        {{ review.getCorrectCards().length }}
+        <span class="stats-text">completed</span>
       </div>
       <div>{{ Math.floor(review.progress() * 100) }}%</div>
       <div class="kz-text-error">
         <i class="bi bi-x-circle me-1"></i>
-        {{ review.getIncorrectCards().length }} mistakes
+        {{ review.getIncorrectCards().length }}
+        <span class="stats-text">mistakes</span>
       </div>
     </div>
   </div>
@@ -297,5 +299,11 @@ function checkAnswer(e: Event) {
 textarea:focus,
 input:focus {
   outline: none;
+}
+
+@media screen and (max-width: 650px) {
+  .stats-text {
+    display: none;
+  }
 }
 </style>

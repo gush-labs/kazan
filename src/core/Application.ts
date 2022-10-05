@@ -42,7 +42,9 @@ class StatusState {
 
   completeProcess(key: string) {
     const processId = this.processes.findIndex((p) => p.key == key);
-    this.processes.splice(processId, 1);
+    if (processId >= 0) {
+      this.processes.splice(processId, 1);
+    }
   }
 
   pushError(key: string, message: string) {
@@ -54,7 +56,9 @@ class StatusState {
 
   clearError(key: string) {
     const processId = this.errors.findIndex((p) => p.key == key);
-    this.errors.splice(processId, 1);
+    if (processId >= 0) {
+      this.errors.splice(processId, 1);
+    }
   }
 }
 

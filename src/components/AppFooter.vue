@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import LoadingCircle from "./LoadingCircle.vue";
 import { Application, type Process, type Error } from "@/core/Application";
-import { ref, computed } from "vue";
+import { ref, computed, watch } from "vue";
 import {
   watchRemove,
   watchUpdate,
@@ -24,18 +24,24 @@ const process = ref<Process | undefined>(undefined);
 const error = ref<Error | undefined>(undefined);
 const info = ref<boolean>(true);
 
+watch(info, (v) => {
+  console.log(v);
+})
 // Hide instantly general app info
 watchUpdate(Application.status.currentProcess, () => (info.value = false));
 watchUpdate(Application.status.currentError, () => (info.value = false));
 // Show general app info with delay to give other animations time to finish
 watchRemoveDelay(
   Application.status.currentProcess,
-  () => (info.value = showInfo.value),
+  () => info.value = showInfo.value,
   550
 );
 watchRemoveDelay(
   Application.status.currentError,
-  () => (info.value = showInfo.value),
+  () => {
+    console.log("ERROR REMOVE");
+    info.value = showInfo.value;
+  },
   550
 );
 
@@ -82,13 +88,13 @@ watchUpdateDelay(
       </div>
     </Transition>
     <Transition name="process">
-      <div v-if="process" class="process-view ps-1 pe-3">
+      <div v-if="process" class="process-view ps-1 pe-3 mb-3">
         <LoadingCircle class="me-2" />
         {{ process.message }}
       </div>
     </Transition>
     <Transition name="info">
-      <div class="error-view ps-1 pe-3" v-if="error">
+      <div class="error-view ps-1 pe-3 mb-3" v-if="error">
         <i class="bi bi-exclamation-circle me-2"></i>
         {{ error.message }}
       </div>
@@ -145,6 +151,12 @@ watchUpdateDelay(
 @media screen and (max-width: 650px) {
   .bottom-text {
     display: none;
+  }
+  .process-view {
+    font-size: 1.1em;
+  }
+  .error-view {
+    font-size: 1.1em;
   }
 }
 </style>

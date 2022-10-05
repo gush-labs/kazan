@@ -117,7 +117,7 @@ export class Dictionary {
           .catch(() => {
             Application.status.errorSet(
               "wksync-error",
-              "Failed to connect to WaniKani. Try to refresh the page."
+              "Failed to connect to WaniKani"
             );
           });
       };
@@ -130,7 +130,7 @@ export class Dictionary {
 
     Application.status.processSubmit(
       "wksync",
-      "Loading vocabulary from WaniKani",
+      "Loading vocabulary",
       request
     );
     return request;
