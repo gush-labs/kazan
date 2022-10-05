@@ -45,7 +45,7 @@ function signIn() {
         </p>
         <input
           v-model="input"
-          class="form-control font-monospace"
+          class="form-control font-monospace kz-input"
           placeholder="WaniKani API key"
         />
         <ActionButton
@@ -55,6 +55,7 @@ function signIn() {
           class="w-100 mt-3"
           >Sign in</ActionButton
         >
+        <!--<div id="appleid-signin" class="signin-button mt-3" data-color="black" data-width="100%" data-border="true" data-type="sign-in"></div>-->
         <div v-if="loading" class="mt-3 p-2">
           <LoadingCircle />
           Signing up...
@@ -90,7 +91,10 @@ function signIn() {
   animation-duration: 5s;
   animation-name: progress;
 }
-
+.signin-button {
+  width: 100%;
+  height: 2.5em;
+}
 @keyframes progress {
   from {
     width: 0%;
@@ -98,11 +102,6 @@ function signIn() {
   to {
     width: 100%;
   }
-}
-
-.form-control {
-  border: var(--input-border-width) solid var(--input-border-color);
-  border-radius: var(--input-border-radius);
 }
 
 @media screen and (max-width: 650px) {

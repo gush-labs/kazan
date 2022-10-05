@@ -1,0 +1,18 @@
+{
+  "name": "Kazan - Japanese learning assistant",
+  "short_name": "カザン",
+  "description": "Kazan is Japanese learning assistance app which integrates with WaniKani",
+  "background_color": "#FFFFFF",
+  "start_url": "/",
+  "display": "standalone",
+  "scope": "/",
+  "theme_color": "#FFFFFF",
+  "id": "kazan",
+  "icons": [
+    {
+      "src": "/icon.png",
+      "type": "image/png",
+      "sizes": "1024x1024"
+    }
+  ]
+}

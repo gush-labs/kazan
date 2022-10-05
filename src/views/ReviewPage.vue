@@ -216,7 +216,7 @@ function checkAnswer(e: Event) {
         <input
           v-model="input"
           @input="onChange"
-          class="answer-form japanese w-100 p-2"
+          class="kz-input answer-form japanese w-100 p-2"
           placeholder=""
           spellcheck="false"
         />
@@ -283,7 +283,6 @@ function checkAnswer(e: Event) {
 }
 
 .answer-container .answer-form {
-  border: var(--input-border-width) solid var(--input-border-color);
   border-bottom-left-radius: var(--input-border-radius);
   border-bottom-right-radius: var(--input-border-radius);
   text-align: center;

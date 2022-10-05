@@ -76,7 +76,7 @@ function startReview() {
       <div class="text-center mb-3"><h4>Select vocabulary</h4></div>
 
       <select
-        class="form-select mb-3"
+        class="form-select mb-3 kz-select"
         aria-label="Default select example"
         v-model="select.reviewId"
       >
@@ -158,10 +158,6 @@ function startReview() {
 }
 .level-container .button {
   font-size: 2em;
-}
-.vocabulary-container .form-select {
-  border: var(--button-border-width) solid var(--button-border-color);
-  border-radius: var(--button-border-radius);
 }
 .level-container h4 {
   margin: 0px;
