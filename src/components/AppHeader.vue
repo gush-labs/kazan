@@ -12,6 +12,9 @@ function goHome() {
 function signOut() {
   Authentication.logout();
 }
+function goProfile() {
+  router.push({ name: "login" });
+}
 </script>
 
 <template>
@@ -22,6 +25,7 @@ function signOut() {
       <ActionButton dropdown plain icon="translate" class="header-link"
         >English</ActionButton
       >
+      <ActionButton icon="translate" class="header-link-mobile"></ActionButton>
       <ul class="dropdown-menu language-links">
         <li>
           <ActionButton class="dropdown-item active">English</ActionButton>
@@ -40,6 +44,11 @@ function signOut() {
       <ActionButton dropdown plain icon="person-circle" class="header-link">
         {{ user ? user.username : "Profile" }}
       </ActionButton>
+      <ActionButton
+        @click="() => goProfile()"
+        icon="person-circle"
+        class="header-link-mobile"
+      ></ActionButton>
       <div class="dropdown-menu dropdown-menu-end profile-menu">
         <ul class="profile-links">
           <PageLink
@@ -82,7 +91,12 @@ function signOut() {
 }
 .header-link {
   text-decoration: none;
-  border-radius: 0.5em;
+}
+.header-link-mobile {
+  border-radius: 50%;
+  font-size: 1.1em;
+  height: 3em;
+  width: 3em;
 }
 .logo:hover {
   cursor: pointer;
@@ -90,5 +104,22 @@ function signOut() {
 .logo img {
   max-height: 4em;
   height: 4em;
+}
+
+@media screen and (max-width: 650px) {
+  .header-link {
+    display: none;
+  }
+  .header-link-mobile {
+    display: block;
+  }
+}
+@media screen and (min-width: 650px) {
+  .header-link {
+    display: block;
+  }
+  .header-link-mobile {
+    display: none;
+  }
 }
 </style>

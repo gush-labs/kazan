@@ -97,6 +97,8 @@ body {
   border: var(--button-border-width) solid var(--border-base-color);
   border-radius: var(--button-border-radius);
   background-color: var(--button-bg-color);
+  padding-block-start: 0.45em;
+  padding-block-end: 0.45em;
 }
 .kz-button:hover {
   border: var(--button-border-width) solid var(--border-hover-color);

@@ -253,7 +253,7 @@ function checkAnswer(e: Event) {
 }
 .card-type {
   display: block;
-  border: var(--button-border-width) solid var(--border-base-color);
+  border: var(--input-border-width) solid var(--input-border-color);
   border-top-left-radius: var(--button-border-radius);
   border-top-right-radius: var(--button-border-radius);
   border-bottom: none !important;
@@ -283,8 +283,8 @@ function checkAnswer(e: Event) {
 }
 
 .answer-container .answer-form {
-  border-bottom-left-radius: var(--input-border-radius);
-  border-bottom-right-radius: var(--input-border-radius);
+  border-top-left-radius: 0px;
+  border-top-right-radius: 0px;
   text-align: center;
   font-size: 2em;
 }

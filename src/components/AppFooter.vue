@@ -73,7 +73,7 @@ watchUpdateDelay(
   >
     <div class="empty">-</div>
     <Transition name="info">
-      <div v-if="info">
+      <div v-if="info" class="bottom-text">
         version 0.5
         <i class="bi bi-dot"></i>
         <a class="author-link text-muted" href="https://github.com/gush-labs"
@@ -141,5 +141,10 @@ watchUpdateDelay(
   transform: translateY(2em) scale(20%);
   opacity: 0;
   color: rgba(0, 0, 0, 0);
+}
+@media screen and (max-width: 650px) {
+  .bottom-text {
+    display: none;
+  }
 }
 </style>
