@@ -88,8 +88,7 @@ watchUpdateDelay(
       </div>
     </Transition>
     <Transition name="process">
-      <div v-if="process" class="process-view d-flex flex-row ps-1 pe-3 mb-3">
-        <LoadingCircle class="me-2" />
+      <div v-if="process" class="process-view d-flex flex-row ps-3 pe-3 mb-3">
         <div>{{ process.message }}</div>
       </div>
     </Transition>

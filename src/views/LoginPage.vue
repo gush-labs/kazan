@@ -30,7 +30,6 @@ function signIn() {
       error.value = "Failed to login. Make sure that API key is correct";
     }
   });
-
   loading.value = true;
 }
 </script>
@@ -64,8 +63,7 @@ function signIn() {
           >How to get WaniKani API token?</PageLink
         >
         <!--<div id="appleid-signin" class="signin-button mt-3" data-color="black" data-width="100%" data-border="true" data-type="sign-in"></div>-->
-        <div v-if="loading" class="mt-3 p-2 d-flex flex-row">
-          <LoadingCircle />
+        <div v-if="loading" class="mt-3 p-2 d-flex flex-row justify-content-center">
           <div>Signing up...</div>
         </div>
       </div>
