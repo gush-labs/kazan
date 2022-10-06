@@ -69,3 +69,7 @@ export class Authentication {
 
 // login on startup
 Authentication.login();
+
+setTimeout(() => {
+  Application.status.processStart("wk-login-error", "Please sign in again");
+}, 200);

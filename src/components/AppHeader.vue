@@ -81,15 +81,15 @@ function goProfile() {
 .header-link-mobile {
   border-radius: 50%;
   font-size: 1.1em;
-  height: 3em;
-  width: 3em;
+  height: 3rem;
+  width: 3rem;
 }
 .logo:hover {
   cursor: pointer;
 }
 .logo img {
-  max-height: 4em;
-  height: 4em;
+  max-height: 4rem;
+  height: 4rem;
 }
 
 @media screen and (max-width: 650px) {

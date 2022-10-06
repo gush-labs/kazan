@@ -88,9 +88,9 @@ watchUpdateDelay(
       </div>
     </Transition>
     <Transition name="process">
-      <div v-if="process" class="process-view ps-1 pe-3 mb-3">
+      <div v-if="process" class="process-view d-flex flex-row ps-1 pe-3 mb-3">
         <LoadingCircle class="me-2" />
-        {{ process.message }}
+        <div>{{ process.message }}</div>
       </div>
     </Transition>
     <Transition name="info">
@@ -109,12 +109,12 @@ watchUpdateDelay(
 .process-view {
   background-color: var(--button-active-color);
   color: var(--button-active-text-color);
-  border-radius: 1em;
+  border-radius: 1rem;
 }
 .error-view {
   background-color: var(--text-danger-color);
   color: var(--text-light-color);
-  border-radius: 1em;
+  border-radius: 1rem;
 }
 .error {
   color: var(--text-error-color) !important;
