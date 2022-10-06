@@ -12,7 +12,9 @@ const props = defineProps<{
 
 function click(e: any) {
   (document.activeElement as HTMLElement).blur();
-  emits("click", e);
+  if (!(props.disabled && props.disabled == true)) {
+    emits("click", e);
+  }
 }
 </script>
 

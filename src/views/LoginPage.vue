@@ -3,6 +3,7 @@ import LoadingCircle from "@/components/LoadingCircle.vue";
 import { Authentication } from "@/core/Authentication";
 import ActionButton from "@/components/ActionButton.vue";
 import { WaniKaniClient } from "@/core/WaniKaniClient";
+import PageLink from "@/components/PageLink.vue";
 import router from "@/router";
 import { ref } from "vue";
 
@@ -46,7 +47,7 @@ function signIn() {
         <input
           v-model="input"
           class="form-control font-monospace kz-input"
-          placeholder="WaniKani API key"
+          placeholder="WaniKani API token"
         />
         <ActionButton
           v-if="!loading"
@@ -54,6 +55,13 @@ function signIn() {
           icon="box-arrow-in-right"
           class="w-100 mt-3"
           >Sign in</ActionButton
+        >
+        <PageLink
+          icon="question-circle"
+          :to="{ name: 'api-guide' }"
+          plain
+          class="signin-guide-link text-muted mt-3"
+          >How to get WaniKani API token?</PageLink
         >
         <!--<div id="appleid-signin" class="signin-button mt-3" data-color="black" data-width="100%" data-border="true" data-type="sign-in"></div>-->
         <div v-if="loading" class="mt-3 p-2">
@@ -94,6 +102,9 @@ function signIn() {
 .signin-button {
   width: 100%;
   height: 2.5em;
+}
+.signin-guide-link {
+  text-decoration: none;
 }
 @keyframes progress {
   from {

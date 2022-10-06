@@ -37,14 +37,8 @@ export class Storage {
   }
 
   private static clearStorage() {
-    const apiKey = localStorage.getItem("wanikani");
     localStorage.clear();
     localStorage.setItem("version", this.requiredVersion + "");
-
-    // We don't want to remove WaniKani API key
-    if (apiKey) {
-      localStorage.setItem("wanikani", apiKey);
-    }
   }
 
   /**

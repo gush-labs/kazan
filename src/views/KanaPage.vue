@@ -5,6 +5,7 @@ import { database } from "@/core/Database";
 import PageLink from "@/components/PageLink.vue";
 import router from "@/router";
 import { Storage } from "@/core/Storage";
+import type { RouteLocationRaw } from "vue-router";
 
 const monographs: string[] = [
   "a", "ka", "sa", "ta", "na", 
@@ -61,6 +62,10 @@ function allDiacritics() {
 function clearAll() {
   monographs.concat(diacritics).forEach(k => set(state, k, false));
 }
+
+function goTo(path: RouteLocationRaw) {
+  router.push(path);
+}
 </script>
 
 <template>
@@ -100,12 +105,12 @@ function clearAll() {
       @click="() => set(state, v, !get(state, v))">{{ (kana.alphabet as Record<string, any>)[v][0][0] }}</ActionButton>
   </div>
 
-  <PageLink 
-    :to="{name: 'review', query: {entries: kanaToReview.toString(), db: name.toLowerCase() }}" 
+  <ActionButton
+    @click="() => goTo({name: 'review', query: {entries: kanaToReview.toString(), db: name.toLowerCase() }})" 
     class="separate start-button" 
     :disabled="!anySelected">
     Start!
-  </PageLink>
+  </ActionButton>
 </div>
 </template>
 

@@ -13,7 +13,7 @@ function signOut() {
   Authentication.logout();
 }
 function goProfile() {
-  router.push({ name: "login" });
+  router.push({ name: "profile" });
 }
 </script>
 
@@ -41,7 +41,12 @@ function goProfile() {
     </div>
 
     <div class="dropdown profile">
-      <ActionButton dropdown plain icon="person-circle" class="header-link">
+      <ActionButton
+        @click="() => goProfile()"
+        plain
+        icon="person-circle"
+        class="header-link"
+      >
         {{ user ? user.username : "Profile" }}
       </ActionButton>
       <ActionButton
@@ -49,25 +54,6 @@ function goProfile() {
         icon="person-circle"
         class="header-link-mobile"
       ></ActionButton>
-      <div class="dropdown-menu dropdown-menu-end profile-menu">
-        <ul class="profile-links">
-          <PageLink
-            v-if="user == undefined"
-            :to="{ name: 'login' }"
-            class="dropdown-item"
-            >Sign in</PageLink
-          >
-          <ActionButton class="dropdown-item disabled" href="#"
-            >Settings</ActionButton
-          >
-          <ActionButton
-            v-if="user != undefined"
-            @click="signOut"
-            class="dropdown-item"
-            >Sign out</ActionButton
-          >
-        </ul>
-      </div>
     </div>
   </div>
 </template>

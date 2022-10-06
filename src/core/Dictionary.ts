@@ -128,11 +128,7 @@ export class Dictionary {
       pageRequests.push(firstPageRequest);
     });
 
-    Application.status.processSubmit(
-      "wksync",
-      "Loading vocabulary",
-      request
-    );
+    Application.status.processSubmit("wksync", "Loading vocabulary", request);
     return request;
   }
 

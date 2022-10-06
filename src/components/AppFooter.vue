@@ -26,14 +26,14 @@ const info = ref<boolean>(true);
 
 watch(info, (v) => {
   console.log(v);
-})
+});
 // Hide instantly general app info
 watchUpdate(Application.status.currentProcess, () => (info.value = false));
 watchUpdate(Application.status.currentError, () => (info.value = false));
 // Show general app info with delay to give other animations time to finish
 watchRemoveDelay(
   Application.status.currentProcess,
-  () => info.value = showInfo.value,
+  () => (info.value = showInfo.value),
   550
 );
 watchRemoveDelay(

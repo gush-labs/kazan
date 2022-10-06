@@ -6,6 +6,8 @@ import KanaPage from "@/views/KanaPage.vue";
 import LoginPage from "@/views/LoginPage.vue";
 import LearningPage from "@/views/LearningPage.vue";
 import VocabularyPage from "@/views/VocabularyPage.vue";
+import ApiGuide from "@/views/ApiGuide.vue";
+import ProfilePage from "@/views/ProfilePage.vue";
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -14,6 +16,16 @@ const router = createRouter({
       path: "/:page(.*)?",
       name: "home",
       component: HomePage,
+    },
+    {
+      path: "/api-guide",
+      name: "api-guide",
+      component: ApiGuide,
+    },
+    {
+      path: "/profile",
+      name: "profile",
+      component: ProfilePage,
     },
     {
       path: "/login",

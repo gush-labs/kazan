@@ -1,7 +1,9 @@
 <script setup lang="ts">
 import PageLink from "@/components/PageLink.vue";
+import ActionButton from "@/components/ActionButton.vue";
 import { ref, watch, type Ref } from "vue";
 import router from "@/router";
+import type { RouteLocationRaw } from "vue-router";
 
 class ButtonItem {
   name = "";
@@ -84,6 +86,10 @@ watch(
     currentPage.value = page ?? pages.get("home")!;
   }
 );
+
+function goTo(path: RouteLocationRaw) {
+  router.push(path);
+}
 </script>
 
 <template>
@@ -117,16 +123,16 @@ watch(
 
       <div class="control-container mt-2">
         <div v-if="currentPage.buttons" class="control">
-          <PageLink
+          <ActionButton
             v-for="(b, i) in currentPage.buttons"
             :key="i"
             :disabled="
               b.link == undefined && (b.page == undefined || !pages.has(b.page))
             "
-            :to="b.page ? b.page : b.link ? b.link : 'home'"
+            @click="() => goTo(b.page ? b.page : b.link ? b.link : 'home')"
           >
             {{ b.name }}
-          </PageLink>
+          </ActionButton>
         </div>
       </div>
     </div>

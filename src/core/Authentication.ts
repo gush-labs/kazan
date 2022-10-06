@@ -45,10 +45,7 @@ export class Authentication {
         // If we'd tried to login using saved WaniKani API key
         // but failed, it means that this API key is not valid anymore
         if (response != undefined && response.code == 401 && this.user.value) {
-          Application.status.errorSet(
-            "wk-login-error",
-            "Please sign in again"
-          );
+          Application.status.errorSet("wk-login-error", "Please sign in again");
           this.logout();
           return false;
         }
