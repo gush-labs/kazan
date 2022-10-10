@@ -76,7 +76,7 @@ function startReview() {
       <div class="text-center mb-3"><h4>Select vocabulary</h4></div>
 
       <select
-        class="form-select mb-3 kz-select"
+        class="form-select kz-select gap-bottom"
         aria-label="Default select example"
         v-model="select.reviewId"
       >
@@ -102,7 +102,7 @@ function startReview() {
         </div>
 
         <select
-          class="form-select mb-3"
+          class="form-select gap-bottom"
           aria-label="Default select example"
           v-model="select.level"
           :disabled="levels.length == 0"
@@ -135,7 +135,7 @@ function startReview() {
         </div>
 
         <ActionButton
-          class="mt-3"
+          class="gap-top"
           @click="() => startReview()"
           :disabled="!anySelected"
           >Start!</ActionButton

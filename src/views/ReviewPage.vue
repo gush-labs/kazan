@@ -271,7 +271,7 @@ function checkAnswer(e: Event) {
   grid-template-rows: 2em 1fr auto;
 }
 .review-window .review-target {
-  font-size: 4.5em;
+  font-size: 4em;
   font-weight: 400;
   margin: 0;
 }

@@ -52,7 +52,7 @@ function signIn() {
           v-if="!loading"
           @click="signIn"
           icon="box-arrow-in-right"
-          class="w-100 mt-3"
+          class="w-100 sign-button"
           >Sign in</ActionButton
         >
         <PageLink
@@ -63,7 +63,10 @@ function signIn() {
           >How to get WaniKani API token?</PageLink
         >
         <!--<div id="appleid-signin" class="signin-button mt-3" data-color="black" data-width="100%" data-border="true" data-type="sign-in"></div>-->
-        <div v-if="loading" class="mt-3 p-2 d-flex flex-row justify-content-center">
+        <div
+          v-if="loading"
+          class="mt-3 p-2 d-flex flex-row justify-content-center"
+        >
           <div>Signing up...</div>
         </div>
       </div>
@@ -89,6 +92,10 @@ function signIn() {
 }
 .redirect-progress {
   background-color: rgba(0, 0, 0, 0.1);
+}
+
+.sign-button {
+  margin-top: var(--default-grid-gap);
 }
 
 .redirect-progress-line {

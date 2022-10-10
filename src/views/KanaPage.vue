@@ -85,7 +85,7 @@ function goTo(path: RouteLocationRaw) {
     </div>
   </div>
 
-  <ActionButton class="mb-3" switch @click="allMonographs" :switched="monographsSelected">All Monographs</ActionButton>
+  <ActionButton class="kana-title" switch @click="allMonographs" :switched="monographsSelected">All Monographs</ActionButton>
 
   <div class="kana-container">
     <ActionButton v-for="v, i in monographs"
@@ -95,9 +95,9 @@ function goTo(path: RouteLocationRaw) {
       @click="() => set(state, v, !get(state, v))">{{ (kana.alphabet as Record<string, any>)[v][0][0] }}</ActionButton>
   </div>
 
-  <ActionButton class="separate" switch @click="allDiacritics" :switched="diacriticsSelected">All Diacritics</ActionButton>
+  <ActionButton class="kana-title mt-4" switch @click="allDiacritics" :switched="diacriticsSelected">All Diacritics</ActionButton>
 
-  <div class="kana-container mt-3">
+  <div class="kana-container">
     <ActionButton v-for="v, i in diacritics" 
       :key="i"
       switch 
@@ -107,7 +107,7 @@ function goTo(path: RouteLocationRaw) {
 
   <ActionButton
     @click="() => goTo({name: 'review', query: {entries: kanaToReview.toString(), db: name.toLowerCase() }})" 
-    class="separate start-button" 
+    class="start-button mt-4" 
     :disabled="!anySelected">
     Start!
   </ActionButton>
@@ -119,18 +119,21 @@ function goTo(path: RouteLocationRaw) {
   margin-right: 1.5em;
 }
 
-.separate {
-  margin-top: 2em;
-}
 .header-container {
   display: grid;
   grid-template-columns: 3em 1fr 3em;
 }
+
+.kana-title {
+  margin-bottom: var(--default-grid-gap);
+}
+
 .kana-container {
   display: grid;
   grid-template-columns: repeat(5, 1fr);
-  gap: 1em;
+  gap: var(--default-grid-gap);
 }
+
 a {
   text-decoration: none;
 }

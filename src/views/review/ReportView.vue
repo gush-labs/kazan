@@ -104,10 +104,10 @@ const slowestCount = review.value
 .buttons {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(11em, 1fr));
-  gap: 1em;
+  gap: var(--default-grid-gap);
 }
 .complete-container .btn {
-  margin-top: 1em;
+  margin-top: var(--default-grid-gap);
 }
 
 .report {

@@ -23,18 +23,20 @@ const user = Authentication.user;
         </div>
       </div>
 
-      <PageLink :to="{ name: 'login' }" v-if="!user" icon="box-arrow-right"
-        >Sign in</PageLink
-      >
-      <ActionButton icon="gear" disabled>Settings</ActionButton>
-      <ActionButton
-        @click="() => Authentication.logout()"
-        v-if="user"
-        icon="box-arrow-left"
-        >Logout</ActionButton
-      >
+      <div class="control-buttons-container">
+        <PageLink :to="{ name: 'login' }" v-if="!user" icon="box-arrow-right"
+          >Sign in</PageLink
+        >
+        <ActionButton icon="gear" disabled>Settings</ActionButton>
+        <ActionButton
+          @click="() => Authentication.logout()"
+          v-if="user"
+          icon="box-arrow-left"
+          >Logout</ActionButton
+        >
+      </div>
 
-      <ActionButton icon="info-circle" class="mt-3" disabled
+      <ActionButton icon="info-circle" class="mt-4 w-100" disabled
         >About the app</ActionButton
       >
     </div>
@@ -42,10 +44,11 @@ const user = Authentication.user;
 </template>
 
 <style scoped>
-.control-container {
+.control-buttons-container {
   display: grid;
-  gap: 1em;
+  gap: var(--default-grid-gap);
 }
+
 @media screen and (max-width: 650px) {
   .control-container {
     width: 100%;

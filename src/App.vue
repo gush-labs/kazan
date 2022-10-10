@@ -69,9 +69,24 @@ body {
   --dropdown-border-radius: var(--button-border-radius);
   --dropdown-border-width: var(--button-border-width);
   --dropdown-border-color: var(--button-border-color);
+
+  --default-grid-gap: 0.75rem;
+  --default-grid-gap-big: 1.5rem;
 }
 
 /* BASIC CLASSES */
+.gap-bottom {
+  margin-bottom: var(--default-grid-gap);
+}
+.gap-bottom-big {
+  margin-bottom: var(--default-grid-gap-big);
+}
+.gap-top {
+  margin-top: var(--default-grid-gap);
+}
+.gap-top-big {
+  margin-top: var(--default-grid-gap-big);
+}
 .kz-text {
   color: var(--text-base-color);
 }

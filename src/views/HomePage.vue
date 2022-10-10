@@ -144,7 +144,7 @@ function goTo(path: RouteLocationRaw) {
   display: grid;
   grid-template-rows: minmax(auto, 1fr) minmax(auto, 1fr);
   grid-template-columns: repeat(auto-fit, minmax(15em, 1fr));
-  gap: 0.5rem;
+  gap: var(--default-grid-gap);
 }
 .title-control {
   display: flex;

@@ -12,6 +12,7 @@ const alphabet = {
   english: new Set(
     "a b c d e f g h i j k l m n o p q r s t u v w x y z".split(" ")
   ),
+  numbers: new Set("1 2 3 4 5 6 7 8 9 0".split(" ")),
 };
 
 function updateAlphabet(pair: string[], romajiToKana: Map<string, string>) {
@@ -89,6 +90,9 @@ class Language {
       input
         .split("")
         .filter((c) => c != " ")
+        .filter((c) => c != ".")
+        .filter((c) => c != "?")
+        .filter((c) => !alphabet.numbers.has(c.toLowerCase()))
         .filter((c) => !alphabet.english.has(c.toLowerCase())).length == 0
     );
   }
