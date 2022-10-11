@@ -79,8 +79,8 @@ watchUpdateDelay(
   >
     <div class="empty">-</div>
     <Transition name="info">
-      <div v-if="info" class="bottom-text d-flex flex-row align-items-center">
-        <div>version 0.5</div>
+      <div v-if="info" class="bottom-text">
+        version 0.5
         <i class="bi bi-dot"></i>
         <a class="author-link text-muted" href="https://github.com/gush-labs"
           ><i class="bi bi-github"></i> gush-labs</a
