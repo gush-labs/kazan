@@ -65,8 +65,9 @@ function signIn() {
         <!--<div id="appleid-signin" class="signin-button mt-3" data-color="black" data-width="100%" data-border="true" data-type="sign-in"></div>-->
         <div
           v-if="loading"
-          class="mt-3 p-2 d-flex flex-row justify-content-center"
+          class="mt-3 p-2 d-flex flex-row justify-content-center align-items-center"
         >
+          <LoadingCircle class="me-1"></LoadingCircle>
           <div>Signing up...</div>
         </div>
       </div>

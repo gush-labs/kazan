@@ -79,8 +79,8 @@ watchUpdateDelay(
   >
     <div class="empty">-</div>
     <Transition name="info">
-      <div v-if="info" class="bottom-text">
-        version 0.5
+      <div v-if="info" class="bottom-text d-flex flex-row align-items-center">
+        <div>version 0.5</div>
         <i class="bi bi-dot"></i>
         <a class="author-link text-muted" href="https://github.com/gush-labs"
           ><i class="bi bi-github"></i> gush-labs</a
@@ -88,12 +88,13 @@ watchUpdateDelay(
       </div>
     </Transition>
     <Transition name="process">
-      <div v-if="process" class="process-view d-flex flex-row ps-3 pe-3 mb-3">
-        <div>{{ process.message }}</div>
+      <div v-if="process" class="process-view shadow d-flex flex-row ps-1 mb-3 pe-1 align-items-center">
+        <LoadingCircle class="loading-icon"></LoadingCircle>
+        <div class="mx-2">{{ process.message }}...</div>
       </div>
     </Transition>
     <Transition name="info">
-      <div class="error-view ps-1 pe-3 mb-3" v-if="error">
+      <div class="error-view shadow ps-1 pe-3 mb-3" v-if="error">
         <i class="bi bi-exclamation-circle me-2"></i>
         {{ error.message }}
       </div>
@@ -105,10 +106,16 @@ watchUpdateDelay(
 .empty {
   opacity: 0;
 }
+.loading-icon {
+  background-color: white !important;
+  font-size: 120%;
+}
 .process-view {
   background-color: var(--button-active-color);
   color: var(--button-active-text-color);
   border-radius: 1rem;
+  padding-top: 0.1rem;
+  padding-bottom: 0.1rem;
 }
 .error-view {
   background-color: var(--text-danger-color);
@@ -150,12 +157,6 @@ watchUpdateDelay(
 @media screen and (max-width: 650px) {
   .bottom-text {
     display: none;
-  }
-  .process-view {
-    font-size: 1.1em;
-  }
-  .error-view {
-    font-size: 1.1em;
   }
 }
 </style>

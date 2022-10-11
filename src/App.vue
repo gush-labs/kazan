@@ -45,6 +45,7 @@ body {
   --text-error-color: rgb(97, 33, 33);
   --text-danger-color: rgb(176, 56, 56);
   --text-success-color: rgb(25, 79, 13);
+  --text-mute-color: #6c757d;
 
   --border-base-color: rgba(0, 0, 0, 0.1);
   --border-hover-color: rgba(0, 0, 0, 0.1);
@@ -77,6 +78,12 @@ body {
 /* BASIC CLASSES */
 .gap-bottom {
   margin-bottom: var(--default-grid-gap);
+}
+.gap-right {
+  margin-right: var(--default-grid-gap);
+}
+.gap-left {
+  margin-left: var(--default-grid-gap);
 }
 .gap-bottom-big {
   margin-bottom: var(--default-grid-gap-big);
