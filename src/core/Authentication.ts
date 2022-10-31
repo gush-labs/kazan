@@ -46,6 +46,9 @@ export class Authentication {
         // but failed, it means that this API key is not valid anymore
         if (response != undefined && response.code == 401 && this.user.value) {
           Application.status.errorSet("wk-login-error", "Please sign in again");
+          setTimeout(() => {
+            Application.status.errorClear("wk-login-error");
+          }, 5000);
           this.logout();
           return false;
         }

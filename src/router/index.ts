@@ -8,6 +8,7 @@ import LearningPage from "@/views/LearningPage.vue";
 import VocabularyPage from "@/views/VocabularyPage.vue";
 import ApiGuide from "@/views/ApiGuide.vue";
 import ProfilePage from "@/views/ProfilePage.vue";
+import SettingsPage from "@/views/SettingsPage.vue";
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -16,6 +17,11 @@ const router = createRouter({
       path: "/:page(.*)?",
       name: "home",
       component: HomePage,
+    },
+    {
+      path: "/settings",
+      name: "settings",
+      component: SettingsPage,
     },
     {
       path: "/api-guide",

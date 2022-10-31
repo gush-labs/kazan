@@ -23,11 +23,11 @@ const user = Authentication.user;
         </div>
       </div>
 
-      <div class="control-buttons-container">
+      <div class="control-buttons-container mt-4">
         <PageLink :to="{ name: 'login' }" v-if="!user" icon="box-arrow-right"
           >Sign in</PageLink
         >
-        <ActionButton icon="gear" disabled>Settings</ActionButton>
+        <PageLink :to="{ name: 'settings' }" icon="gear">Settings</PageLink>
         <ActionButton
           @click="() => Authentication.logout()"
           v-if="user"

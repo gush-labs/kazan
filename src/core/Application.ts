@@ -91,8 +91,16 @@ class Status {
   );
 }
 
+export class ConfigurationOptions {
+  static availableJapaneseFonts: { name: string; style: string }[] = [
+    { name: "Noto Sans JP", style: "sans-serif" },
+    { name: "M PLUS Rounded 1c", style: "sans-serif" },
+    { name: "Noto Serif JP", style: "serif" },
+  ];
+}
+
 class Configuration {
-  japaneseFont = "";
+  japaneseFont = 0;
   enableKanaInput = true;
 }
 

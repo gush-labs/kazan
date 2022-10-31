@@ -2,6 +2,15 @@
 import { RouterView } from "vue-router";
 import AppFooter from "@/components/AppFooter.vue";
 import AppHeader from "./components/AppHeader.vue";
+import { Application, ConfigurationOptions } from "@/core/Application";
+import { computed } from "vue";
+
+const configuration = Application.configuration;
+const fonts = ConfigurationOptions.availableJapaneseFonts;
+const currentFont = computed(
+  () => '"' + fonts[configuration.japaneseFont].name + '"'
+);
+const currentStyle = computed(() => fonts[configuration.japaneseFont].style);
 </script>
 
 <template>
@@ -149,7 +158,8 @@ body {
 
 /* Fonts for japanese texts (not great, but better than default ones) */
 .japanese {
-  font-family: "Noto Sans JP", sans-serif;
+  font-family: v-bind(currentFont);
+  font-style: v-bind(currentStyle);
 }
 
 /* Styles to properly size text related to parent elements.

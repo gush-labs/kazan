@@ -32,7 +32,7 @@ const links = [
   },
   {
     name: "Japanese Phonetics by Dogen",
-    description: "Online course on Patron on Japanese phonetics.",
+    description: "Online course on Patreon on Japanese phonetics.",
     links: [{ name: "@dogen", link: "https://www.patreon.com/dogen/posts" }],
   },
 ];

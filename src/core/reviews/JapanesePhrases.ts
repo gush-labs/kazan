@@ -1,6 +1,5 @@
 import { Review, RandomPicker, ReviewCard } from "@/core/Review";
 import type { CreatorParams, Creator, CreatorStatus } from "./Creator";
-import { type Ref, ref } from "vue";
 
 function createCard(
   meaning: string,
@@ -31,7 +30,7 @@ class JapanesePhrases implements Creator {
   create(params: CreatorParams, rawParams: string[]): Review | undefined {
     const cards = [
       createCard("Glad to meet you", "", ["はじめまして"]),
-      createCard("Look forward to work with you", "", [
+      createCard("Looking forward to work with you", "", [
         "よろしくおねがいします",
       ]),
       createCard("Good morning", "", ["おはようございます"]),
