@@ -135,7 +135,7 @@ function startReview() {
         </div>
 
         <ActionButton
-          class="gap-top"
+          class="gap-top kz-success"
           @click="() => startReview()"
           :disabled="!anySelected"
           >Start!</ActionButton

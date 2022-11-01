@@ -5,7 +5,7 @@ import ActionButton from "@/components/ActionButton.vue";
 import { WaniKaniClient } from "@/core/WaniKaniClient";
 import PageLink from "@/components/PageLink.vue";
 import router from "@/router";
-import { ref } from "vue";
+import { ref, watch } from "vue";
 
 const input = ref("");
 const loading = ref(false);
@@ -15,6 +15,12 @@ const user = Authentication.user;
 if (user.value) {
   router.push({ name: "home" });
 }
+
+watch(input, value => {
+  if (value == "") {
+    error.value = "";
+  }
+});
 
 function signIn() {
   if (input.value.length == 0) {
@@ -52,7 +58,7 @@ function signIn() {
           v-if="!loading"
           @click="signIn"
           icon="box-arrow-in-right"
-          class="w-100 sign-button"
+          class="w-100 sign-button kz-success"
           >Sign in</ActionButton
         >
         <PageLink

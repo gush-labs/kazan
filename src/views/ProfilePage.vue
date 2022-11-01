@@ -28,17 +28,18 @@ const user = Authentication.user;
           >Sign in</PageLink
         >
         <PageLink :to="{ name: 'settings' }" icon="gear">Settings</PageLink>
+        <ActionButton icon="info-circle" disabled
+          >About the app</ActionButton
+        >
         <ActionButton
           @click="() => Authentication.logout()"
           v-if="user"
           icon="box-arrow-left"
+          class="kz-danger"
           >Logout</ActionButton
         >
       </div>
 
-      <ActionButton icon="info-circle" class="mt-4 w-100" disabled
-        >About the app</ActionButton
-      >
     </div>
   </div>
 </template>

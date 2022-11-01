@@ -128,15 +128,26 @@ body {
   border: var(--button-border-width) solid var(--border-base-color);
   border-radius: var(--button-border-radius);
   background-color: var(--button-bg-color);
+  border-bottom: 3px solid rgba(0,0,0,0.08);
   padding-block-start: 0.45em;
   padding-block-end: 0.45em;
+}
+.kz-success {
+  background-color: rgb(73, 184, 73) !important;
+  color: white !important;
+}
+.kz-danger {
+  background-color: rgb(203, 81, 81) !important;
+  color: white !important;
 }
 .kz-button:hover {
   border: var(--button-border-width) solid var(--border-hover-color);
   background-color: var(--button-hover-bg-color);
+  border-bottom: 3px solid rgba(0,0,0,0.15);
 }
 .kz-button:focus {
   border: var(--button-border-width) solid var(--border-hover-color);
+  border-bottom: 3px solid rgba(0,0,0,0);
   background-color: var(--button-bg-color);
 }
 .kz-button-active {
@@ -154,6 +165,7 @@ body {
 .kz-button-disabled:hover {
   cursor: default;
   border: var(--button-border-width) solid var(--border-base-color) !important;
+  border-bottom: 3px solid rgba(0,0,0,0.15) !important;
 }
 
 /* Fonts for japanese texts (not great, but better than default ones) */

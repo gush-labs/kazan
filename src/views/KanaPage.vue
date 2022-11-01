@@ -87,7 +87,7 @@ function goTo(path: RouteLocationRaw) {
 
   <ActionButton class="kana-title" switch @click="allMonographs" :switched="monographsSelected">All Monographs</ActionButton>
 
-  <div class="kana-container">
+  <div class="kana-container japanese">
     <ActionButton v-for="v, i in monographs"
       :key="i"
       switch 
@@ -97,7 +97,7 @@ function goTo(path: RouteLocationRaw) {
 
   <ActionButton class="kana-title mt-4" switch @click="allDiacritics" :switched="diacriticsSelected">All Diacritics</ActionButton>
 
-  <div class="kana-container">
+  <div class="kana-container japanese">
     <ActionButton v-for="v, i in diacritics" 
       :key="i"
       switch 
@@ -107,7 +107,7 @@ function goTo(path: RouteLocationRaw) {
 
   <ActionButton
     @click="() => goTo({name: 'review', query: {entries: kanaToReview.toString(), db: name.toLowerCase() }})" 
-    class="start-button mt-4" 
+    class="start-button mt-4 kz-success" 
     :disabled="!anySelected">
     Start!
   </ActionButton>
