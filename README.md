@@ -1,7 +1,7 @@
 ![Untitled](https://user-images.githubusercontent.com/6123702/194173134-23fec594-76ed-44a9-88b5-26c33e396a28.png)
 # Kazan - Japanese learning assistant
 
-Web-app that helps you to practice hiragana, katakana, vocabulary, and kanji. An assistance tool for your WaniKani learning journey.
+Web-app that helps you to practice hiragana, katakana, vocabulary, and kanji (coming soon). An assistance tool for your WaniKani learning journey.
 
 ![iPhone 12 Pro Max -- Silver](https://user-images.githubusercontent.com/6123702/194172375-9a630f5a-805b-4235-ba23-3a2bc7369d36.png)
 
