@@ -135,9 +135,11 @@ export class Review {
 
   getCorrectCards(): ReviewCard[] {
     const result: ReviewCard[] = [];
-    this.completedCardsIds.forEach((id) =>
-      result.push(this.generatedCards.get(id)!)
-    );
+    this.completedCardsIds.forEach((id) => {
+      if (!this.incorrectCardsIds.has(id)) {
+        result.push(this.generatedCards.get(id)!);
+      }
+    });
     return result;
   }
 
@@ -147,6 +149,10 @@ export class Review {
       result.push(this.generatedCards.get(id)!)
     );
     return result;
+  }
+
+  getTotalCardsCount(): number {
+    return this.picker.totalCards();
   }
 
   /**

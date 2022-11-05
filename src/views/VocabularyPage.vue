@@ -102,7 +102,7 @@ function startReview() {
         </div>
 
         <select
-          class="form-select gap-bottom"
+          class="form-select kz-select gap-bottom"
           aria-label="Default select example"
           v-model="select.level"
           :disabled="levels.length == 0"
@@ -130,7 +130,7 @@ function startReview() {
             :switch="fixedParams.translation ?? select.translation"
             @click="() => (select.translation = !select.translation)"
             :disabled="fixedParams.translation != undefined"
-            >To Japanese translation</SwitchOption
+            >Japanese translation</SwitchOption
           >
         </div>
 

@@ -78,13 +78,14 @@ watchUpdateDelay(
     class="footer d-flex flex-row justify-content-center text-muted align-items-end"
   >
     <div class="empty">-</div>
+
     <Transition name="info">
       <div v-if="info" class="bottom-text">
-        version 0.6
+        <!--version 0.6
         <i class="bi bi-dot"></i>
         <a class="author-link text-muted" href="https://github.com/gush-labs"
           ><i class="bi bi-github"></i> gush-labs</a
-        >
+        >-->
       </div>
     </Transition>
     <Transition name="process">

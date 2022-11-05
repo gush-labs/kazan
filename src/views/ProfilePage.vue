@@ -28,9 +28,7 @@ const user = Authentication.user;
           >Sign in</PageLink
         >
         <PageLink :to="{ name: 'settings' }" icon="gear">Settings</PageLink>
-        <ActionButton icon="info-circle" disabled
-          >About the app</ActionButton
-        >
+        <ActionButton icon="info-circle" disabled>About the app</ActionButton>
         <ActionButton
           @click="() => Authentication.logout()"
           v-if="user"
@@ -39,7 +37,6 @@ const user = Authentication.user;
           >Logout</ActionButton
         >
       </div>
-
     </div>
   </div>
 </template>

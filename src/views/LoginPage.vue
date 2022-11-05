@@ -16,7 +16,7 @@ if (user.value) {
   router.push({ name: "home" });
 }
 
-watch(input, value => {
+watch(input, (value) => {
   if (value == "") {
     error.value = "";
   }

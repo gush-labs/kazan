@@ -17,7 +17,7 @@ function createCard(
 
 class JapaneseBasicVerbs implements Creator {
   id = "verbs";
-  name = "Japanese Basic Verbs - lesson 1 [nihongoresources.com]";
+  name = "Japanese Basic Verbs";
 
   fixedParams = {
     translation: true,
