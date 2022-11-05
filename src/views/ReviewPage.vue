@@ -232,7 +232,7 @@ function checkAnswer(e: Event) {
       <div class="kz-text-success">
         <i class="bi bi-check-circle me-1"></i>
         {{ review.getCorrectCards().length }}
-        <span class="stats-text">completed</span>
+        <span class="stats-text">correct</span>
       </div>
       <div>{{ Math.floor(review.progress() * 100) }}%</div>
       <div class="kz-text-error">
