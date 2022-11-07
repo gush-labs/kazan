@@ -19,7 +19,7 @@ const fonts = ConfigurationOptions.availableJapaneseFonts;
         >Go back</ActionButton
       >
 
-      <div class="title-container text-center mt-2 mb-3"><h4>Settings</h4></div>
+      <div class="title-container text-center mt-2 mb-2"><h4>Settings</h4></div>
 
       <div class="font-sample d-flex flex-column py-2">
         <div class="text-muted text-center">Font preview</div>
