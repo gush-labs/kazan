@@ -5,6 +5,16 @@ Web-app that helps you to practice hiragana, katakana, vocabulary, and kanji (co
 
 ![iPhone 12 Pro Max -- Silver](https://user-images.githubusercontent.com/6123702/194172375-9a630f5a-805b-4235-ba23-3a2bc7369d36.png)
 
+# Features
+
+List of currently supported features:
+ * **Kana review**
+ * **Vocabulary review**
+   * Meaning, reading, and translation reviews
+   * Review by WaniKani user level
+ * **Settings**
+   * Japanese fonts
+ * **WPA support**
 
 # Development
 You can run local dev server either by using `npm` directly or by using docker container.
