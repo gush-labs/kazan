@@ -23,12 +23,12 @@ const questionFontSize = ref("4em");
 const questionFontWeight = ref("bold");
 const showAnswer = ref(false);
 const answerInput = ref("");
+const error = ref<string | undefined>(undefined);
 
 const db = database;
 const review = ref(createReview(db.hiragana.all));
 
 const card = ref<ReviewCard>(review.value.take());
-const error = ref<string | undefined>(undefined);
 const typeName = computed(() => {
   switch (card.value.type) {
     case "meaning":
@@ -210,20 +210,29 @@ function checkAnswer(e: Event) {
       <div
         class="review-answer d-flex flex-row justify-content-center flex-wrap mt-3"
       >
-        <div v-if="!wrongAnswer && card.note == ''" class="empty">empty</div>
+        <div v-if="!wrongAnswer && card.note == '' && !error" class="empty">
+          empty
+        </div>
 
         <!-- TODO: Don't take additional space if there are no cards with notes -->
 
         <div
-          v-if="!wrongAnswer && card.note != ''"
-          class="note text-muted w-100"
+          v-if="!wrongAnswer && card.note != '' && !error"
+          class="note text-muted w-100 d-flex flex-column justify-content-center"
         >
-          {{ card.note }}
+          <div>{{ card.note }}</div>
+        </div>
+
+        <div
+          v-if="!wrongAnswer && error"
+          class="error w-100 d-flex flex-column justify-content-center"
+        >
+          <div><i class="bi bi-exclamation-circle"></i> {{ error }}</div>
         </div>
 
         <div
           v-if="wrongAnswer"
-          class="d-flex flex-row justify-content-center flex-wrap answer-store w-100"
+          class="d-flex flex-row justify-content-center align-items-center flex-wrap answer-store w-100"
         >
           <div v-if="showAnswer">
             <div
@@ -329,15 +338,29 @@ function checkAnswer(e: Event) {
 .note {
   background-color: rgba(0, 0, 0, 0.1);
   border-radius: var(--button-border-radius);
+  min-height: 2.5rem;
+  font-size: 1.5em;
+}
+.error {
+  background-color: rgba(255, 140, 0, 0.199);
+  border-radius: var(--button-border-radius);
+  color: rgb(147, 71, 0);
+  min-height: 2.5rem;
 }
 .answer-item {
   color: green;
   font-weight: bold;
 }
+.review-answer .empty {
+  opacity: 0;
+  min-height: 2.5rem;
+}
 /* That's name is awful and not obvious what is answer-container and what is answer-store >_<) */
 .answer-store {
   background-color: rgba(34, 171, 0, 0.2);
   border-radius: var(--button-border-radius);
+  min-height: 2.5rem;
+  font-size: 1.5em;
 }
 .show-answer-button {
   opacity: 0.5;
@@ -355,13 +378,6 @@ function checkAnswer(e: Event) {
   font-size: v-bind(questionFontSize);
   font-weight: v-bind(questionFontWeight);
   margin: 0;
-}
-.review-window .review-answer {
-  font-size: 1.5em;
-}
-
-.review-answer .empty {
-  opacity: 0;
 }
 
 .answer-container .answer-form {
