@@ -102,6 +102,7 @@ export class ConfigurationOptions {
 class Configuration {
   japaneseFont = 0;
   enableKanaInput = true;
+  showAnswers = false;
 }
 
 export class Application {

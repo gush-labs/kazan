@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import LoadingCircle from "./LoadingCircle.vue";
 import { Application, type Process, type Error } from "@/core/Application";
-import { ref, computed, watch } from "vue";
+import { ref, computed } from "vue";
 import {
   watchRemove,
   watchUpdate,
@@ -22,11 +22,10 @@ const showProcess = computed(() => {
 
 const process = ref<Process | undefined>(undefined);
 const error = ref<Error | undefined>(undefined);
+// TODO: We don't need this thing anymore
+// so this variable can be completely deleted
 const info = ref<boolean>(true);
 
-watch(info, (v) => {
-  console.log(v);
-});
 // Hide instantly general app info
 watchUpdate(Application.status.currentProcess, () => (info.value = false));
 watchUpdate(Application.status.currentError, () => (info.value = false));
@@ -39,7 +38,6 @@ watchRemoveDelay(
 watchRemoveDelay(
   Application.status.currentError,
   () => {
-    console.log("ERROR REMOVE");
     info.value = showInfo.value;
   },
   550
@@ -78,16 +76,6 @@ watchUpdateDelay(
     class="footer d-flex flex-row justify-content-center text-muted align-items-end"
   >
     <div class="empty">-</div>
-
-    <Transition name="info">
-      <div v-if="info" class="bottom-text">
-        <!--version 0.6
-        <i class="bi bi-dot"></i>
-        <a class="author-link text-muted" href="https://github.com/gush-labs"
-          ><i class="bi bi-github"></i> gush-labs</a
-        >-->
-      </div>
-    </Transition>
     <Transition name="process">
       <div
         v-if="process"

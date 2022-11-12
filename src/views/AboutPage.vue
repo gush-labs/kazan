@@ -21,7 +21,7 @@ import ActionButton from "@/components/ActionButton.vue";
         <div class="d-flex flex-column info-container text-muted">
           <div class="d-flex flex-row justify-content-between info-item">
             <div class="fw-bold">Version</div>
-            <div>1.0</div>
+            <div>1.1</div>
           </div>
           <div class="d-flex flex-row justify-content-between info-item">
             <div class="fw-bold">Source</div>

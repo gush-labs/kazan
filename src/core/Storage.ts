@@ -11,16 +11,18 @@ export type StorageRef<T> = Ref<T | undefined>;
  * Completely reactive persistant storage powered by browser local storage.
  */
 export class Storage {
-  // in memory storage
+  // in-memory storage of primitive values
   static cacheValues = new Map<string, Ref<any>>();
+  // in-memory storage of objects
   static cacheObjects = new Map<string, any>();
-  static requiredVersion = 5;
+  // requited version of the storage
+  static requiredVersion = 6;
 
   /**
    * Verifies that storage is not oudated
    * and if it is, then performs a full cleanup
    */
-  static verify() {
+  public static verify() {
     try {
       const rawVersion = localStorage.getItem("version");
       if (rawVersion) {
@@ -36,16 +38,29 @@ export class Storage {
     console.info("Storage is cleared due to not being valid.");
   }
 
+  /**
+   * Removes all saved data in the browser storage.
+   */
   private static clearStorage() {
     localStorage.clear();
     localStorage.setItem("version", this.requiredVersion + "");
   }
 
   /**
+   * Removes all data from the storage
+   */
+  public static clear() {
+    this.cacheValues.forEach((r) => (r.value = undefined));
+    this.cacheObjects.clear();
+    this.clearStorage();
+  }
+
+  /**
    * Get reference to the value in the storage.
    * If value is missing, call the retriever to get a value.
+   * Useful in case if you want to cache the result of an HTTP request.
    */
-  static cached<T>(
+  public static cached<T>(
     key: string,
     retriever: () => Promise<T>
   ): Promise<StorageRef<T>> {
@@ -61,9 +76,9 @@ export class Storage {
   }
 
   /**
-   * Get a reference to the value in the storage
+   * Get a reference to the value in the storage.
    */
-  static get<T>(key: string): StorageRef<T> {
+  public static get<T>(key: string): StorageRef<T> {
     const ref = Storage.getCachedRef<T>(key);
     if (ref.value) {
       return ref;
@@ -79,7 +94,7 @@ export class Storage {
    * Get an object from the storage. If missing
    * initialize with provided object.
    */
-  static getObject<T extends object>(key: string, init: T): T {
+  public static getObject<T extends object>(key: string, init: T): T {
     let saved: T | undefined = undefined as T | undefined;
 
     if (!this.cacheObjects.has(key)) {
@@ -94,20 +109,10 @@ export class Storage {
   /**
    * Remove a value from the storage
    */
-  static delete(key: string) {
+  public static delete(key: string) {
     this.getCachedRef(key).value = undefined;
     this.cacheObjects.delete(key);
-  }
-
-  /**
-   * Removes all data from the storage
-   */
-  static clear() {
-    this.cacheValues.forEach((value) => {
-      value.value = undefined;
-    });
-    this.cacheObjects.clear();
-    this.clearStorage();
+    localStorage.removeItem(key);
   }
 
   private static getLocalStorageItem<T>(key: string): T | undefined {
@@ -178,4 +183,5 @@ export class Storage {
   }
 }
 
+// Verify the storage on the startup
 Storage.verify();

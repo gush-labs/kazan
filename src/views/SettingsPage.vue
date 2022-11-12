@@ -1,11 +1,14 @@
 <script setup lang="ts">
 import ActionButton from "@/components/ActionButton.vue";
 import { Application, ConfigurationOptions } from "@/core/Application";
-import { computed } from "vue";
 import router from "@/router";
+import SwitchOption from "@/components/SwitchOption.vue";
+import { computed } from "vue";
 
 const configuration = Application.configuration;
 const fonts = ConfigurationOptions.availableJapaneseFonts;
+
+const showAnswer = computed(() => configuration.showAnswers);
 </script>
 
 <template>
@@ -35,6 +38,13 @@ const fonts = ConfigurationOptions.availableJapaneseFonts;
           {{ font.name }}
         </option>
       </select>
+
+      <SwitchOption
+        :switch="showAnswer"
+        class="mt-3"
+        @click="() => (configuration.showAnswers = !configuration.showAnswers)"
+        >Always show answers</SwitchOption
+      >
     </div>
   </div>
 </template>

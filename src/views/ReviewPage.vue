@@ -7,6 +7,8 @@ import Language from "@/core/Language";
 import router from "@/router";
 import { ref, computed } from "vue";
 import { parseParams } from "@/core/reviews/Creator";
+import ActionButton from "@/components/ActionButton.vue";
+import { Application } from "@/core/Application";
 
 function createReview(
   collection: Array<Array<string>>,
@@ -15,12 +17,17 @@ function createReview(
   return new Review(new RandomPicker(generateCards(collection)), kana);
 }
 
+const showReport = ref(false);
+const wrongAnswer = ref(false);
+const questionFontSize = ref("4em");
+const questionFontWeight = ref("bold");
+const showAnswer = ref(false);
+const answerInput = ref("");
+
 const db = database;
 const review = ref(createReview(db.hiragana.all));
+
 const card = ref<ReviewCard>(review.value.take());
-const input = ref("");
-const wrong = ref(false);
-const complete = ref(false);
 const error = ref<string | undefined>(undefined);
 const typeName = computed(() => {
   switch (card.value.type) {
@@ -34,12 +41,29 @@ const typeName = computed(() => {
   return "";
 });
 
+function takeCard(review: Review) {
+  // Take a new card from the review queue
+  card.value = review.take();
+
+  // Redefine all variables which describe state of the
+  // currently shown card
+  showAnswer.value = Application.configuration.showAnswers;
+  wrongAnswer.value = false;
+  answerInput.value = "";
+
+  // Resize text for the card
+  const sf = 20;
+  const length = card.value ? card.value.question.length : 0;
+  questionFontSize.value =
+    Math.max(2, 2 * (Math.max(0, sf - length) / sf) + 2) + "em";
+  const latin = Language.latinOnly(card.value ? card.value.question : "");
+  questionFontWeight.value = latin ? "bold" : "normal";
+}
+
 function startReview(r: Review) {
   review.value = r;
-  input.value = "";
-  wrong.value = false;
-  complete.value = false;
-  card.value = review.value.take();
+  showReport.value = false;
+  takeCard(review.value);
 }
 
 // Take the review ID and review parameters from URL parameters
@@ -98,22 +122,22 @@ if (queryEntries.length > 0) {
 
 // =============> EVERYTHING ABOVE SHOULD BE REMOVED <=================
 
-function onChange() {
-  let inputText = input.value;
+function onAnswerInput() {
+  let inputText = answerInput.value;
   const kanaInput =
     card.value.input == "hiragana" || card.value.input == "katakana";
 
   if (kanaInput) {
     // remove spaces from kana input
-    const inputCharacters = input.value.split("").filter((c) => c != " ");
+    const inputCharacters = answerInput.value.split("").filter((c) => c != " ");
     inputText =
       inputCharacters.length > 0 ? inputCharacters.reduce((l, r) => l + r) : "";
   }
 
   if (card.value.input == "hiragana") {
-    input.value = Language.toHiragana(inputText);
+    answerInput.value = Language.toHiragana(inputText);
   } else if (card.value.input == "katakana") {
-    input.value = Language.toKatakana(inputText);
+    answerInput.value = Language.toKatakana(inputText);
   }
 
   if (Language.kanaOnly(inputText) || Language.latinOnly(inputText)) {
@@ -125,7 +149,7 @@ function checkAnswer(e: Event) {
   e.preventDefault();
   const rev = review.value;
 
-  const inputCharacters = input.value.split(" ").filter((c) => c != "");
+  const inputCharacters = answerInput.value.split(" ").filter((c) => c != "");
   let inputText =
     inputCharacters.length > 0
       ? inputCharacters.reduce((l, r) => l + " " + r)
@@ -153,76 +177,116 @@ function checkAnswer(e: Event) {
     error.value = undefined;
   }
 
-  if (!wrong.value) {
-    // verify the current review card
-    const correct = rev.verify(card.value, inputText);
-    if (correct) {
+  // If we're currently showing that the answer was wrong
+  if (wrongAnswer.value) {
+    // Clear the input and take a new card
+    takeCard(rev);
+    wrongAnswer.value = false;
+    answerInput.value = "";
+  } else {
+    // Otherwise verify the current review card
+    const correctAnswer = rev.verify(card.value, inputText);
+    if (correctAnswer) {
       // take a new one if it's correct
-      card.value = rev.take();
-      input.value = "";
+      takeCard(rev);
+      answerInput.value = "";
     } else {
       // otherwise we want to show the correct answer
-      wrong.value = true;
+      wrongAnswer.value = true;
     }
-  } else if (wrong.value) {
-    wrong.value = false;
-    card.value = rev.take();
-    input.value = "";
   }
 
-  complete.value = rev.completed();
+  showReport.value = rev.completed();
 }
 </script>
 
 <template>
-  <div v-if="!complete" class="d-flex flex-column justify-content-center">
-    <div :class="{ 'kz-text-dunger': wrong }" class="review-window text-center">
+  <div v-if="!showReport" class="d-flex flex-column justify-content-center">
+    <div class="review-window text-center">
       <div class="d-flex flex-column justify-content-end fw-bold"></div>
       <div>
         <h1 class="review-target japanese">{{ card.question }}</h1>
       </div>
       <div
-        class="review-answer d-flex flex-row justify-content-center flex-wrap"
+        class="review-answer d-flex flex-row justify-content-center flex-wrap mt-3"
       >
-        <div v-if="!wrong && card.note == ''" class="empty">empty</div>
+        <div v-if="!wrongAnswer && card.note == ''" class="empty">empty</div>
 
         <!-- TODO: Don't take additional space if there are no cards with notes -->
-        <div v-if="!wrong && card.note != ''" class="note text-muted">
+
+        <div
+          v-if="!wrongAnswer && card.note != ''"
+          class="note text-muted w-100"
+        >
           {{ card.note }}
         </div>
+
         <div
-          v-if="wrong"
-          class="d-flex flex-row justify-content-center flex-wrap"
+          v-if="wrongAnswer"
+          class="d-flex flex-row justify-content-center flex-wrap answer-store w-100"
         >
-          <div
-            v-for="answer in card.shownAnswers"
-            :key="answer"
-            class="ms-2 me-2"
-          >
-            {{ answer }}
+          <div v-if="showAnswer">
+            <div
+              v-for="answer in card.shownAnswers"
+              :key="answer"
+              class="ms-2 me-2 answer-item px-3"
+            >
+              {{ answer }}
+            </div>
+          </div>
+          <div v-if="!showAnswer">
+            <ActionButton
+              plain
+              icon="eye"
+              @click="() => (showAnswer = true)"
+              class="show-answer-button"
+              >Show answer</ActionButton
+            >
           </div>
         </div>
       </div>
     </div>
 
-    <div class="answer-container mb-3 mt-3">
+    <div class="answer-container mb-3 mt-1">
       <div
         class="card-type p-1"
-        :class="{ 'card-type-reading': card.type == 'reading' }"
+        :class="{
+          'kz-danger': wrongAnswer,
+          'card-type-reading': card.type == 'reading',
+        }"
       >
         {{ typeName }}
       </div>
       <form @submit="checkAnswer">
         <input
-          v-model="input"
-          @input="onChange"
+          v-model="answerInput"
+          @input="onAnswerInput"
           class="kz-input answer-form japanese w-100 p-2"
+          :class="{ 'kz-danger': wrongAnswer }"
           placeholder=""
           spellcheck="false"
         />
       </form>
     </div>
 
+    <div class="control-container">
+      <ActionButton icon="info-circle" disabled>Item info</ActionButton>
+      <ActionButton
+        v-if="!wrongAnswer"
+        icon="check-circle"
+        @click="(e) => checkAnswer(e)"
+        >Check</ActionButton
+      >
+      <ActionButton
+        v-if="wrongAnswer"
+        icon="caret-right"
+        @click="(e) => checkAnswer(e)"
+        >Next card</ActionButton
+      >
+    </div>
+
+    <!--
+      I don't know yet where to put those stats
     <div v-if="error" class="error-window mb-5 text-center">
       <i class="bi bi-exclamation-circle"></i>
       {{ error }}
@@ -241,9 +305,10 @@ function checkAnswer(e: Event) {
         <span class="stats-text">mistakes</span>
       </div>
     </div>
+    -->
   </div>
 
-  <ReportView v-if="complete" @start="startReview" :review="review" />
+  <ReportView v-if="showReport" @start="startReview" :review="review" />
 </template>
 
 <style scoped>
@@ -261,6 +326,22 @@ function checkAnswer(e: Event) {
   border-bottom: none !important;
   text-align: center;
 }
+.note {
+  background-color: rgba(0, 0, 0, 0.1);
+  border-radius: var(--button-border-radius);
+}
+.answer-item {
+  color: green;
+  font-weight: bold;
+}
+/* That's name is awful and not obvious what is answer-container and what is answer-store >_<) */
+.answer-store {
+  background-color: rgba(34, 171, 0, 0.2);
+  border-radius: var(--button-border-radius);
+}
+.show-answer-button {
+  opacity: 0.5;
+}
 .card-type-reading {
   background-color: var(--button-active-color);
   border: 1px solid rgba(0, 0, 0, 0);
@@ -271,12 +352,11 @@ function checkAnswer(e: Event) {
   grid-template-rows: 2em 1fr auto;
 }
 .review-window .review-target {
-  font-size: 4em;
-  font-weight: 400;
+  font-size: v-bind(questionFontSize);
+  font-weight: v-bind(questionFontWeight);
   margin: 0;
 }
 .review-window .review-answer {
-  font-weight: bold;
   font-size: 1.5em;
 }
 
@@ -288,12 +368,18 @@ function checkAnswer(e: Event) {
   border-top-left-radius: 0px;
   border-top-right-radius: 0px;
   text-align: center;
-  font-size: 2em;
+  font-size: 1.75em;
 }
 .anwer-container .answer-form:focus {
   border-color: inherit;
   -webkit-box-shadow: none;
   box-shadow: none;
+}
+
+.control-container {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--default-grid-gap);
 }
 
 textarea:focus,

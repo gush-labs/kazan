@@ -141,7 +141,7 @@ const slowestCount = review.value
   text-align: center;
   border-bottom: 1px solid var(--border-base-color);
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(8em, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(7em, 1fr));
 }
 
 @media screen and (max-width: 650px) {

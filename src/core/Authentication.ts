@@ -1,5 +1,5 @@
 /**
- * Module responsible for any type of authentication.
+ * Module responsible for authentication actions (login, logout, etc.).
  */
 import { Application } from "@/core/Application";
 import { WaniKaniClient } from "@/core/WaniKaniClient";
@@ -67,6 +67,7 @@ export class Authentication {
 
   static logout() {
     Storage.clear();
+    WaniKaniClient.deleteKey();
   }
 }
 

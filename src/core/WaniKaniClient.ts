@@ -12,11 +12,15 @@ export class WaniKaniClient {
     return Storage.getObject<WaniKaniData>("wanikani", new WaniKaniData());
   }
 
-  static setKey(key: string) {
+  public static deleteKey() {
+    Storage.delete("wanikani");
+  }
+
+  public static setKey(key: string) {
     this.data.apiKey = key;
   }
 
-  static request(resource: string, query: any = {}): Promise<any> {
+  public static request(resource: string, query: any = {}): Promise<any> {
     const api = this.data.apiKey;
     if (!api) {
       return Promise.reject("There is no WaniKani API key present");
