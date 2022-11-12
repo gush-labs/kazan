@@ -1,4 +1,8 @@
 <script setup lang="ts">
+/**
+ * Simple button which performs some actions
+ */
+
 const emits = defineEmits(["click"]);
 const props = defineProps<{
   label?: string;

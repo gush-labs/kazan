@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import ActionButton from "@/components/ActionButton.vue";
-import router from "@/router";
+import GoBackButton from "@/components/GoBackButton.vue";
+import DisplayContainer from "@/components/DisplayContainer.vue";
 
 const links = [
   {
@@ -39,16 +39,10 @@ const links = [
 </script>
 
 <template>
-  <div class="d-flex flex-column justify-content-center pt-4">
+  <DisplayContainer center class="pt-4">
     <div class="list-container">
       <div class="d-flex flex-row justify-content-center">
-        <ActionButton
-          plain
-          @click="() => router.back()"
-          class="text-muted"
-          icon="arrow-left-short"
-          >Go back</ActionButton
-        >
+        <GoBackButton />
       </div>
       <div v-for="(link, i) in links" :key="i">
         <h4>{{ link.name }}</h4>
@@ -60,7 +54,7 @@ const links = [
         </div>
       </div>
     </div>
-  </div>
+  </DisplayContainer>
 </template>
 
 <style scoped>

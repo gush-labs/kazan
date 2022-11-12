@@ -4,6 +4,7 @@ import ActionButton from "@/components/ActionButton.vue";
 import { ref, watch, type Ref } from "vue";
 import router from "@/router";
 import type { RouteLocationRaw } from "vue-router";
+import DisplayContainer from "@/components/DisplayContainer.vue";
 
 class ButtonItem {
   name = "";
@@ -93,7 +94,8 @@ function goTo(path: RouteLocationRaw) {
 </script>
 
 <template>
-  <div class="menu-container">
+  <DisplayContainer center>
+
     <div class="menu-center">
       <div class="title-container mb-2">
         <div class="title-control mb-3 text-muted">
@@ -136,7 +138,7 @@ function goTo(path: RouteLocationRaw) {
         </div>
       </div>
     </div>
-  </div>
+  </DisplayContainer>
 </template>
 
 <style scoped>
@@ -169,11 +171,5 @@ function goTo(path: RouteLocationRaw) {
 .menu-center {
   display: grid;
   grid-template-rows: 1fr 1fr;
-}
-.menu-container {
-  height: 100%;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
 }
 </style>

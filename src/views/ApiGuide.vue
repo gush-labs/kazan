@@ -1,19 +1,12 @@
 <script setup lang="ts">
-import ActionButton from "@/components/ActionButton.vue";
-import router from "@/router";
+import GoBackButton from "@/components/GoBackButton.vue";
+import DisplayContainer from "@/components/DisplayContainer.vue";
 </script>
 
 <template>
-  <div class="d-flex flex-column justify-content-center">
-    <div class="d-flex flex-row justify-content-center mb-4">
-      <ActionButton
-        plain
-        @click="() => router.back()"
-        class="text-muted"
-        icon="arrow-left-short"
-        >Go back to Sign In</ActionButton
-      >
-    </div>
+  <DisplayContainer center>
+    <GoBackButton class='mb-3'/>
+
     <h4>How to get WaniKani API token?</h4>
     <p>
       In order to use WaniKani vocabulary you need to sign in using your
@@ -34,5 +27,5 @@ import router from "@/router";
       <li>You will see a new token appear</li>
     </ol>
     <p>Now you can copy your WaniKani API token and use it for sign in.</p>
-  </div>
+  </DisplayContainer>
 </template>

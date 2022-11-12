@@ -6,6 +6,7 @@ import { WaniKaniClient } from "@/core/WaniKaniClient";
 import PageLink from "@/components/PageLink.vue";
 import router from "@/router";
 import { ref, watch } from "vue";
+import DisplayContainer from "@/components/DisplayContainer.vue";
 
 const input = ref("");
 const loading = ref(false);
@@ -41,41 +42,40 @@ function signIn() {
 </script>
 
 <template>
-  <div class="d-flex flex-column justify-content-center text-center">
-    <div class="d-flex flex-row justify-content-center">
-      <div v-if="!user" class="profile-container d-flex flex-column">
-        <h4>Sign in</h4>
-        <p :class="{ error: error, 'text-muted': !error }">
-          <i v-if="error" class="bi bi-exclamation-circle"></i>
-          {{ error ? error : "Sign in through your WaniKani account" }}
-        </p>
-        <input
-          v-model="input"
-          class="form-control font-monospace kz-input"
-          placeholder="WaniKani API token"
-        />
-        <ActionButton
-          v-if="!loading"
-          @click="signIn"
-          icon="box-arrow-in-right"
-          class="w-100 sign-button kz-success"
-          >Sign in</ActionButton
-        >
-        <PageLink
-          icon="question-circle"
-          :to="{ name: 'api-guide' }"
-          plain
-          class="signin-guide-link text-muted mt-3"
-          >How to get WaniKani API token?</PageLink
-        >
-        <!--<div id="appleid-signin" class="signin-button mt-3" data-color="black" data-width="100%" data-border="true" data-type="sign-in"></div>-->
-        <div
-          v-if="loading"
-          class="mt-3 p-2 d-flex flex-row justify-content-center align-items-center"
-        >
-          <LoadingCircle class="me-1"></LoadingCircle>
-          <div>Signing up...</div>
-        </div>
+  <DisplayContainer center short class="text-center">
+
+    <div v-if="!user" class="d-flex flex-column">
+      <h4>Sign in</h4>
+      <p :class="{ error: error, 'text-muted': !error }">
+        <i v-if="error" class="bi bi-exclamation-circle"></i>
+        {{ error ? error : "Sign in through your WaniKani account" }}
+      </p>
+      <input
+        v-model="input"
+        class="form-control font-monospace kz-input"
+        placeholder="WaniKani API token"
+      />
+      <ActionButton
+        v-if="!loading"
+        @click="signIn"
+        icon="box-arrow-in-right"
+        class="w-100 sign-button kz-success"
+        >Sign in</ActionButton
+      >
+      <PageLink
+        icon="question-circle"
+        :to="{ name: 'api-guide' }"
+        plain
+        class="signin-guide-link text-muted mt-3"
+        >How to get WaniKani API token?</PageLink
+      >
+      <!--<div id="appleid-signin" class="signin-button mt-3" data-color="black" data-width="100%" data-border="true" data-type="sign-in"></div>-->
+      <div
+        v-if="loading"
+        class="mt-3 p-2 d-flex flex-row justify-content-center align-items-center"
+      >
+        <LoadingCircle class="me-1"></LoadingCircle>
+        <div>Signing up...</div>
       </div>
     </div>
 
@@ -90,7 +90,8 @@ function signIn() {
     >
       <div class="redirect-progress-line"></div>
     </div>
-  </div>
+  </DisplayContainer>
+
 </template>
 
 <style scoped>
@@ -99,6 +100,7 @@ function signIn() {
 }
 .redirect-progress {
   background-color: rgba(0, 0, 0, 0.1);
+  border-radius: var(--button-border-radius);
 }
 
 .sign-button {
@@ -110,6 +112,7 @@ function signIn() {
   background-color: rgba(0, 0, 0, 0.25);
   animation-duration: 5s;
   animation-name: progress;
+  border-radius: var(--button-border-radius);
 }
 .signin-button {
   width: 100%;
@@ -124,17 +127,6 @@ function signIn() {
   }
   to {
     width: 100%;
-  }
-}
-
-@media screen and (max-width: 650px) {
-  .profile-container {
-    width: 100%;
-  }
-}
-@media screen and (min-width: 650px) {
-  .profile-container {
-    width: 75%;
   }
 }
 </style>

@@ -1,11 +1,12 @@
 <script setup lang="ts">
 import { computed } from "vue";
 import ActionButton from "@/components/ActionButton.vue";
+import GoBackButton from "@/components/GoBackButton.vue";
 import { database } from "@/core/Database";
-import PageLink from "@/components/PageLink.vue";
 import router from "@/router";
 import { Storage } from "@/core/Storage";
 import type { RouteLocationRaw } from "vue-router";
+import DisplayContainer from "@/components/DisplayContainer.vue";
 
 const monographs: string[] = [
   "a", "ka", "sa", "ta", "na", 
@@ -69,13 +70,8 @@ function goTo(path: RouteLocationRaw) {
 </script>
 
 <template>
-<div class="d-flex flex-column justify-content-center pt-4">
-
-  <div class="navigation-container d-flex flex-row justify-content-center mb-2">
-    <PageLink :to="{ name: 'home', params: { page: 'kana' }}" 
-      icon="arrow-left-short" 
-      class='text-muted back-button' plain>Go back</PageLink>
-  </div>
+<DisplayContainer center class="pt-4">
+  <GoBackButton :to="{name: 'home', params: { page: 'kana'}}" class='mb-3'/>
 
   <div class="header-container text-center mb-3 pb-1">
     <div></div>
@@ -111,7 +107,8 @@ function goTo(path: RouteLocationRaw) {
     :disabled="!anySelected">
     Start!
   </ActionButton>
-</div>
+
+</DisplayContainer>
 </template>
 
 <style scoped>

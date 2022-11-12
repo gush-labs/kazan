@@ -1,12 +1,13 @@
 <script setup lang="ts">
 import SwitchOption from "@/components/SwitchOption.vue";
-import PageLink from "@/components/PageLink.vue";
 import { Storage } from "@/core/Storage";
 import ReviewCreator from "@/core/ReviewCreator";
 import { type CreatorParams, exportParams } from "@/core/reviews/Creator";
 import { computed } from "vue";
 import ActionButton from "@/components/ActionButton.vue";
+import GoBackButton from "@/components/GoBackButton.vue";
 import router from "@/router";
+import DisplayContainer from "@/components/DisplayContainer.vue";
 
 const vocabularyReviews = ReviewCreator.getAllReviews();
 class VocabularyReviewSelectData {
@@ -61,88 +62,78 @@ function startReview() {
 </script>
 
 <template>
-  <div class="d-flex flex-column justify-content-center align-items-center">
-    <div class="vocabulary-container d-flex flex-column">
-      <div class="text-center link-container mb-2">
-        <PageLink
-          :to="{ name: 'home', params: { page: 'home' } }"
-          icon="arrow-left-short"
-          class="text-muted"
-          plain
-          >Go back</PageLink
-        >
-      </div>
+  <DisplayContainer short center class="pt-4">
+    <GoBackButton class='mb-3'/>
 
-      <div class="text-center mb-3"><h4>Select vocabulary</h4></div>
+    <div class="text-center mb-3"><h4>Select vocabulary</h4></div>
+
+    <select
+      class="form-select kz-select gap-bottom"
+      aria-label="Default select example"
+      v-model="select.reviewId"
+    >
+      <option
+        v-for="review in vocabularyReviews"
+        :key="review.id"
+        :value="review.id"
+      >
+        {{ review.name }}
+      </option>
+    </select>
+
+    <div class="d-flex flex-column review-params-container">
+      <div
+        v-if="!status.available"
+        class="overlay d-flex justify-content-center flex-column"
+      >
+        <div class="text-center fw-bold mb-3">
+          <i class="bi bi-exclamation-circle me-1"></i> Review is not
+          available
+        </div>
+        <div class="text-center">{{ status.reason }}</div>
+      </div>
 
       <select
         class="form-select kz-select gap-bottom"
         aria-label="Default select example"
-        v-model="select.reviewId"
+        v-model="select.level"
+        :disabled="levels.length == 0"
       >
-        <option
-          v-for="review in vocabularyReviews"
-          :key="review.id"
-          :value="review.id"
-        >
-          {{ review.name }}
+        <option v-for="(level, id) in levels" :key="level" :value="id">
+          {{ level }}
         </option>
       </select>
 
-      <div class="d-flex flex-column review-params-container">
-        <div
-          v-if="!status.available"
-          class="overlay d-flex justify-content-center flex-column"
+      <div class="switch-container">
+        <SwitchOption
+          :switch="fixedParams.meaning ?? select.meaning"
+          @click="() => (select.meaning = !select.meaning)"
+          :disabled="fixedParams.meaning != undefined"
+          >Meaning of words</SwitchOption
         >
-          <div class="text-center fw-bold mb-3">
-            <i class="bi bi-exclamation-circle me-1"></i> Review is not
-            available
-          </div>
-          <div class="text-center">{{ status.reason }}</div>
-        </div>
-
-        <select
-          class="form-select kz-select gap-bottom"
-          aria-label="Default select example"
-          v-model="select.level"
-          :disabled="levels.length == 0"
+        <SwitchOption
+          :switch="fixedParams.reading ?? select.reading"
+          @click="() => (select.reading = !select.reading)"
+          :disabled="fixedParams.reading != undefined"
         >
-          <option v-for="(level, id) in levels" :key="level" :value="id">
-            {{ level }}
-          </option>
-        </select>
-
-        <div class="switch-container">
-          <SwitchOption
-            :switch="fixedParams.meaning ?? select.meaning"
-            @click="() => (select.meaning = !select.meaning)"
-            :disabled="fixedParams.meaning != undefined"
-            >Meaning of words</SwitchOption
-          >
-          <SwitchOption
-            :switch="fixedParams.reading ?? select.reading"
-            @click="() => (select.reading = !select.reading)"
-            :disabled="fixedParams.reading != undefined"
-          >
-            Reading of words</SwitchOption
-          >
-          <SwitchOption
-            :switch="fixedParams.translation ?? select.translation"
-            @click="() => (select.translation = !select.translation)"
-            :disabled="fixedParams.translation != undefined"
-            >Japanese translation</SwitchOption
-          >
-        </div>
-
-        <ActionButton
-          class="gap-top kz-success"
-          @click="() => startReview()"
-          :disabled="!anySelected"
-          >Start!</ActionButton
+          Reading of words</SwitchOption
+        >
+        <SwitchOption
+          :switch="fixedParams.translation ?? select.translation"
+          @click="() => (select.translation = !select.translation)"
+          :disabled="fixedParams.translation != undefined"
+          >Japanese translation</SwitchOption
         >
       </div>
+
+      <ActionButton
+        class="gap-top kz-success"
+        @click="() => startReview()"
+        :disabled="!anySelected"
+        >Start!</ActionButton
+      >
     </div>
-  </div>
+  </DisplayContainer>
 </template>
 
 <style scoped>
@@ -170,15 +161,5 @@ function startReview() {
 }
 .link-container {
   margin-right: 1.5em;
-}
-@media screen and (max-width: 650px) {
-  .vocabulary-container {
-    width: 100%;
-  }
-}
-@media screen and (min-width: 650px) {
-  .vocabulary-container {
-    width: 75%;
-  }
 }
 </style>

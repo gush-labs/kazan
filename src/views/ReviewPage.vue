@@ -293,40 +293,12 @@ function checkAnswer(e: Event) {
         >Next card</ActionButton
       >
     </div>
-
-    <!--
-      I don't know yet where to put those stats
-    <div v-if="error" class="error-window mb-5 text-center">
-      <i class="bi bi-exclamation-circle"></i>
-      {{ error }}
-    </div>
-
-    <div v-if="error == undefined" class="stats-window mb-5">
-      <div class="kz-text-success">
-        <i class="bi bi-check-circle me-1"></i>
-        {{ review.getCorrectCards().length }}
-        <span class="stats-text">correct</span>
-      </div>
-      <div>{{ Math.floor(review.progress() * 100) }}%</div>
-      <div class="kz-text-error">
-        <i class="bi bi-x-circle me-1"></i>
-        {{ review.getIncorrectCards().length }}
-        <span class="stats-text">mistakes</span>
-      </div>
-    </div>
-    -->
   </div>
 
   <ReportView v-if="showReport" @start="startReview" :review="review" />
 </template>
 
 <style scoped>
-.stats-window {
-  border-radius: 10px;
-  text-align: center;
-  display: grid;
-  grid-template-columns: 1fr 1fr 1fr;
-}
 .card-type {
   display: block;
   border: var(--input-border-width) solid var(--input-border-color);
@@ -401,11 +373,5 @@ function checkAnswer(e: Event) {
 textarea:focus,
 input:focus {
   outline: none;
-}
-
-@media screen and (max-width: 650px) {
-  .stats-text {
-    display: none;
-  }
 }
 </style>

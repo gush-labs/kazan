@@ -164,7 +164,6 @@ body {
   border: var(--button-border-width) solid var(--border-base-color) !important;
 }
 
-/* Fonts for japanese texts (not great, but better than default ones) */
 .japanese {
   font-family: v-bind(currentFont);
   font-style: v-bind(currentStyle);
