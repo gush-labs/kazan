@@ -198,6 +198,13 @@ function checkAnswer(e: Event) {
 
   showReport.value = rev.completed();
 }
+
+// [Note 1]
+// <input type="url"> disables keyboard suggestions on iOS 16 safari, and
+// <form novalidate> disables validation for being a url (that gets enabled by type url).
+// This is an (only?) acceptable use for this pattern - for teaching purposes,
+// where we want to verify that the user can spell words without help.
+// This is a hack and it will eventually break.
 </script>
 
 <template>
@@ -266,7 +273,7 @@ function checkAnswer(e: Event) {
       >
         {{ typeName }}
       </div>
-      <form @submit="checkAnswer">
+      <form @submit="checkAnswer" novalidate>
         <input
           v-model="answerInput"
           @input="onAnswerInput"
@@ -274,7 +281,9 @@ function checkAnswer(e: Event) {
           :class="{ 'kz-danger': wrongAnswer }"
           placeholder=""
           spellcheck="false"
+          type="url"
         />
+        <!-- see [Note 1] -->
       </form>
     </div>
 
