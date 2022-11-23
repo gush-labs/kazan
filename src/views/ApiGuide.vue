@@ -5,7 +5,7 @@ import DisplayContainer from "@/components/DisplayContainer.vue";
 
 <template>
   <DisplayContainer center>
-    <GoBackButton class='mb-3'/>
+    <GoBackButton class="mb-3" />
 
     <h4>How to get WaniKani API token?</h4>
     <p>

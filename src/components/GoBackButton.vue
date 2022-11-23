@@ -10,18 +10,22 @@ const props = defineProps<{
 
 <template>
   <div class="w-100 d-flex flex-row justify-content-center">
-    <ActionButton 
+    <ActionButton
       v-if="!props.to"
       plain
       @click="() => router.back()"
       class="text-muted pe-2"
-      icon="arrow-left-short">Go back</ActionButton>
+      icon="arrow-left-short"
+      >Go back</ActionButton
+    >
     <PageLink
       plain
       v-if="props.to"
       :to="props.to"
       class="text-muted pe-2 link"
-      icon="arrow-left-short">Go back</PageLink>
+      icon="arrow-left-short"
+      >Go back</PageLink
+    >
   </div>
 </template>
 

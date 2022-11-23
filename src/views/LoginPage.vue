@@ -43,7 +43,6 @@ function signIn() {
 
 <template>
   <DisplayContainer center short class="text-center">
-
     <div v-if="!user" class="d-flex flex-column">
       <h4>Sign in</h4>
       <p :class="{ error: error, 'text-muted': !error }">
@@ -91,7 +90,6 @@ function signIn() {
       <div class="redirect-progress-line"></div>
     </div>
   </DisplayContainer>
-
 </template>
 
 <style scoped>

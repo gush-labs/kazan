@@ -95,7 +95,6 @@ function goTo(path: RouteLocationRaw) {
 
 <template>
   <DisplayContainer center>
-
     <div class="menu-center">
       <div class="title-container mb-2">
         <div class="title-control mb-3 text-muted">

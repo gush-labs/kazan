@@ -6,7 +6,7 @@ type TextPart = {
   after?: number;
   before?: number;
   speed?: number;
-} 
+};
 
 const props = defineProps<{
   text: TextPart[];

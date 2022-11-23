@@ -13,7 +13,7 @@ const showAnswer = computed(() => configuration.showAnswers);
 
 <template>
   <DisplayContainer center short>
-    <GoBackButton class='mb-3'/>
+    <GoBackButton class="mb-3" />
 
     <div class="title-container text-center mb-2"><h4>Settings</h4></div>
 

@@ -5,7 +5,7 @@ import DisplayContainer from "@/components/DisplayContainer.vue";
 
 <template>
   <DisplayContainer center short class="text-center">
-    <GoBackButton class='mb-3'/>
+    <GoBackButton class="mb-3" />
 
     <div class="w-100">
       <h4>About the app</h4>

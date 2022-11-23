@@ -63,7 +63,7 @@ function startReview() {
 
 <template>
   <DisplayContainer short center class="pt-4">
-    <GoBackButton class='mb-3'/>
+    <GoBackButton class="mb-3" />
 
     <div class="text-center mb-3"><h4>Select vocabulary</h4></div>
 
@@ -87,8 +87,7 @@ function startReview() {
         class="overlay d-flex justify-content-center flex-column"
       >
         <div class="text-center fw-bold mb-3">
-          <i class="bi bi-exclamation-circle me-1"></i> Review is not
-          available
+          <i class="bi bi-exclamation-circle me-1"></i> Review is not available
         </div>
         <div class="text-center">{{ status.reason }}</div>
       </div>
