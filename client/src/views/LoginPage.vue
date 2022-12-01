@@ -2,7 +2,6 @@
 import LoadingCircle from "@/components/LoadingCircle.vue";
 import { Authentication } from "@/core/Authentication";
 import ActionButton from "@/components/ActionButton.vue";
-import { WaniKaniClient } from "@/core/WaniKaniClient";
 import PageLink from "@/components/PageLink.vue";
 import router from "@/router";
 import { ref, watch } from "vue";
@@ -28,8 +27,7 @@ function signIn() {
     return;
   }
 
-  WaniKaniClient.setKey(input.value);
-  Authentication.login().then((success) => {
+  Authentication.login({ wanikaniApiKey: input.value }).then((success) => {
     loading.value = false;
     if (success) {
       setTimeout(() => router.push({ name: "home" }), 5000);

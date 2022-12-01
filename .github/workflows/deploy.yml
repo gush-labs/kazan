@@ -3,7 +3,6 @@ name: Build and Deploy to Pages
 on:
   push:
     branches: ["master"]
-
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
 
@@ -19,29 +18,46 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  build:
+
+  checkout:
     runs-on: ubuntu-latest
     steps:
+
       - name: Checkout
         uses: actions/checkout@v3
-      - name: Build
-        run: |
-          npm ci
-          npm run build
-          cp ./dist/index.html ./dist/404.html
+
+  server-build:
+    needs: checkout
+    runs-on: ubuntu-latest
+    steps:
+
+      - name: Build server
+        run: make server-build
+
+  client-build:
+    needs: checkout
+    runs-on: ubuntu-latest
+    steps:
+
+      - name: Build client
+        run: make client-build
+
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v1
         with:
           path: './dist/'
-  deploy:
-    needs: build
+
+  client-deploy:
+    needs: client-build
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
     runs-on: ubuntu-latest
     steps:
+
       - name: Setup Pages
         uses: actions/configure-pages@v1
+
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@main

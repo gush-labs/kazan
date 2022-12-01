@@ -8,12 +8,8 @@ class WaniKaniData {
 }
 
 export class WaniKaniClient {
-  private static get data() {
+  public static get data() {
     return Storage.getObject<WaniKaniData>("wanikani", new WaniKaniData());
-  }
-
-  public static deleteKey() {
-    Storage.delete("wanikani");
   }
 
   public static setKey(key: string) {

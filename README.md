@@ -7,7 +7,7 @@ Web-app that helps you to practice hiragana, katakana, vocabulary, and kanji (co
 
 # Features
 
-List of currently supported features:
+List of currently supported features
  * **Kana review**
  * **Vocabulary review**
    * Meaning, reading, and translation reviews
@@ -17,46 +17,22 @@ List of currently supported features:
  * **WPA support**
 
 # Development
-You can run local dev server either by using `npm` directly or by using docker container.
 
-## Using Docker
+There are 2 directories inside of this repository:
+ * `server` - source code for the server (NodeJS app)
+ * `client` - source code for the web-app (Vue/TypeScript app)
 
-Start local dev server with `docker-compose` by using the current state
-of the source code:
-```sh
-docker-compose up
-```
-Please keep in mind that in order to see your changes, you need
-to rebuild the docker image.
+You can navigate to any of those and init them as local npm projects through
+`npm install`. And then use IDE of your choice to make appropriate changes.
 
-Stop running local dev server:
-```sh
-docker-compose down
-```
-
-## Using npm
-
-Install all required dependencies:
-```sh
-npm install
-```
-
-Compile and Hot-Reload for Development
-```sh
-npm run dev
-```
-
-Type-Check, Compile and Minify for Production
+If you just want to try to run both server and client locally, you can do that
+by using the following `make` commands:
 
 ```sh
-npm run build
+# To launch the server locally
+make server-run
+
+# To lanuch the web-server for the web-app locally
+make client-run
 ```
-
-Lint with [ESLint](https://eslint.org/)
-
-```sh
-npm run lint
-```
-
-
 

@@ -7,6 +7,17 @@ import { ref, reactive, watch, type Ref } from "vue";
 
 export type StorageRef<T> = Ref<T | undefined>;
 
+export type RemoteData = {
+  version: number;
+  data: Map<string, any>;
+};
+
+export interface RemoteStorage {
+  loadAll: () => Promise<RemoteData>;
+  setVersion: (version: number) => void;
+  save: (key: string, value: any) => void;
+}
+
 /**
  * Completely reactive persistant storage powered by browser local storage.
  */
@@ -17,6 +28,8 @@ export class Storage {
   static cacheObjects = new Map<string, any>();
   // requited version of the storage
   static requiredVersion = 6;
+  // remote storage (our backend for example)
+  static remoteStorage: RemoteStorage | undefined = undefined;
 
   /**
    * Verifies that storage is not oudated
@@ -55,31 +68,63 @@ export class Storage {
     this.clearStorage();
   }
 
-  /**
-   * Get reference to the value in the storage.
-   * If value is missing, call the retriever to get a value.
-   * Useful in case if you want to cache the result of an HTTP request.
-   */
-  public static cached<T>(
-    key: string,
-    retriever: () => Promise<T>
-  ): Promise<StorageRef<T>> {
-    const ref = Storage.get<T>(key);
-    if (ref.value) {
-      return Promise.resolve(ref);
-    }
+  public static initRemoteStorage(remoteStorage: RemoteStorage) {
+    remoteStorage
+      .loadAll()
+      .then((response) => {
+        // If data in the remote storage is not outdated
+        if (response.version == this.requiredVersion) {
+          // load all data
+          response.data.forEach((value, key) => {
+            console.log("Remote Storage: load key=" + key);
+            const ref = this.cacheValues.get(key);
+            if (ref) {
+              // Update value in the cache if we have it
+              ref.value = value;
+            } else {
+              // otherwise, just save that value to our local storage
+              this.localStorageSet(key, value);
+            }
+          });
+          // and update our local version
+          localStorage.setItem("version", this.requiredVersion + "");
+        }
 
-    return retriever().then((v) => {
-      ref.value = v;
-      return ref;
-    });
+        console.log("Remote Storage: all data loaded");
+        // and only after everything was updated
+        // we will set the remote storage
+        this.remoteStorage = remoteStorage;
+      })
+      .catch((e) => {
+        console.error("Failed to load data from the remote storage", e);
+      });
+  }
+
+  public static getRemote<T>(key: string): StorageRef<T> {
+    // First try to load from the local storage
+    const ref = this.get<T>(key);
+
+    // We will always try to save values to the remote
+    // storage as soon as it will be available
+    setTimeout(
+      () =>
+        watch(ref, (value) => {
+          if (this.remoteStorage) {
+            console.log("Remote Storage: save key=" + key);
+            this.remoteStorage.save(key, value);
+          }
+        }),
+      0
+    );
+
+    return ref;
   }
 
   /**
    * Get a reference to the value in the storage.
    */
   public static get<T>(key: string): StorageRef<T> {
-    const ref = Storage.getCachedRef<T>(key);
+    const ref = this.getCachedRef<T>(key);
     if (ref.value) {
       return ref;
     }
