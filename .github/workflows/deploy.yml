@@ -1,4 +1,4 @@
-name: Build and Deploy to Pages
+name: Build and Deploy to Production
 
 on:
   push:
@@ -19,17 +19,13 @@ concurrency:
 
 jobs:
 
-  checkout:
+  server-build:
+    needs: checkout
     runs-on: ubuntu-latest
     steps:
 
       - name: Checkout
         uses: actions/checkout@v3
-
-  server-build:
-    needs: checkout
-    runs-on: ubuntu-latest
-    steps:
 
       - name: Build server
         run: make server-build
@@ -38,6 +34,9 @@ jobs:
     needs: checkout
     runs-on: ubuntu-latest
     steps:
+
+      - name: Checkout
+        uses: actions/checkout@v3
 
       - name: Build client
         run: make client-build
