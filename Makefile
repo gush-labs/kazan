@@ -18,17 +18,19 @@ client-build: client-lint
 client-run:
 	@echo "CLIENT: Running web-server for the client.. "
 	cd client; \
-	npm install; \
+	npm ci; \
 	npm run dev
 
 server-build:
 	@echo "SERVER: Building the server..."
 	cd server; \
+	npm ci; \
 	npm run build
 	@echo "SERVER: Build complete"
 
 server-run: server-build
 	@echo "SERVER: Running the server..."
 	cd server; \
+	npm ci;
 	npm run start
 
