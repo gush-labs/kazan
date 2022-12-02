@@ -13,8 +13,8 @@ flowchart LR
   kazan-client(Kazan Web-app\nkazan.vadimgush.com)
   browser{{User Browser}}
   
-  browser -->|Web-page request| kazan-client
-  browser -->|Backend requests| kazan-lb
+  browser -->|Web-page Request| kazan-client
+  browser -->|Backend Requests| kazan-lb
   
   subgraph Google Cloud
   direction LR
