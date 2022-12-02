@@ -5,7 +5,7 @@ Web-app that helps you to practice hiragana, katakana, vocabulary, and kanji (co
 
 ![iPhone 12 Pro Max -- Silver](https://user-images.githubusercontent.com/6123702/194172375-9a630f5a-805b-4235-ba23-3a2bc7369d36.png)
 
-# Features
+## Features
 
 List of currently supported features
  * **Kana review**
@@ -16,7 +16,7 @@ List of currently supported features
    * Japanese fonts
  * **WPA support**
 
-# Development
+## Development
 
 There are 2 directories inside of this repository:
  * `server` - source code for the server (NodeJS app)
