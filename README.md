@@ -1,5 +1,5 @@
 ![Untitled](https://user-images.githubusercontent.com/6123702/194173134-23fec594-76ed-44a9-88b5-26c33e396a28.png)
-# [Kazan - Japanese learning assistant](https://kana.vadimgush.com)
+# [Kazan - Japanese learning assistant](https://kazan.vadimgush.com)
 
 Web-app that helps you to practice hiragana, katakana, vocabulary, and kanji (coming soon). An assistance tool for your [WaniKani](https://wanikani.com) learning journey.
 
