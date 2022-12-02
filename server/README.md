@@ -1,6 +1,6 @@
 # Server
 
-This directory contains source code for the server-side of Kazan app. It's Node.js app that uses Express framework (though wrapped as a Google Cloud Function).
+This directory contains source code for the server-side of Kazan app. It's Node.js app that uses Express framework (though wrapped as a Google Cloud Function). It is very easy to run in a serverless environment which allows for very cheap maintaince cost.
 
 ## Infrastructure
 
