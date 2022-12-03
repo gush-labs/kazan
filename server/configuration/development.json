@@ -1,0 +1,8 @@
+{
+  "environment": "standalone",
+  "database": {
+    "url": { "env": "MONGO_DB_URL" },
+    "user": { "env": "MONGO_DB_USER" },
+    "password": { "env": "MONGO_DB_PASSWORD" }
+  }
+}

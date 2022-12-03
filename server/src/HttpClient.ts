@@ -1,6 +1,6 @@
 import http from "https";
 
-class HttpClient {
+export class HttpClient {
   static get(url: string, headers: Map<string, string>): Promise<any> {
     const promise = new Promise((resolve, reject) =>
       http.get(url, (response) => {
@@ -28,5 +28,3 @@ class HttpClient {
     return promise;
   }
 }
-
-export default HttpClient;

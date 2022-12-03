@@ -1,21 +1,25 @@
-import express from "express";
-import { WaniKani } from "./WaniKani";
+import handler from "./Handlers";
+import { Configuration, config} from "./Configuration";
+import * as functions from "@google-cloud/functions-framework";
 
-const app = express();
+if (Configuration.get(config.environment) === "standalone") {
+  import("express").then(module => {
+    const express = module.default;
 
-app.get("/", (request, response) => {
-  response.send("ONLINE");
-});
+    console.log("Starting app as a standalone server...");
 
-app.get("/login", (request, response) => {
-  const apiKey: string = request.body.key;
-  WaniKani.auth(apiKey)
-    .then((user) => {
-      response.send("DONE!");
-    })
-    .catch((error) => {
-      response.status(401).send("{}");
-    });
-});
+    const expressApp = express();
+    expressApp.get(handler.path, handler.handle);
 
-app.listen(8080);
+    console.log("Startup completed");
+    expressApp.listen(8080);
+  });
+}
+
+if (Configuration.get(config.environment) === "cloud-function") {
+  console.log("Initializing as Google Cloud Function...");
+
+  functions.http(handler.name, handler.handle);
+
+  console.log("Initialization completed");
+}

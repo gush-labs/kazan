@@ -1,4 +1,4 @@
-name: Build code
+name: Build Code
 
 on:
   push:
@@ -16,7 +16,8 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  lint-js:
+
+  all-build:
     runs-on: ubuntu-latest
     steps:
 
