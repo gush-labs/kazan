@@ -33,7 +33,7 @@ export class Storage {
 
   /**
    * Verifies that storage is not oudated
-   * and if it is, then performs a full cleanup
+   * and if it is, then performs a full cleanup.
    */
   public static verify() {
     try {
@@ -53,6 +53,7 @@ export class Storage {
 
   /**
    * Removes all saved data in the browser storage.
+   * And updates storage version to the latest one.
    */
   private static clearStorage() {
     localStorage.clear();
@@ -60,7 +61,8 @@ export class Storage {
   }
 
   /**
-   * Removes all data from the storage
+   * Removes all data from the local caches and clears
+   * the browser storage completely.
    */
   public static clear() {
     this.cacheValues.forEach((r) => (r.value = undefined));
@@ -68,6 +70,13 @@ export class Storage {
     this.clearStorage();
   }
 
+  /**
+   * Links the current storage with a remote one. Meaning that
+   * every save or load operation will be synchronized with the remote
+   * storage. This allows us to save some data in the cloud which
+   * then will be loaded from multiple devices.
+   * @param remoteStorage remote storage to be used
+   */
   public static initRemoteStorage(remoteStorage: RemoteStorage) {
     remoteStorage
       .loadAll()
@@ -100,6 +109,17 @@ export class Storage {
       });
   }
 
+  /**
+   * Loads a value from the remote storage if it's not
+   * yet been requested. Otherwise loads a value for this key
+   * from the local storage.
+   *
+   * All update operations to this value will be send to the remote
+   * storage.
+   *
+   * @param key key of the value
+   * @returns ref to the value
+   */
   public static getRemote<T>(key: string): StorageRef<T> {
     // First try to load from the local storage
     const ref = this.get<T>(key);
@@ -160,6 +180,11 @@ export class Storage {
     localStorage.removeItem(key);
   }
 
+  /**
+   * Reads a value from the browser local storage.
+   * @param key key for that value
+   * @returns value or undefined if it's not present in the storage
+   */
   private static getLocalStorageItem<T>(key: string): T | undefined {
     try {
       const storageEntry = localStorage.getItem(key);
@@ -176,6 +201,12 @@ export class Storage {
     return undefined;
   }
 
+  /**
+   * Loads an object from the local cache (browser local storage).
+   * @param key key for the object
+   * @param init initial value if object is not present
+   * @returns an object itself
+   */
   private static getCachedObject<T extends object>(
     key: string,
     init: object
@@ -188,6 +219,11 @@ export class Storage {
     );
   }
 
+  /**
+   * Loads ref of the value from the local cache (browser local storage).
+   * @param key key of the value
+   * @returns reference to the value
+   */
   private static getCachedRef<T>(key: string): StorageRef<T> {
     return this.getCached<StorageRef<T>, T | undefined>(
       key,

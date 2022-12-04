@@ -46,6 +46,34 @@ export function watchRemoveDelay<T>(
   });
 }
 
+export class Temporary<T> {
+  private updateTime: number = new Date().getTime();
+  private ttl: number;
+  private v: T | undefined;
+
+  public constructor(initial: T | undefined, ttl: number) {
+    this.ttl = ttl;
+    this.v = initial;
+    this.updateTime -= ttl;
+  }
+
+  public set(v: T) {
+    this.updateTime = new Date().getTime();
+    this.v = v;
+  }
+
+  public get value(): T | undefined {
+    if (this.expired || this.v === undefined) {
+      return undefined;
+    }
+    return this.v;
+  }
+
+  public get expired(): boolean {
+    return new Date().getTime() > this.updateTime + this.ttl;
+  }
+}
+
 export class TimeDistribution {
   buckets: number[] = [];
   range: { start: number; end: number } = { start: 0, end: 0 };
