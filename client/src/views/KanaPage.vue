@@ -71,7 +71,6 @@ function goTo(path: RouteLocationRaw) {
 
 <template>
 <DisplayContainer center class="pt-4">
-  <GoBackButton :to="{name: 'home', params: { page: 'kana'}}" class='mb-3'/>
 
   <div class="header-container text-center mb-3 pb-1">
     <div></div>

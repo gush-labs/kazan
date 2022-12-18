@@ -10,19 +10,18 @@ BackendClient.status.then((result) => (status.value = result));
 
 <template>
   <DisplayContainer center short class="text-center">
-    <GoBackButton class="mb-3" />
-
     <div class="w-100">
       <h4>About the app</h4>
       <p><b>Kazan</b> - WaniKani assistance tool.</p>
-      <div class="d-flex flex-column info-container text-muted">
+      <div class="d-flex flex-column kz-container text-muted">
+
         <div class="d-flex flex-row justify-content-between info-item">
-          <div class="fw-bold">Version</div>
+          <div>Version</div>
           <div>1.1</div>
         </div>
 
         <div class="d-flex flex-row justify-content-between info-item">
-          <div class="fw-bold">Source</div>
+          <div>Source</div>
           <div>
             <a class="text-muted" href="https://github.com/gush-labs/kazan"
               >@gush-labs/kazan</a
@@ -31,7 +30,7 @@ BackendClient.status.then((result) => (status.value = result));
         </div>
 
         <div class="d-flex flex-row justify-content-between info-item">
-          <div class="fw-bold">Server Status</div>
+          <div>Server Status</div>
           <div>
             <div v-if="status === true">
               <span class="online-icon"><i class="bi bi-circle-fill"></i></span>
@@ -49,6 +48,7 @@ BackendClient.status.then((result) => (status.value = result));
             </div>
           </div>
         </div>
+
       </div>
     </div>
   </DisplayContainer>
@@ -69,11 +69,12 @@ BackendClient.status.then((result) => (status.value = result));
   padding: 0.5em;
   padding-inline-end: 1em;
   padding-inline-start: 1em;
-  margin-bottom: 1px;
+  border-bottom: var(--button-border-width) solid var(--button-border-color);
 }
 .info-item:last-child {
   border-bottom-left-radius: var(--button-border-radius);
   border-bottom-right-radius: var(--button-border-radius);
+  border-bottom: none;
 }
 .info-item:first-child {
   border-top-left-radius: var(--button-border-radius);

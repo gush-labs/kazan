@@ -33,14 +33,18 @@ const slowestCount = review.value
 </script>
 
 <template>
-  <div class="d-flex flex-column justify-content-center mt-5 mb-5 pt-5">
+  <div class="d-flex flex-column justify-content-center mt-5 mb-5">
     <div v-if="cards.length == 0" class="text-center p-3">
       <h4>{{ congrat }} <i class="bi bi-hand-thumbs-up"></i></h4>
     </div>
 
-    <DistributionView :distribution="timeDistribution" class="mb-3" />
+    <div v-if="cards.length != 0" class="text-center p-3">
+      <h4>Review results</h4>
+    </div>
 
-    <div class="stats-window mb-3 pb-3">
+    <DistributionView :distribution="timeDistribution" />
+
+    <div class="stats-window kz-container p-2 gap-top">
       <div class="flex-fill kz-text-success">
         <i class="bi bi-check-circle me-1"></i>&nbsp;{{
           review.getCorrectCards().length
@@ -51,20 +55,14 @@ const slowestCount = review.value
           review.getTotalCardsCount()
         }}&nbsp;total
       </div>
-      <!--
-      <div class="flex-fill hard">
-        <i class="bi bi-clock-history me-1"></i>&nbsp;{{
-          slowestCount
-        }}&nbsp;slowest
-      </div>
-      -->
       <div class="flex-fill kz-text-error">
         <i class="bi bi-x-circle me-1"></i>&nbsp;{{
           review.getIncorrectCards().length
-        }}&nbsp;mistakes
+        }}&nbsp;<span v-if="review.getIncorrectCards().length == 1">mistake</span><span v-if="review.getIncorrectCards().length != 1">mistakes</span>
       </div>
     </div>
 
+    <!--
     <div v-if="cards.length > 0" class="report mb-3">
       <div
         v-for="(result, id) in cards"
@@ -75,8 +73,9 @@ const slowestCount = review.value
         {{ result.name }}
       </div>
     </div>
+  -->
 
-    <div class="buttons">
+    <div class="buttons gap-top">
       <ActionButton
         icon="arrow-repeat"
         @click="() => emits('start', review.repeat())"
@@ -96,7 +95,7 @@ const slowestCount = review.value
         >Repeat incorrect</ActionButton
       >
     </div>
-    <div class="complete-container">
+    <div class="gap-top">
       <ActionButton
         icon="arrow-return-left"
         class="w-100"
@@ -112,9 +111,6 @@ const slowestCount = review.value
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(11em, 1fr));
   gap: var(--default-grid-gap);
-}
-.complete-container .btn {
-  margin-top: var(--default-grid-gap);
 }
 
 .report {
@@ -139,7 +135,6 @@ const slowestCount = review.value
 
 .stats-window {
   text-align: center;
-  border-bottom: 1px solid var(--border-base-color);
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(7em, 1fr));
 }

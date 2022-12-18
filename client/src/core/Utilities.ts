@@ -82,7 +82,7 @@ export class TimeDistribution {
   static calculate(values: number[]): TimeDistribution {
     const distribution = new TimeDistribution();
 
-    const resolution = 40;
+    const resolution = 30;
     const buckets: number[] = new Array(resolution).fill(0);
     const maxValue = (Math.floor(this.max(values) / 5) + 1) * 5;
 
