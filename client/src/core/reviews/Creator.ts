@@ -2,7 +2,7 @@
  * Interface for review creators. Classes which responsibility
  * is to create reviews for certain subjects.
  */
-import type { Review } from "@/core/Review";
+import { ReviewCard, type Review } from "@/core/Review";
 
 export type CreatorParams = {
   level?: number;
@@ -16,6 +16,69 @@ export type CreatorStatus = {
   available: boolean;
   reason: string;
 };
+
+export type ReviewRow = {
+  id: number;
+  // Usually english translation of the japanese word
+  english: string[],
+  // Japanese word or a phrase
+  japanese: string[],
+  // Reading of the japanese word
+  reading: string[],
+  // Hints
+  note?: string,
+  
+  // The next 3 fields are used for the case
+  // when we want to show only one answer
+  // despite accepting multiple for example
+  shownReadings?: string[],
+  shownJapanese?: string[],
+  shownEnglish?: string[],
+}
+
+export type ReviewTable = ReviewRow[];
+
+export function meaningCards(data: ReviewTable): ReviewCard[] {
+  return data.map(row => {
+    return new ReviewCard({
+      id: row.id,
+      type: "meaning",
+      question: (row.shownJapanese ?? row.japanese)[0],
+      shownAnswers: row.shownEnglish ?? row.english,
+      answers: row.english,
+      note: row.note,
+      input: "romaji",
+    });
+  });
+}
+
+export function readingCards(data: ReviewTable): ReviewCard[] {
+  return data.map(row => {
+    return new ReviewCard({
+      id: row.id,
+      type: "meaning",
+      question: (row.shownJapanese ?? row.japanese)[0],
+      shownAnswers: row.shownReadings ?? row.reading,
+      answers: row.reading,
+      note: row.note,
+      input: "hiragana",
+    });
+  });
+}
+
+export function translationCards(data: ReviewTable): ReviewCard[] {
+  return data.map(row => {
+    return new ReviewCard({
+      id: row.id,
+      type: "meaning",
+      question: (row.shownEnglish ?? row.english)[0],
+      shownAnswers: row.shownJapanese ?? row.japanese,
+      answers: row.japanese.concat(row.reading),
+      note: row.note,
+      input: "hiragana",
+    });
+  });
+}
 
 /**
  * Takes creator params with raw params and converts them
@@ -56,29 +119,11 @@ export interface Creator {
   id: string;
   name: string;
 
-  // If creator only supports some of parameters
-  // and has default values for them
-  fixedParams: CreatorParams;
+  enabledParameters: CreatorParams;
 
-  /**
-   * Creates a new review from given parameters.
-   * Parameters are passed as just a raw array of strings
-   * (they should be parsed before processing).
-   */
-  create(params: CreatorParams, rawParams: string[]): Review | undefined;
+  create(parameters: CreatorParams, additionalParameters: string[]): Review | undefined;
 
-  /**
-   * Returns an array of available levels
-   * (for JLTP it will be N5, N4 and so on.)
-   *
-   * If there are not levels to choose from, should
-   * return an empty array.
-   */
   levels(): string[];
 
-  /**
-   * Tells weither the current review is avaible or not
-   * (WaniKani vocabulary might not be avaible is user it not logged in)
-   */
   status(): CreatorStatus;
 }

@@ -209,13 +209,14 @@ function checkAnswer(e: Event) {
 
 <template>
   <div v-if="!showReport" class="d-flex flex-column justify-content-center">
-    <div class="review-window text-center">
-      <div class="d-flex flex-column justify-content-end fw-bold"></div>
-      <div>
+
+    <div class="review-window text-center kz-container d-flex flex-column">
+
+      <div class="my-3">
         <h1 class="review-target japanese">{{ card.question }}</h1>
       </div>
       <div
-        class="review-answer d-flex flex-row justify-content-center flex-wrap mt-3"
+        class="review-answer d-flex flex-row justify-content-center flex-wrap"
       >
         <div v-if="!wrongAnswer && card.note == '' && !error" class="empty">
           empty
@@ -239,7 +240,7 @@ function checkAnswer(e: Event) {
 
         <div
           v-if="wrongAnswer"
-          class="d-flex flex-row justify-content-center align-items-center flex-wrap answer-store w-100"
+          class="d-flex flex-row justify-content-center align-items-center flex-wrap answer-store w-100 kz-success"
         >
           <div v-if="showAnswer">
             <div
@@ -253,7 +254,7 @@ function checkAnswer(e: Event) {
           <div v-if="!showAnswer">
             <ActionButton
               plain
-              icon="eye"
+              icon="check-circle"
               @click="() => (showAnswer = true)"
               class="show-answer-button"
               >Show answer</ActionButton
@@ -263,7 +264,7 @@ function checkAnswer(e: Event) {
       </div>
     </div>
 
-    <div class="answer-container mb-3 mt-1">
+    <div class="answer-container gap-top">
       <div
         class="card-type p-1"
         :class="{
@@ -287,7 +288,7 @@ function checkAnswer(e: Event) {
       </form>
     </div>
 
-    <div class="control-container">
+    <div class="control-container gap-top">
       <ActionButton icon="info-circle" disabled>Item info</ActionButton>
       <ActionButton
         v-if="!wrongAnswer"
@@ -318,33 +319,33 @@ function checkAnswer(e: Event) {
 }
 .note {
   background-color: rgba(0, 0, 0, 0.1);
-  border-radius: var(--button-border-radius);
-  min-height: 2.5rem;
-  font-size: 1.5em;
+  border-bottom-left-radius: var(--button-border-radius);
+  border-bottom-right-radius: var(--button-border-radius);
 }
 .error {
   background-color: rgba(255, 140, 0, 0.199);
-  border-radius: var(--button-border-radius);
+  border-bottom-left-radius: var(--button-border-radius);
+  border-bottom-right-radius: var(--button-border-radius);
   color: rgb(147, 71, 0);
-  min-height: 2.5rem;
+}
+.answer-store {
+  border-bottom-left-radius: var(--button-border-radius);
+  border-bottom-right-radius: var(--button-border-radius);
 }
 .answer-item {
-  color: green;
-  font-weight: bold;
+  font-size: 1.2em;
+}
+.review-answer {
+  border-top: var(--button-border-width) solid var(--button-border-color);
+  min-height: 2.5rem;
 }
 .review-answer .empty {
   opacity: 0;
   min-height: 2.5rem;
 }
 /* That's name is awful and not obvious what is answer-container and what is answer-store >_<) */
-.answer-store {
-  background-color: rgba(34, 171, 0, 0.2);
-  border-radius: var(--button-border-radius);
-  min-height: 2.5rem;
-  font-size: 1.5em;
-}
 .show-answer-button {
-  opacity: 0.5;
+  color: white;
 }
 .card-type-reading {
   background-color: var(--button-active-color);

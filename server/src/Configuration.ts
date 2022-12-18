@@ -1,9 +1,18 @@
+/**
+ * Module is responsible for parsing configuration files
+ * and provides type-strong definition of application configuration.
+ */
 
 type EnvironmentVariable<T> = {
   env: string,
   default?: T
 }
 
+/**
+ * Any variable specified in the configuration file is 
+ * either a definition of that variable or a name to the environment
+ * variable.
+ */
 type Variable<T> = T | EnvironmentVariable<T>;
 
 type ConfigurationData = {
@@ -14,13 +23,13 @@ type ConfigurationData = {
     password: Variable<string>
   }
 }
-
 const env: Map<string, string | undefined> = new Map(Object.entries(process.env));
+
 export const config: ConfigurationData = require("./configuration.json");
 
-export class Configuration {
+export namespace Configuration {
 
-  static get<T>(variable: Variable<T>): T | undefined {
+  export function get<T>(variable: Variable<T>): T | undefined {
     if (typeof variable === "string") {
       return variable;
     } 

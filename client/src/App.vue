@@ -23,7 +23,7 @@ const currentStyle = computed(() => fonts[configuration.japaneseFont].style);
 
 <style>
 body {
-  background-color: white;
+  background-color: #f2f2f7;
 }
 
 .app-container {
@@ -62,10 +62,10 @@ body {
   --button-active-color: rgba(0, 0, 0, 0.5);
   --button-active-text-color: var(--text-light-color);
   --button-disabled-opacity: 0.65;
-  --button-border-radius: 4px;
-  --button-bg-color: rgba(0, 0, 0, 0.08);
-  --button-hover-bg-color: rgba(0, 0, 0, 0.15);
-  --button-border-width: 0px;
+  --button-border-radius: 10px;
+  --button-bg-color: white;
+  --button-hover-bg-color: #e5e5ea;
+  --button-border-width: 1px;
   --button-border-color: var(--border-base-color);
 
   --input-border-radius: var(--button-border-radius);
@@ -103,6 +103,11 @@ body {
 .gap-top-big {
   margin-top: var(--default-grid-gap-big);
 }
+.kz-container {
+  border: var(--button-border-width) solid var(--border-base-color);
+  border-radius: var(--button-border-radius);
+  background-color: var(--button-bg-color);
+}
 .kz-text {
   color: var(--text-base-color);
 }
@@ -130,6 +135,7 @@ body {
   background-color: var(--button-bg-color);
   padding-block-start: 0.45em;
   padding-block-end: 0.45em;
+  transition: 0.2s;
 }
 .kz-success {
   background-color: rgb(73, 184, 73) !important;

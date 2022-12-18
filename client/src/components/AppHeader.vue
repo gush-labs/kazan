@@ -36,7 +36,7 @@ function goProfile() {
     </div>
 
     <div @click="goHome" class="logo">
-      <img src="/public/logo.png" />
+      カザン
     </div>
 
     <div class="dropdown profile">
@@ -89,6 +89,10 @@ function goProfile() {
 .logo img {
   max-height: 4rem;
   height: 4rem;
+}
+.logo {
+  font-weight: bold;
+  font-size: 3rem;
 }
 
 @media screen and (max-width: 650px) {

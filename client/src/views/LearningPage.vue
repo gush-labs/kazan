@@ -41,9 +41,6 @@ const links = [
 <template>
   <DisplayContainer center class="pt-4">
     <div class="list-container">
-      <div class="d-flex flex-row justify-content-center">
-        <GoBackButton />
-      </div>
       <div v-for="(link, i) in links" :key="i">
         <h4>{{ link.name }}</h4>
         <p class="mb-1">{{ link.description }}</p>

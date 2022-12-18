@@ -19,7 +19,7 @@ class JapaneseBasicVerbs implements Creator {
   id = "verbs";
   name = "Japanese Basic Verbs";
 
-  fixedParams = {
+  enabledParameters = {
     translation: true,
     meaning: false,
     reading: false,

@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import LoadingCircle from "./LoadingCircle.vue";
 import { Application, type Process, type Error } from "@/core/Application";
 import { ref, computed } from "vue";
 import {
@@ -8,6 +7,8 @@ import {
   watchRemoveDelay,
   watchUpdateDelay,
 } from "@/core/Utilities";
+import ActionButton from "@/components/ActionButton.vue";
+import router from "@/router";
 
 const showInfo = computed(() => {
   return (
@@ -75,7 +76,8 @@ watchUpdateDelay(
   <div
     class="footer d-flex flex-row justify-content-center text-muted align-items-end"
   >
-    <div class="empty">-</div>
+    <ActionButton class="px-5 text-muted shadow-sm" @click="() => router.back()"><i class="bi bi-arrow-left me-1"></i> Go back</ActionButton>
+    <!--
     <Transition name="process">
       <div
         v-if="process"
@@ -91,10 +93,15 @@ watchUpdateDelay(
         {{ error.message }}
       </div>
     </Transition>
+  -->
   </div>
 </template>
 
 <style scoped>
+.footer .kz-button {
+  border-radius: 2rem;
+  background-color: var(--button-bg-color);
+}
 .empty {
   opacity: 0;
 }

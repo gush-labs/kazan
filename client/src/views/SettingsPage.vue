@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import GoBackButton from "@/components/GoBackButton.vue";
 import { Application, ConfigurationOptions } from "@/core/Application";
 import SwitchOption from "@/components/SwitchOption.vue";
 import { computed } from "vue";
@@ -13,17 +12,16 @@ const showAnswer = computed(() => configuration.showAnswers);
 
 <template>
   <DisplayContainer center short>
-    <GoBackButton class="mb-3" />
 
     <div class="title-container text-center mb-2"><h4>Settings</h4></div>
 
-    <div class="font-sample d-flex flex-column py-2">
+    <div class="kz-container d-flex flex-column py-2">
       <div class="text-muted text-center">Font preview</div>
       <div class="japanese text-center"><h3>私は寿司が好きです</h3></div>
     </div>
 
     <select
-      class="form-select gap-top"
+      class="form-select gap-top kz-select px-3"
       aria-label="Default select example"
       v-model="configuration.japaneseFont"
     >
@@ -32,18 +30,12 @@ const showAnswer = computed(() => configuration.showAnswers);
       </option>
     </select>
 
-    <SwitchOption
-      :switch="showAnswer"
-      class="mt-3"
-      @click="() => (configuration.showAnswers = !configuration.showAnswers)"
-      >Always show answers</SwitchOption
-    >
+    <div class="kz-container gap-top px-3 d-flex flex-column">
+      <SwitchOption
+        :switch="showAnswer"
+        @click="() => (configuration.showAnswers = !configuration.showAnswers)"
+        >Always show answers</SwitchOption
+      >
+    </div>
   </DisplayContainer>
 </template>
-
-<style scoped>
-.font-sample {
-  border-radius: var(--button-border-radius);
-  background-color: var(--button-bg-color);
-}
-</style>

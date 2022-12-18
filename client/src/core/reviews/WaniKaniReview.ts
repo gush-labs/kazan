@@ -13,7 +13,7 @@ type WaniKaniQuery = {
 class WaniKaniReview implements Creator {
   id = "wanikani";
   name = "WaniKani";
-  fixedParams = {};
+  enabledParameters = {};
 
   static parseWaniKaniParams(
     creatorParams: CreatorParams,
