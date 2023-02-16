@@ -7,13 +7,13 @@ Web-app that helps you to practice hiragana, katakana, vocabulary, and kanji (co
 
 ## Features
 
-List of currently supported features
  * **Kana review**
- * **Vocabulary review**
+ * **WaniKani vocabulary review**
    * Meaning, reading, and translation reviews
    * Review by WaniKani user level
  * **Settings**
-   * Japanese fonts
+   * Selection of Japanese fonts
+   * Show answers/hide answers
  * **WPA support**
 
 ## Development

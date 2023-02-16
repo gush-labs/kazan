@@ -1,33 +1,5 @@
-# Server
+# Repetition Server
 
-This directory contains source code for the server-side of Kazan app. It's Node.js app that uses Express framework (though wrapped as a Google Cloud Function). It is very easy to run in a serverless environment which allows for very cheap maintaince cost.
+**NOTE:** I'm planning on creating a separate project for the implementation of the server. So this directory will be probably moved to another repository.
 
-## Infrastructure
-
-This is a flowchart that somewhat describes the general idea of Kazan infrastructure:
-
-```mermaid
-flowchart LR
-  kazan-lb(HTTP Load Balancer\nserver.kazan.vadimgush.com)
-  kazan-function(Backend Cloud Functions)
-  kazan-client(Kazan Web-app\nkazan.vadimgush.com)
-  kazan-db(Serverless Database)
-  browser{{User Browser}}
-  
-  browser -->|Web-page Request| kazan-client
-  browser -->|Backend Requests| kazan-lb
-  kazan-function --> kazan-db
-  
-  subgraph Google Cloud
-  direction LR
-  kazan-lb --> kazan-function
-  
-    subgraph MongoDB Atlas
-    kazan-db
-    end
-  end
-  
-  subgraph Github Pages
-  kazan-client
-  end
-```
+Repetition server is an implementation of SRS which can be embedded in any web-app. It's a Node.js application written in TypeScript with usage of Express framework. It uses MongoDB to store all content and state of SRS for every user (as well as user information itself).
