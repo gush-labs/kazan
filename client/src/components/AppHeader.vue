@@ -1,15 +1,9 @@
 <script setup lang="ts">
-import { Authentication } from "@/core/Authentication";
 import ActionButton from "@/components/ActionButton.vue";
 import router from "@/router";
 
-const user = Authentication.user;
-
 function goHome() {
   router.push({ name: "home" });
-}
-function signOut() {
-  Authentication.logout();
 }
 function goProfile() {
   router.push({ name: "profile" });
@@ -45,9 +39,7 @@ function goProfile() {
         plain
         icon="person-circle"
         class="header-link"
-      >
-        {{ user ? user.username : "Profile" }}
-      </ActionButton>
+      >Profile</ActionButton>
       <ActionButton
         @click="() => goProfile()"
         icon="person-circle"

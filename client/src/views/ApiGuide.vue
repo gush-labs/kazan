@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import GoBackButton from "@/components/GoBackButton.vue";
 import DisplayContainer from "@/components/DisplayContainer.vue";
 </script>
 

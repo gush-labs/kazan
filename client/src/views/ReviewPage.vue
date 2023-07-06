@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { database, generateCards } from "@/core/Database";
 import { Review, RandomPicker, ReviewCard } from "@/core/Review";
-import ReviewCreator from "@/core/ReviewCreator";
+import Reviews from "@/core/Reviews";
 import ReportView from "@/views/review/ReportView.vue";
 import Language from "@/core/Language";
 import router from "@/router";
@@ -72,7 +72,7 @@ const reviewParams = router.currentRoute.value.query.params?.toString();
 if (reviewId && reviewParams) {
   const [reviewCreatorParams, reviewCreatorRawParams] =
     parseParams(reviewParams);
-  const review = ReviewCreator.create(
+  const review = Reviews.create(
     reviewId,
     reviewCreatorParams,
     reviewCreatorRawParams
@@ -385,3 +385,4 @@ input:focus {
   outline: none;
 }
 </style>
+@/core/Reviews

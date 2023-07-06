@@ -64,7 +64,7 @@ body {
   --button-disabled-opacity: 0.65;
   --button-border-radius: 10px;
   --button-bg-color: white;
-  --button-hover-bg-color: #e5e5ea;
+  --button-hover-bg-color: #eeeef3;
   --button-border-width: 1px;
   --button-border-color: var(--border-base-color);
 

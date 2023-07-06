@@ -62,19 +62,6 @@ const slowestCount = review.value
       </div>
     </div>
 
-    <!--
-    <div v-if="cards.length > 0" class="report mb-3">
-      <div
-        v-for="(result, id) in cards"
-        :key="id"
-        :class="{ 'card-incorrect': !result.correct }"
-        class="card-item p-1"
-      >
-        {{ result.name }}
-      </div>
-    </div>
-  -->
-
     <div class="buttons gap-top">
       <ActionButton
         icon="arrow-repeat"
@@ -82,16 +69,9 @@ const slowestCount = review.value
         >Repeat all</ActionButton
       >
       <ActionButton
-        v-if="allCorrect"
-        icon="clock-history"
-        @click="() => {}"
-        disabled
-        >Repeat slowest</ActionButton
-      >
-      <ActionButton
-        v-if="!allCorrect"
         icon="x-circle"
         @click="() => emits('start', review.repeatIncorrect())"
+        :disabled="allCorrect"
         >Repeat incorrect</ActionButton
       >
     </div>
@@ -113,35 +93,9 @@ const slowestCount = review.value
   gap: var(--default-grid-gap);
 }
 
-.report {
-  border-radius: 10px;
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(8em, 1fr));
-  gap: 1em;
-}
-.report .card-item {
-  text-align: center;
-}
-.report .card-incorrect {
-  border: 1px solid var(--text-danger-color);
-  border-radius: var(--button-border-radius);
-  color: var(--text-danger-color);
-  opacity: 0.7;
-}
-
-.stats-window .hard {
-  color: rgb(112, 86, 22);
-}
-
 .stats-window {
   text-align: center;
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(7em, 1fr));
-}
-
-@media screen and (max-width: 650px) {
-  .stats-window .hard {
-    display: none;
-  }
 }
 </style>

@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import LoadingCircle from "@/components/LoadingCircle.vue";
 import { Authentication } from "@/core/Authentication";
 import ActionButton from "@/components/ActionButton.vue";
 import PageLink from "@/components/PageLink.vue";
@@ -7,58 +6,61 @@ import router from "@/router";
 import { ref, watch } from "vue";
 import DisplayContainer from "@/components/DisplayContainer.vue";
 
-const input = ref("");
-const loading = ref(false);
-const error = ref("");
-const user = Authentication.user;
+const errorText = ref("");
+const apiKeyInput = ref("");
+const showLoadingProcess = ref(false);
 
-if (user.value) {
-  router.push({ name: "home" });
+// Redirect user to the profile page if user is logged in
+if (Authentication.user.value) {
+  router.push({ name: "profile" });
 }
 
-watch(input, (value) => {
-  if (value == "") {
-    error.value = "";
-  }
-});
+watch(apiKeyInput, () => errorText.value = "");
 
-function signIn() {
-  if (input.value.length == 0) {
+async function signIn() {
+  if (apiKeyInput.value.length == 0) {
+    errorText.value = "API token can't be empty";
     return;
   }
+  showLoadingProcess.value = true;
 
-  Authentication.login({ wanikaniApiKey: input.value }).then((success) => {
-    loading.value = false;
-    if (success) {
-      setTimeout(() => router.push({ name: "home" }), 5000);
+  const authenticated = await Authentication.login({ wanikaniApiKey: apiKeyInput.value });
+  setTimeout(() => {
+    showLoadingProcess.value = false;
+    if (authenticated) {
+      router.push({ name: "profile" });
     } else {
-      error.value = "Failed to login. Make sure that API key is correct";
+      errorText.value = "API token is incorrect";
     }
-  });
-  loading.value = true;
+  }, 1000);
 }
 </script>
 
 <template>
   <DisplayContainer center short class="text-center">
-    <div v-if="!user" class="d-flex flex-column">
+    <div class="d-flex flex-column">
       <h4>Sign in</h4>
-      <p :class="{ error: error, 'text-muted': !error }">
-        <i v-if="error" class="bi bi-exclamation-circle"></i>
-        {{ error ? error : "Sign in through your WaniKani account" }}
+      <p :class="{ error: errorText, 'text-muted': !errorText }">
+        <Transition name="signin-text-transition" mode="out-in">
+          <span v-if="errorText">{{ errorText }}</span>
+          <span v-else>Sign in through your WaniKani account</span>
+        </Transition>
       </p>
       <input
-        v-model="input"
+        v-model="apiKeyInput"
         class="form-control font-monospace kz-input"
         placeholder="WaniKani API token"
       />
       <ActionButton
-        v-if="!loading"
         @click="signIn"
-        icon="box-arrow-in-right"
-        class="w-100 sign-button kz-success"
-        >Sign in</ActionButton
-      >
+        class="w-100 gap-top"
+        :type="showLoadingProcess ? 'active' : 'success'"
+        >
+        <Transition name="signin-text-transition" mode="out-in">
+          <span v-if="!showLoadingProcess"><i class="bi bi-box-arrow-in-right"></i> Sign in</span>
+          <span v-else><i class="bi bi-arrow-up-circle"></i> Authenticating...</span>
+        </Transition>
+      </ActionButton>
       <PageLink
         icon="question-circle"
         :to="{ name: 'api-guide' }"
@@ -66,26 +68,6 @@ function signIn() {
         class="signin-guide-link text-muted mt-3"
         >How to get WaniKani API token?</PageLink
       >
-      <!--<div id="appleid-signin" class="signin-button mt-3" data-color="black" data-width="100%" data-border="true" data-type="sign-in"></div>-->
-      <div
-        v-if="loading"
-        class="mt-3 p-2 d-flex flex-row justify-content-center align-items-center"
-      >
-        <LoadingCircle class="me-1"></LoadingCircle>
-        <div>Signing up...</div>
-      </div>
-    </div>
-
-    <div v-if="user">
-      <h4>Hello, {{ user.username }}!</h4>
-      <p>初めまして</p>
-    </div>
-
-    <div
-      v-if="user"
-      class="redirect-progress w-100 d-flex flex-row justify-content-start mt-3"
-    >
-      <div class="redirect-progress-line"></div>
     </div>
   </DisplayContainer>
 </template>
@@ -94,35 +76,19 @@ function signIn() {
 .error {
   color: var(--text-error-color);
 }
-.redirect-progress {
-  background-color: rgba(0, 0, 0, 0.1);
-  border-radius: var(--button-border-radius);
-}
-
-.sign-button {
-  margin-top: var(--default-grid-gap);
-}
-
-.redirect-progress-line {
-  min-height: 0.25em;
-  background-color: rgba(0, 0, 0, 0.25);
-  animation-duration: 5s;
-  animation-name: progress;
-  border-radius: var(--button-border-radius);
-}
-.signin-button {
-  width: 100%;
-  height: 2.5em;
-}
 .signin-guide-link {
   text-decoration: none;
 }
-@keyframes progress {
-  from {
-    width: 0%;
-  }
-  to {
-    width: 100%;
-  }
+
+.signin-text-transition-enter-active,
+.signin-text-transition-leave-active {
+  opacity: 1;
+  transition: 0.2s;
 }
+
+.signin-text-transition-enter-from,
+.signin-text-transition-leave-to {
+  opacity: 0;
+}
+
 </style>

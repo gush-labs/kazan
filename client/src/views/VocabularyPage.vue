@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import SwitchOption from "@/components/SwitchOption.vue";
 import { Storage } from "@/core/Storage";
-import ReviewCreator from "@/core/ReviewCreator";
+import Reviews from "@/core/Reviews";
 import { type CreatorParams, exportParams } from "@/core/reviews/Creator";
 import { computed } from "vue";
 import ActionButton from "@/components/ActionButton.vue";
@@ -9,9 +9,12 @@ import GoBackButton from "@/components/GoBackButton.vue";
 import router from "@/router";
 import DisplayContainer from "@/components/DisplayContainer.vue";
 
-const vocabularyReviews = ReviewCreator.getAllReviews();
+// Get all reviews that are available in the web-app
+const vocabularyReviews = Reviews.getAllReviews();
+
+// Define selected vocabulary state to be stored in the browser storage
 class VocabularyReviewSelectData {
-  reviewId: string = vocabularyReviews[0].id;
+  reviewId: string = vocabularyReviews[0].id; // the first review selected by default
   translation = false;
   meaning = false;
   reading = true;
@@ -19,17 +22,20 @@ class VocabularyReviewSelectData {
   level = 0;
 }
 
+// Get last selected vocabulary from the browser storage
 const select = Storage.getObject<VocabularyReviewSelectData>(
   "vocabulary-review-select",
   new VocabularyReviewSelectData()
 );
 
+// Get currently selected review
 const review = computed(
   () => vocabularyReviews.filter((v) => v.id == select.reviewId)[0]
 );
+
 const levels = computed(() => review.value.levels());
 const status = computed(() => review.value.status());
-const fixedParams = computed<CreatorParams>(() => review.value.fixedParams);
+const fixedParams = computed<CreatorParams>(() => review.value.enabledParameters);
 
 const anySelected = computed(() => {
   const meaning = fixedParams.value.meaning ?? select.meaning;
@@ -162,3 +168,4 @@ function startReview() {
   margin-right: 1.5em;
 }
 </style>
+@/core/Reviews
