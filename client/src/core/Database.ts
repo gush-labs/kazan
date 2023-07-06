@@ -1,4 +1,4 @@
-// TODO: This file should be destroyed, disassembled, buried under the ground
+// TODO(vadim): This file should be destroyed, disassembled, buried under the ground
 // every person who knows about existence of this file should be killed
 import { ReviewCard } from "@/core/Review";
 import { hiraganaData, katakanaData } from "@/data/kana";
