@@ -5,7 +5,6 @@ import Reviews from "@/core/Reviews";
 import { type CreatorParams, exportParams } from "@/core/reviews/Creator";
 import { computed } from "vue";
 import ActionButton from "@/components/ActionButton.vue";
-import GoBackButton from "@/components/GoBackButton.vue";
 import router from "@/router";
 import DisplayContainer from "@/components/DisplayContainer.vue";
 
@@ -69,7 +68,6 @@ function startReview() {
 
 <template>
   <DisplayContainer short center class="pt-4">
-    <GoBackButton class="mb-3" />
 
     <div class="text-center mb-3"><h4>Select vocabulary</h4></div>
 

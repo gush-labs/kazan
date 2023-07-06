@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import { computed } from "vue";
 import ActionButton from "@/components/ActionButton.vue";
-import GoBackButton from "@/components/GoBackButton.vue";
 import { database } from "@/core/Database";
 import router from "@/router";
 import { Storage } from "@/core/Storage";
