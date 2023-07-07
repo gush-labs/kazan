@@ -27,6 +27,3 @@ jobs:
       - name: Client Build
         run: make client-build
 
-      - name: Server Build
-        run: make server-build
-

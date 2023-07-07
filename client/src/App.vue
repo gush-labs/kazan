@@ -151,6 +151,7 @@ body {
   padding-block-end: 0.45em;
   transition: 0.2s;
 }
+
 .kz-button:hover {
   border: var(--button-border-width) solid var(--border-hover-color);
   background-color: var(--button-hover-bg-color);

@@ -21,23 +21,3 @@ client-run:
 	npm ci; \
 	npm run dev
 
-server-build:
-	@echo "SERVER: Building the server..."
-	cd server; \
-	npm ci; \
-	npm run build
-	@echo "SERVER: Build complete"
-
-server-build-prod:
-	@echo "SERVER: Building the server for production..."
-	cd server; \
-	npm ci; \
-	npm run build-prod;
-	@echo "SERVER: Production build complete"
-
-server-run: server-build
-	@echo "SERVER: Running the server..."
-	cd server; \
-	npm ci; \
-	npm run start
-
