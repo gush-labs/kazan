@@ -1,3 +1,4 @@
+// TODO(vadim): Delete this stuff. We don't have (and not planning to) backend.
 import { Storage, type RemoteStorage, type RemoteData } from "./Storage";
 import { Temporary } from "./Utilities";
 

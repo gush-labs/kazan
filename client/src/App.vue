@@ -22,10 +22,8 @@ const currentStyle = computed(() => fonts[configuration.japaneseFont].style);
 </template>
 
 <style>
-body {
-  background-color: white;
-}
 
+/* The main div container where all content is placed */
 .app-container {
   position: relative;
 
@@ -40,6 +38,7 @@ body {
   grid-template-rows: auto 1fr auto;
 }
 
+/* Resize app container to mobile screens */
 @media screen and (max-width: 650px) {
   .app-container {
     margin-left: 1em;
@@ -55,6 +54,7 @@ body {
   --text-danger-color: rgb(176, 56, 56);
   --text-success-color: rgb(25, 79, 13);
   --text-mute-color: #6c757d;
+  --app-background-color: #f2f2f7;
 
   --border-base-color: rgba(0, 0, 0, 0.1);
   --border-hover-color: rgba(0, 0, 0, 0.1);
@@ -62,10 +62,10 @@ body {
   --button-active-color: rgba(0, 0, 0, 0.5);
   --button-active-text-color: var(--text-light-color);
   --button-disabled-opacity: 0.65;
-  --button-border-radius: 4px;
-  --button-bg-color: rgba(0, 0, 0, 0.08);
-  --button-hover-bg-color: rgba(0, 0, 0, 0.15);
-  --button-border-width: 0px;
+  --button-border-radius: 10px;
+  --button-bg-color: white;
+  --button-hover-bg-color: #eeeef3;
+  --button-border-width: 1px;
   --button-border-color: var(--border-base-color);
 
   --input-border-radius: var(--button-border-radius);
@@ -84,7 +84,11 @@ body {
   --default-grid-gap-big: 1.5rem;
 }
 
-/* BASIC CLASSES */
+body {
+  background-color: var(--app-background-color);
+}
+
+/* Different gaps between elements */
 .gap-bottom {
   margin-bottom: var(--default-grid-gap);
 }
@@ -103,6 +107,15 @@ body {
 .gap-top-big {
   margin-top: var(--default-grid-gap-big);
 }
+
+/* Basic white container for any content */
+.kz-container {
+  border: var(--button-border-width) solid var(--border-base-color);
+  border-radius: var(--button-border-radius);
+  background-color: var(--button-bg-color);
+}
+
+/* All text on the pages */
 .kz-text {
   color: var(--text-base-color);
 }
@@ -115,14 +128,20 @@ body {
 .kz-text-success {
   color: var(--text-success-color);
 }
+
+/* Input field */
 .kz-input {
   border: var(--input-border-width) solid var(--input-border-color);
   border-radius: var(--input-border-radius);
 }
+
+/* Select field */
 .kz-select {
   border: var(--select-border-width) solid var(--select-border-color);
   border-radius: var(--select-border-radius);
 }
+
+/* Button component */
 .kz-button {
   position: relative;
   border: var(--button-border-width) solid var(--border-base-color);
@@ -130,15 +149,9 @@ body {
   background-color: var(--button-bg-color);
   padding-block-start: 0.45em;
   padding-block-end: 0.45em;
+  transition: 0.2s;
 }
-.kz-success {
-  background-color: rgb(73, 184, 73) !important;
-  color: white !important;
-}
-.kz-danger {
-  background-color: rgb(203, 81, 81) !important;
-  color: white !important;
-}
+
 .kz-button:hover {
   border: var(--button-border-width) solid var(--border-hover-color);
   background-color: var(--button-hover-bg-color);
@@ -162,6 +175,16 @@ body {
 .kz-button-disabled:hover {
   cursor: default;
   border: var(--button-border-width) solid var(--border-base-color) !important;
+}
+
+/* Frequently used colors */
+.kz-success {
+  background-color: rgb(73, 184, 73) !important;
+  color: white !important;
+}
+.kz-danger {
+  background-color: rgb(203, 81, 81) !important;
+  color: white !important;
 }
 
 .japanese {

@@ -96,27 +96,8 @@ function goTo(path: RouteLocationRaw) {
 <template>
   <DisplayContainer center>
     <div class="menu-center">
+
       <div class="title-container mb-2">
-        <div class="title-control mb-3 text-muted">
-          <div>
-            <PageLink
-              v-if="parentPage"
-              :to="{ name: 'home', params: { page: currentPage.parent } }"
-              class="text-muted"
-              icon="arrow-left-short"
-              plain
-            >
-              {{ parentPage.name }}
-            </PageLink>
-          </div>
-          <PageLink
-            :to="{ name: 'learning' }"
-            class="text-muted"
-            icon="book"
-            plain
-            >Learning resources</PageLink
-          >
-        </div>
         <div>
           <h4>{{ currentPage.title }}</h4>
         </div>

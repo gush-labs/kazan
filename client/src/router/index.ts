@@ -4,7 +4,6 @@ import ReviewPage from "@/views/ReviewPage.vue";
 import NotFoundPage from "@/views/NotFoundPage.vue";
 import KanaPage from "@/views/KanaPage.vue";
 import LoginPage from "@/views/LoginPage.vue";
-import LearningPage from "@/views/LearningPage.vue";
 import VocabularyPage from "@/views/VocabularyPage.vue";
 import ApiGuide from "@/views/ApiGuide.vue";
 import ProfilePage from "@/views/ProfilePage.vue";
@@ -43,11 +42,6 @@ const router = createRouter({
       path: "/login",
       name: "login",
       component: LoginPage,
-    },
-    {
-      path: "/learning",
-      name: "learning",
-      component: LearningPage,
     },
     {
       path: "/kana/:kana",

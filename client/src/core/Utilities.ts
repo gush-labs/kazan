@@ -22,30 +22,6 @@ export function watchUpdate<T>(
   });
 }
 
-export function watchUpdateDelay<T>(
-  ref: Ref<T | undefined>,
-  action: (v: T) => void,
-  delay: number
-) {
-  watch(ref, (v) => {
-    if (v != undefined) {
-      setTimeout(() => action(v), delay);
-    }
-  });
-}
-
-export function watchRemoveDelay<T>(
-  ref: Ref<T | undefined>,
-  action: () => void,
-  delay: number
-) {
-  watch(ref, (v) => {
-    if (v == undefined) {
-      setTimeout(() => action(), delay);
-    }
-  });
-}
-
 export class Temporary<T> {
   private updateTime: number = new Date().getTime();
   private ttl: number;
@@ -82,7 +58,7 @@ export class TimeDistribution {
   static calculate(values: number[]): TimeDistribution {
     const distribution = new TimeDistribution();
 
-    const resolution = 40;
+    const resolution = 30;
     const buckets: number[] = new Array(resolution).fill(0);
     const maxValue = (Math.floor(this.max(values) / 5) + 1) * 5;
 

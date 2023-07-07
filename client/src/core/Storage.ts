@@ -1,7 +1,8 @@
 /**
- * Module responsible for everything related to
- * consistent storage. Used to create objects which
- * are saved to the browser local storage on changes.
+ * This is an implementation of persistant storage where web-app stores
+ * currently selected vocabulary, app settings, WaniKani credentials and everything else.
+ * This code is quite obscure, so I will not recommend spending any time trying to read
+ * and understand it (and yep, this code is a reinvented wheel).
  */
 import { ref, reactive, watch, type Ref } from "vue";
 
@@ -22,14 +23,15 @@ export interface RemoteStorage {
  * Completely reactive persistant storage powered by browser local storage.
  */
 export class Storage {
+
   // in-memory storage of primitive values
   static cacheValues = new Map<string, Ref<any>>();
+
   // in-memory storage of objects
   static cacheObjects = new Map<string, any>();
+
   // requited version of the storage
   static requiredVersion = 6;
-  // remote storage (our backend for example)
-  static remoteStorage: RemoteStorage | undefined = undefined;
 
   /**
    * Verifies that storage is not oudated
@@ -68,76 +70,6 @@ export class Storage {
     this.cacheValues.forEach((r) => (r.value = undefined));
     this.cacheObjects.clear();
     this.clearStorage();
-  }
-
-  /**
-   * Links the current storage with a remote one. Meaning that
-   * every save or load operation will be synchronized with the remote
-   * storage. This allows us to save some data in the cloud which
-   * then will be loaded from multiple devices.
-   * @param remoteStorage remote storage to be used
-   */
-  public static initRemoteStorage(remoteStorage: RemoteStorage) {
-    remoteStorage
-      .loadAll()
-      .then((response) => {
-        // If data in the remote storage is not outdated
-        if (response.version == this.requiredVersion) {
-          // load all data
-          response.data.forEach((value, key) => {
-            console.log("Remote Storage: load key=" + key);
-            const ref = this.cacheValues.get(key);
-            if (ref) {
-              // Update value in the cache if we have it
-              ref.value = value;
-            } else {
-              // otherwise, just save that value to our local storage
-              this.localStorageSet(key, value);
-            }
-          });
-          // and update our local version
-          localStorage.setItem("version", this.requiredVersion + "");
-        }
-
-        console.log("Remote Storage: all data loaded");
-        // and only after everything was updated
-        // we will set the remote storage
-        this.remoteStorage = remoteStorage;
-      })
-      .catch((e) => {
-        console.error("Failed to load data from the remote storage", e);
-      });
-  }
-
-  /**
-   * Loads a value from the remote storage if it's not
-   * yet been requested. Otherwise loads a value for this key
-   * from the local storage.
-   *
-   * All update operations to this value will be send to the remote
-   * storage.
-   *
-   * @param key key of the value
-   * @returns ref to the value
-   */
-  public static getRemote<T>(key: string): StorageRef<T> {
-    // First try to load from the local storage
-    const ref = this.get<T>(key);
-
-    // We will always try to save values to the remote
-    // storage as soon as it will be available
-    setTimeout(
-      () =>
-        watch(ref, (value) => {
-          if (this.remoteStorage) {
-            console.log("Remote Storage: save key=" + key);
-            this.remoteStorage.save(key, value);
-          }
-        }),
-      0
-    );
-
-    return ref;
   }
 
   /**

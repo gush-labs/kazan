@@ -19,31 +19,6 @@ concurrency:
 
 jobs:
 
-  server-build:
-    permissions:
-      contents: 'read'
-      id-token: 'write'
-
-    runs-on: ubuntu-latest
-    steps:
-
-      - name: Checkout
-        uses: actions/checkout@v3
-
-      - id: 'auth'
-        name: 'Authenticate to Google Cloud'
-        uses: 'google-github-actions/auth@v1'
-        with:
-          workload_identity_provider: ${{ secrets.GOOGLE_WORKLOAD_IDENTITY_PROVIDER }}
-          service_account: ${{ secrets.GOOGLE_SERVICE_ACCOUNT }}
-
-      - name: Set up Google Cloud CLI
-        uses: google-github-actions/setup-gcloud@v1
-
-      - name: Build server
-        run: make server-build-prod
-
-
   client-build:
     runs-on: ubuntu-latest
     steps:
