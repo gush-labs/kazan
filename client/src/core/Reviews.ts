@@ -5,9 +5,9 @@ import WaniKaniReview from "./reviews/WaniKaniReview";
 import JapanesePhrases from "./reviews/JapanesePhrases";
 
 /**
- * Creates a review from its name.
+ * Creates a review from the review id.
  */
-abstract class ReviewCreator {
+abstract class Reviews {
   static creators = new Map<string, Creator>();
 
   static getAllReviews(): Creator[] {
@@ -24,11 +24,14 @@ abstract class ReviewCreator {
 }
 
 function set(creator: Creator) {
-  ReviewCreator.creators.set(creator.id, creator);
+  Reviews.creators.set(creator.id, creator);
 }
 
+/**
+ * This is all reviews that are available in our web-app
+ */
 set(new WaniKaniReview());
 set(new JapaneseBasicVerbs());
 set(new JapanesePhrases());
 
-export default ReviewCreator;
+export default Reviews;

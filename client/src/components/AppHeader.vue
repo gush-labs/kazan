@@ -1,15 +1,9 @@
 <script setup lang="ts">
-import { Authentication } from "@/core/Authentication";
 import ActionButton from "@/components/ActionButton.vue";
 import router from "@/router";
 
-const user = Authentication.user;
-
 function goHome() {
   router.push({ name: "home" });
-}
-function signOut() {
-  Authentication.logout();
 }
 function goProfile() {
   router.push({ name: "profile" });
@@ -36,7 +30,7 @@ function goProfile() {
     </div>
 
     <div @click="goHome" class="logo">
-      <img src="/public/logo.png" />
+      カザン
     </div>
 
     <div class="dropdown profile">
@@ -45,9 +39,7 @@ function goProfile() {
         plain
         icon="person-circle"
         class="header-link"
-      >
-        {{ user ? user.username : "Profile" }}
-      </ActionButton>
+      >Profile</ActionButton>
       <ActionButton
         @click="() => goProfile()"
         icon="person-circle"
@@ -89,6 +81,10 @@ function goProfile() {
 .logo img {
   max-height: 4rem;
   height: 4rem;
+}
+.logo {
+  font-weight: bold;
+  font-size: 3rem;
 }
 
 @media screen and (max-width: 650px) {

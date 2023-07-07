@@ -1,14 +1,18 @@
 <script setup lang="ts">
+import { computed } from "vue";
+
 const emits = defineEmits(["click"]);
 const props = defineProps<{
   label?: string;
   icon?: string;
   disabled?: boolean;
   plain?: boolean;
-  dropdown?: boolean;
   switch?: boolean;
   switched?: boolean;
+  type?: "success" | "default" | "active"
 }>();
+
+const buttonType = computed(() => props.type ?? "default");
 
 function click(e: any) {
   (document.activeElement as HTMLElement).blur();
@@ -23,16 +27,15 @@ function click(e: any) {
     @click="click"
     class="kz-text"
     :class="{
-      plain: plain,
-      btn: !plain,
+      'plain': plain,
+      'btn': !plain,
       'kz-button': !plain,
+      'kz-success': buttonType == 'success',
       'kz-button-disabled': props.disabled,
-      'dropdown-toggle': dropdown,
-      'kz-button-active': props.switch && props.switched,
+      'kz-button-active': buttonType == 'active' || switched,
     }"
-    :data-bs-toggle="dropdown ? 'dropdown' : ''"
   >
-    <div v-if="props.label" class="m">{{ props.label }}</div>
+    <div v-if="props.label" class="label">{{ props.label }}</div>
     <i v-if="props.icon" :class="'bi bi-' + props.icon"></i> <slot />
   </button>
 </template>
@@ -45,7 +48,7 @@ function click(e: any) {
   background-color: rgba(0, 0, 0, 0);
   outline: none;
 }
-.m {
+.label {
   position: absolute;
   font-size: 1.3em;
   top: 50%;

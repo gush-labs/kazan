@@ -9,19 +9,31 @@ const user = Authentication.user;
 
 <template>
   <DisplayContainer center short>
-    <div>
-      <div class="d-flex flex-row justify-content-center">
-        <h4 class="mb-0">Your Profile</h4>
+    <div class="d-flex flex-row justify-content-center mb-3">
+      <h4 class="mb-0">Your Profile</h4>
+    </div>
+
+    <div v-if="user" class="kz-container px-3 py-2 d-flex flex-row profile-container">
+      <div class="d-flex flex-column justify-content-center profile-icon">
+        <i class="bi bi-person-circle"></i>
       </div>
-      <div class="d-flex flex-row justify-content-center" v-if="user">
-        <div>
-          <i class="bi bi-person-circle"></i> {{ user.username }}
-          <i class="bi bi-dot"></i> Level {{ user.level }}
-        </div>
+      <div class="d-flex flex-column ms-3 justify-content-center w-100">
+        <div class="">{{ user.username }}</div>
+        <div class="text-muted">Level {{ user.level }}</div>
+      </div>
+      <div class="d-flex flex-column justify-content-center">
+      <ActionButton
+        @click="() => Authentication.logout()"
+        v-if="user"
+        icon="arrow-left-square"
+        class="kz-danger"
+        ></ActionButton
+      >
+        
       </div>
     </div>
 
-    <div class="control-buttons-container mt-4">
+    <div class="control-buttons-container gap-top">
       <PageLink
         class="kz-success"
         :to="{ name: 'login' }"
@@ -33,18 +45,16 @@ const user = Authentication.user;
       <PageLink :to="{ name: 'about' }" icon="info-circle"
         >About the app</PageLink
       >
-      <ActionButton
-        @click="() => Authentication.logout()"
-        v-if="user"
-        icon="box-arrow-left"
-        class="kz-danger"
-        >Logout</ActionButton
-      >
     </div>
   </DisplayContainer>
 </template>
 
 <style scoped>
+.profile-icon {
+  font-size: 2.5em;
+}
+.profile-container {
+}
 .control-buttons-container {
   display: grid;
   gap: var(--default-grid-gap);

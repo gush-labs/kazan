@@ -11,8 +11,8 @@ distribution.buckets.forEach((v, i) => (values[i] = (v / maxCount) * 100));
 </script>
 
 <template>
-  <div class="graph-container">
-    <div class="title-container d-flex flex-row justify-content-between">
+  <div class="graph-container kz-container pt-2">
+    <div class="title-container d-flex flex-row justify-content-between px-2 mb-1">
       <div class="min text-muted">
         {{ Math.round(distribution.range.start * 10) / 10 }} sec.
       </div>
@@ -38,15 +38,13 @@ distribution.buckets.forEach((v, i) => (values[i] = (v / maxCount) * 100));
 <style scoped>
 .title-container .min {
   padding-left: 0.5em;
-  border-left: 2px solid rgba(0, 0, 0, 0.1);
 }
 .title-container .max {
   padding-right: 0.5em;
-  border-right: 2px solid rgba(0, 0, 0, 0.1);
 }
 
 .value-store {
-  background-color: rgba(0, 0, 0, 0.1);
+  background-color: white;
 }
 .dist-container :last-child {
   border-bottom-right-radius: var(--button-border-radius);
@@ -63,5 +61,7 @@ distribution.buckets.forEach((v, i) => (values[i] = (v / maxCount) * 100));
   grid-template-columns: repeat(auto-fit, minmax(1px, 1fr));
   gap: 1px;
   min-height: 3em;
+  background-color: #f2f2f7;
+  border-top: var(--button-border-width) solid #f2f2f7;
 }
 </style>

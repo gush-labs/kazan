@@ -8,6 +8,7 @@ class WaniKaniData {
 }
 
 export class WaniKaniClient {
+
   public static get data() {
     return Storage.getObject<WaniKaniData>("wanikani", new WaniKaniData());
   }
@@ -16,22 +17,22 @@ export class WaniKaniClient {
     this.data.apiKey = key;
   }
 
-  public static request(resource: string, query: any = {}): Promise<any> {
+  public static async request(resource: string, query: any = {}): Promise<any> {
     const api = this.data.apiKey;
     if (!api) {
       return Promise.reject("There is no WaniKani API key present");
     }
 
-    let q = "";
-    Object.entries(query)
+    const rawQuery = Object.entries(query)
       .filter(([_, value]) => value != undefined)
-      .forEach(([key, value]) => (q += key + "=" + value + "&"));
+      .map(([key, value]) => key + "=" + value)
+      .join("&");
 
-    const request = new Request(
-      "https://api.wanikani.com/v2/" + resource + "?" + q
-    );
+    const request = new Request("https://api.wanikani.com/v2/" + resource + "?" + rawQuery);
     request.headers.set("Wanikani-Revision", "20170710");
     request.headers.set("Authorization", "Bearer " + api);
-    return fetch(request).then((response) => response.json());
+
+    const response = await fetch(request);
+    return response.json();
   }
 }

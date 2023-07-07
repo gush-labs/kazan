@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import { computed } from "vue";
 import ActionButton from "@/components/ActionButton.vue";
-import GoBackButton from "@/components/GoBackButton.vue";
 import { database } from "@/core/Database";
 import router from "@/router";
 import { Storage } from "@/core/Storage";
@@ -71,7 +70,6 @@ function goTo(path: RouteLocationRaw) {
 
 <template>
 <DisplayContainer center class="pt-4">
-  <GoBackButton :to="{name: 'home', params: { page: 'kana'}}" class='mb-3'/>
 
   <div class="header-container text-center mb-3 pb-1">
     <div></div>

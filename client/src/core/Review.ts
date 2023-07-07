@@ -82,7 +82,7 @@ export class RandomPicker implements CardPicker {
 
 /**
  * Represents a review of some set of cards.
- * Which cards will be picked is desided by the
+ * Which cards will be picked is decided by the
  * implementation of the Picker.
  */
 export class Review {
@@ -112,7 +112,8 @@ export class Review {
   take(): ReviewCard {
     this.cardTimeStart = Date.now();
 
-    // Look for cards that were unswered incorrectly
+    // Take all incorrectly answered cards that are currently
+    // not completed
     const incorrectCardsToReview: number[] = [];
     this.incorrectCardsIds.forEach((i) => {
       if (!this.completedCardsIds.has(i)) {
@@ -127,6 +128,8 @@ export class Review {
       this.generatedCards.set(card.id, card);
       return card;
     } else {
+      // Otherwise take any incorrectly answered card and present to the user
+      // TODO(vadim): This behaviour can be changed by the user. Would be nice for them to have such option.
       const rid = Math.floor(Math.random() * incorrectCardsToReview.length);
       const id = incorrectCardsToReview[rid];
       return this.generatedCards.get(id)!;
