@@ -150,6 +150,7 @@ body {
   padding-block-start: 0.45em;
   padding-block-end: 0.45em;
   transition: 0.2s;
+  font-size: 1.0em !important;
 }
 
 .kz-button:hover {
