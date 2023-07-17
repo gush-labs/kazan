@@ -23,7 +23,6 @@ export interface RemoteStorage {
  * Completely reactive persistant storage powered by browser local storage.
  */
 export class Storage {
-
   // in-memory storage of primitive values
   static cacheValues = new Map<string, Ref<any>>();
 

@@ -93,7 +93,6 @@ function goTo(path: RouteLocationRaw) {
 <template>
   <DisplayContainer center>
     <div class="menu-center">
-
       <div class="title-container mb-2">
         <div>
           <h4>{{ currentPage.title }}</h4>

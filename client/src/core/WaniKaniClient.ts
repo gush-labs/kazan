@@ -8,7 +8,6 @@ class WaniKaniData {
 }
 
 export class WaniKaniClient {
-
   public static get data() {
     return Storage.getObject<WaniKaniData>("wanikani", new WaniKaniData());
   }
@@ -28,7 +27,9 @@ export class WaniKaniClient {
       .map(([key, value]) => key + "=" + value)
       .join("&");
 
-    const request = new Request("https://api.wanikani.com/v2/" + resource + "?" + rawQuery);
+    const request = new Request(
+      "https://api.wanikani.com/v2/" + resource + "?" + rawQuery
+    );
     request.headers.set("Wanikani-Revision", "20170710");
     request.headers.set("Authorization", "Bearer " + api);
 
