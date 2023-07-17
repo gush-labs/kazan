@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import ActionButton from "@/components/ActionButton.vue";
 import router from "@/router";
-
 let currentPath = router.currentRoute;
 </script>
 
