@@ -15,7 +15,7 @@ if (Authentication.user.value) {
   router.push({ name: "profile" });
 }
 
-watch(apiKeyInput, () => errorText.value = "");
+watch(apiKeyInput, () => (errorText.value = ""));
 
 async function signIn() {
   if (apiKeyInput.value.length == 0) {
@@ -24,7 +24,9 @@ async function signIn() {
   }
   showLoadingProcess.value = true;
 
-  const authenticated = await Authentication.login({ wanikaniApiKey: apiKeyInput.value });
+  const authenticated = await Authentication.login({
+    wanikaniApiKey: apiKeyInput.value,
+  });
   setTimeout(() => {
     showLoadingProcess.value = false;
     if (authenticated) {
@@ -55,10 +57,14 @@ async function signIn() {
         @click="signIn"
         class="w-100 gap-top"
         :type="showLoadingProcess ? 'active' : 'success'"
-        >
+      >
         <Transition name="signin-text-transition" mode="out-in">
-          <span v-if="!showLoadingProcess"><i class="bi bi-box-arrow-in-right"></i> Sign in</span>
-          <span v-else><i class="bi bi-arrow-up-circle"></i> Authenticating...</span>
+          <span v-if="!showLoadingProcess"
+            ><i class="bi bi-box-arrow-in-right"></i> Sign in</span
+          >
+          <span v-else
+            ><i class="bi bi-arrow-up-circle"></i> Authenticating...</span
+          >
         </Transition>
       </ActionButton>
       <PageLink
@@ -90,5 +96,4 @@ async function signIn() {
 .signin-text-transition-leave-to {
   opacity: 0;
 }
-
 </style>

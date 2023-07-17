@@ -58,7 +58,9 @@ const slowestCount = review.value
       <div class="flex-fill kz-text-error">
         <i class="bi bi-x-circle me-1"></i>&nbsp;{{
           review.getIncorrectCards().length
-        }}&nbsp;<span v-if="review.getIncorrectCards().length == 1">mistake</span><span v-if="review.getIncorrectCards().length != 1">mistakes</span>
+        }}&nbsp;<span v-if="review.getIncorrectCards().length == 1"
+          >mistake</span
+        ><span v-if="review.getIncorrectCards().length != 1">mistakes</span>
       </div>
     </div>
 

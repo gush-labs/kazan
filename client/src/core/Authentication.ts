@@ -19,7 +19,6 @@ export type LoginData = {
  * Authenticates user
  */
 export class Authentication {
-
   public static get user(): StorageRef<User> {
     return Storage.get<User>("user");
   }
@@ -40,11 +39,10 @@ export class Authentication {
       }
       this.user.value = this.parse(response);
       return true;
-
     } catch (error) {
       console.error("Failed to authenticate", error);
       return false;
-    } 
+    }
   }
 
   private static parse(response: any): User {

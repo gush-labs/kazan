@@ -12,7 +12,9 @@ distribution.buckets.forEach((v, i) => (values[i] = (v / maxCount) * 100));
 
 <template>
   <div class="graph-container kz-container pt-2">
-    <div class="title-container d-flex flex-row justify-content-between px-2 mb-1">
+    <div
+      class="title-container d-flex flex-row justify-content-between px-2 mb-1"
+    >
       <div class="min text-muted">
         {{ Math.round(distribution.range.start * 10) / 10 }} sec.
       </div>

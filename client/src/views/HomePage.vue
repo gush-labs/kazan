@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import PageLink from "@/components/PageLink.vue";
 import ActionButton from "@/components/ActionButton.vue";
 import { ref, watch, type Ref } from "vue";
 import router from "@/router";
@@ -28,8 +27,6 @@ pages.set("home", {
   buttons: [
     { name: "Kana", page: "kana" },
     { name: "Vocabulary", link: { name: "vocabulary" } },
-    { name: "Grammar", page: "grammar" },
-    { name: "Phonetics", page: "phonetics" },
   ],
 });
 
@@ -96,7 +93,6 @@ function goTo(path: RouteLocationRaw) {
 <template>
   <DisplayContainer center>
     <div class="menu-center">
-
       <div class="title-container mb-2">
         <div>
           <h4>{{ currentPage.title }}</h4>

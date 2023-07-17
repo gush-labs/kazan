@@ -12,7 +12,6 @@ const showAnswer = computed(() => configuration.showAnswers);
 
 <template>
   <DisplayContainer center short>
-
     <div class="title-container text-center mb-2"><h4>Settings</h4></div>
 
     <div class="kz-container d-flex flex-column py-2">
