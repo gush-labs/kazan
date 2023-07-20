@@ -1,12 +1,12 @@
 <script setup lang="ts">
 import SwitchOption from "@/components/SwitchOption.vue";
-import { Storage } from "@/core/Storage";
 import Reviews from "@/core/Reviews";
 import { type CreatorParams, exportParams } from "@/core/reviews/Creator";
 import { computed } from "vue";
 import ActionButton from "@/components/ActionButton.vue";
 import router from "@/router";
 import DisplayContainer from "@/components/DisplayContainer.vue";
+import { useStorage } from "@vueuse/core";
 
 // Get all reviews that are available in the web-app
 const vocabularyReviews = Reviews.getAllReviews();
@@ -22,14 +22,14 @@ class VocabularyReviewSelectData {
 }
 
 // Get last selected vocabulary from the browser storage
-const select = Storage.getObject<VocabularyReviewSelectData>(
+const select = useStorage<VocabularyReviewSelectData>(
   "vocabulary-review-select",
   new VocabularyReviewSelectData()
 );
 
 // Get currently selected review
 const review = computed(
-  () => vocabularyReviews.filter((v) => v.id == select.reviewId)[0]
+  () => vocabularyReviews.filter((v) => v.id == select.value.reviewId)[0]
 );
 
 const levels = computed(() => review.value.levels());
@@ -39,20 +39,20 @@ const fixedParams = computed<CreatorParams>(
 );
 
 const anySelected = computed(() => {
-  const meaning = fixedParams.value.meaning ?? select.meaning;
-  const reading = fixedParams.value.reading ?? select.reading;
-  const translation = fixedParams.value.translation ?? select.translation;
+  const meaning = fixedParams.value.meaning ?? select.value.meaning;
+  const reading = fixedParams.value.reading ?? select.value.reading;
+  const translation = fixedParams.value.translation ?? select.value.translation;
   return meaning || reading || translation;
 });
 
 const reviewParams = computed(() => {
   return exportParams(
     {
-      meaning: fixedParams.value.meaning ?? select.meaning,
-      translation: fixedParams.value.translation ?? select.translation,
-      reading: fixedParams.value.reading ?? select.reading,
-      level: fixedParams.value.level ?? select.level,
-      shuffle: fixedParams.value.shuffle ?? select.shuffle,
+      meaning: fixedParams.value.meaning ?? select.value.meaning,
+      translation: fixedParams.value.translation ?? select.value.translation,
+      reading: fixedParams.value.reading ?? select.value.reading,
+      level: fixedParams.value.level ?? select.value.level,
+      shuffle: fixedParams.value.shuffle ?? select.value.shuffle,
     },
     []
   );
