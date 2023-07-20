@@ -8,9 +8,9 @@ import { computed } from "vue";
 const configuration = Application.configuration;
 const fonts = ConfigurationOptions.availableJapaneseFonts;
 const currentFont = computed(
-  () => '"' + fonts[configuration.japaneseFont].name + '"'
+  () => '"' + fonts[configuration.value.japaneseFont].name + '"'
 );
-const currentStyle = computed(() => fonts[configuration.japaneseFont].style);
+const currentStyle = computed(() => fonts[configuration.value.japaneseFont].style);
 </script>
 
 <template>
@@ -58,7 +58,7 @@ const currentStyle = computed(() => fonts[configuration.japaneseFont].style);
   --border-base-color: rgba(0, 0, 0, 0.1);
   --border-hover-color: rgba(0, 0, 0, 0.1);
 
-  --button-active-color: rgba(0, 0, 0, 0.5);
+  --button-active-color: rgb(64, 138, 217) !important;
   --button-active-text-color: var(--text-light-color);
   --button-disabled-opacity: 0.65;
   --button-border-radius: 10px;
@@ -179,10 +179,12 @@ body {
 
 /* Frequently used colors */
 .kz-success {
-  background-color: rgb(73, 184, 73) !important;
+  /* TODO(vadim): Move this to the theme */
+  background-color: rgb(64, 138, 217) !important;
   color: white !important;
 }
 .kz-danger {
+  /* TODO(vadim): Move this to the theme */
   background-color: rgb(203, 81, 81) !important;
   color: white !important;
 }

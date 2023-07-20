@@ -3,9 +3,9 @@ import { computed } from "vue";
 import ActionButton from "@/components/ActionButton.vue";
 import { database } from "@/core/Database";
 import router from "@/router";
-import { Storage } from "@/core/Storage";
 import type { RouteLocationRaw } from "vue-router";
 import DisplayContainer from "@/components/DisplayContainer.vue";
+import { useStorage } from "@vueuse/core"
 
 const monographs: string[] = [
   "a", "ka", "sa", "ta", "na", 
@@ -19,19 +19,21 @@ const diacritics: string[] = [
 
 const param = router.currentRoute.value.params.kana?.toString() ?? "katakana";
 const kana = param === "hiragana" ? database.hiragana : database.katakana;
-const name = param === "hiragana" ? "Hiragana" : "Katakana";
+const name = param === "hiragana" ? "hiragana" : "katakana";
 
+// Object that we use to store selected kana on the page
+// TODO(vadim): This should be replace with Map<>
 type KanaPageState = {
   raw: { kana: string, selected: boolean }[];
 }
 
+// Sync selected kana on the page with the browser storage
+// TODO(vadim): Versioning!
+const state = useStorage<KanaPageState>(name + "-selected", { raw: []});
+
 function set(state: KanaPageState, kana: string, selected: boolean) {
-  const entry = state.raw.find(v => v.kana == kana);
-  if (entry) {
-    entry.selected = selected;
-  } else {
-    state.raw.push({kana, selected});
-  }
+  state.raw = state.raw.filter(v => v.kana !== kana);
+  state.raw.push({ kana, selected });
 }
 
 function get(state: KanaPageState, kana: string): boolean {
@@ -43,24 +45,24 @@ function selected(state: KanaPageState): string[] {
   return state.raw.filter(v => v.selected).map(v => v.kana);
 }
 
-const state = Storage.getObject<KanaPageState>(name.toLowerCase() + "-selected", { raw: [] });
-const monographsSelected = computed(() => monographs.map(k => get(state, k)).reduce((l, r) => l && r));
-const diacriticsSelected = computed(() => diacritics.map(k => get(state, k)).reduce((l, r) => l && r));
-const anySelected = computed(() => selected(state).length > 0);
-const kanaToReview = computed(() => selected(state));
+// TODO(vadim): Everything below should be refactored
+const monographsSelected = computed(() => monographs.map(k => get(state.value, k)).reduce((l, r) => l && r));
+const diacriticsSelected = computed(() => diacritics.map(k => get(state.value, k)).reduce((l, r) => l && r));
+const anySelected = computed(() => selected(state.value).length > 0);
+const kanaToReview = computed(() => selected(state.value));
 
 function allMonographs() {
   const select = monographsSelected.value;
-  monographs.forEach(v => set(state, v, !select));
+  monographs.forEach(v => set(state.value, v, !select));
 };
 
 function allDiacritics() {
   const select = diacriticsSelected.value;
-  diacritics.forEach(v => set(state, v, !select));
+  diacritics.forEach(v => set(state.value, v, !select));
 };
 
 function clearAll() {
-  monographs.concat(diacritics).forEach(k => set(state, k, false));
+  monographs.concat(diacritics).forEach(k => set(state.value, k, false));
 }
 
 function goTo(path: RouteLocationRaw) {
@@ -73,7 +75,7 @@ function goTo(path: RouteLocationRaw) {
 
   <div class="header-container text-center mb-3 pb-1">
     <div></div>
-    <div><h4 class="m-0">Select {{ name.toLowerCase() }}</h4></div>
+    <div><h4 class="m-0">Select {{ name }}</h4></div>
     <div>
       <ActionButton class='text-muted h-100' plain @click="clearAll"><i class="bi bi-trash"></i></ActionButton>
     </div>
@@ -100,7 +102,7 @@ function goTo(path: RouteLocationRaw) {
   </div>
 
   <ActionButton
-    @click="() => goTo({name: 'review', query: {entries: kanaToReview.toString(), db: name.toLowerCase() }})" 
+    @click="() => goTo({name: 'review', query: {entries: kanaToReview.toString(), db: name }})" 
     class="start-button mt-4 kz-success" 
     :disabled="!anySelected">
     Start!
@@ -110,26 +112,16 @@ function goTo(path: RouteLocationRaw) {
 </template>
 
 <style scoped>
-.back-button {
-  margin-right: 1.5em;
-}
-
 .header-container {
   display: grid;
   grid-template-columns: 3em 1fr 3em;
 }
-
 .kana-title {
   margin-bottom: var(--default-grid-gap);
 }
-
 .kana-container {
   display: grid;
   grid-template-columns: repeat(5, 1fr);
   gap: var(--default-grid-gap);
-}
-
-a {
-  text-decoration: none;
 }
 </style>
