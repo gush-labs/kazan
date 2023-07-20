@@ -1,10 +1,5 @@
 <script setup lang="ts">
 import DisplayContainer from "@/components/DisplayContainer.vue";
-import { BackendClient } from "@/core/BackendClient";
-import { ref } from "vue";
-
-const status = ref<boolean | undefined>(undefined);
-BackendClient.status.then((result) => (status.value = result));
 </script>
 
 <template>
@@ -15,7 +10,7 @@ BackendClient.status.then((result) => (status.value = result));
       <div class="d-flex flex-column kz-container text-muted">
         <div class="d-flex flex-row justify-content-between info-item">
           <div>Version</div>
-          <div>1.1</div>
+          <div>1.2</div>
         </div>
 
         <div class="d-flex flex-row justify-content-between info-item">

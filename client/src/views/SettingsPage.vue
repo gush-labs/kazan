@@ -7,7 +7,7 @@ import DisplayContainer from "@/components/DisplayContainer.vue";
 const configuration = Application.configuration;
 const fonts = ConfigurationOptions.availableJapaneseFonts;
 
-const showAnswer = computed(() => configuration.showAnswers);
+const showAnswer = computed(() => configuration.value.showAnswers);
 </script>
 
 <template>
