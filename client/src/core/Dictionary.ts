@@ -6,8 +6,9 @@
 import { watchRemove } from "@/core/Utilities";
 import { Authentication } from "@/core/Authentication";
 import { Application } from "@/core/Application";
-import { Storage, type StorageRef } from "@/core/Storage";
 import { WaniKaniClient } from "@/core/WaniKaniClient";
+import { useStorage } from "@vueuse/core";
+import type { Ref } from "vue";
 
 export class Word {
   id = 0;
@@ -34,6 +35,7 @@ class DictionaryData {
   static requiredVersion = 0;
   version = 0;
   words: Word[] = [];
+  empty = true;
 }
 
 type PageRequest = Promise<Word[]>;
@@ -44,16 +46,17 @@ export class Dictionary {
   static wanikaniLevels = new Map<number, number[]>();
   static meanings = new Map<string, number[]>();
 
-  private static get data(): StorageRef<DictionaryData> {
-    return Storage.get<DictionaryData>("dictionary");
+  private static get data(): Ref<DictionaryData> {
+    return useStorage<DictionaryData>("dictionary", new DictionaryData);
   }
 
+  // Load dictionary from WaniKani
   static load() {
     if (this.state == DictionaryState.READY) {
       return;
     }
 
-    const dataIsMissing = !this.data.value;
+    const dataIsMissing = this.data.value.empty;
     const dataIsOutdated =
       this.data.value?.version !== DictionaryData.requiredVersion;
 
@@ -69,6 +72,7 @@ export class Dictionary {
   private static loadFromData(data: DictionaryData) {
     // Save vocabulary
     this.data.value = data;
+    this.data.value.empty = false;
 
     // Load everything in memory
     data.words.forEach((word) => {
