@@ -13,7 +13,10 @@ const user = Authentication.user;
       <h4 class="mb-0">Your Profile</h4>
     </div>
 
-    <div v-if="user" class="kz-container px-3 py-2 d-flex flex-row profile-container">
+    <div
+      v-if="user"
+      class="kz-container px-3 py-2 d-flex flex-row profile-container"
+    >
       <div class="d-flex flex-column justify-content-center profile-icon">
         <i class="bi bi-person-circle"></i>
       </div>
@@ -22,14 +25,12 @@ const user = Authentication.user;
         <div class="text-muted">Level {{ user.level }}</div>
       </div>
       <div class="d-flex flex-column justify-content-center">
-      <ActionButton
-        @click="() => Authentication.logout()"
-        v-if="user"
-        icon="arrow-left-square"
-        class="kz-danger"
-        ></ActionButton
-      >
-        
+        <ActionButton
+          @click="() => Authentication.logout()"
+          v-if="user"
+          icon="arrow-left-square"
+          class="kz-danger"
+        ></ActionButton>
       </div>
     </div>
 

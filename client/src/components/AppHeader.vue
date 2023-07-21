@@ -29,9 +29,7 @@ function goProfile() {
       </ul>
     </div>
 
-    <div @click="goHome" class="logo">
-      カザン
-    </div>
+    <div @click="goHome" class="logo">カザン</div>
 
     <div class="dropdown profile">
       <ActionButton
@@ -39,7 +37,8 @@ function goProfile() {
         plain
         icon="person-circle"
         class="header-link"
-      >Profile</ActionButton>
+        >Profile</ActionButton
+      >
       <ActionButton
         @click="() => goProfile()"
         icon="person-circle"

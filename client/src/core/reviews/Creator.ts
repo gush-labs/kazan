@@ -20,26 +20,26 @@ export type CreatorStatus = {
 export type ReviewRow = {
   id: number;
   // Usually english translation of the japanese word
-  english: string[],
+  english: string[];
   // Japanese word or a phrase
-  japanese: string[],
+  japanese: string[];
   // Reading of the japanese word
-  reading: string[],
+  reading: string[];
   // Hints
-  note?: string,
-  
+  note?: string;
+
   // The next 3 fields are used for the case
   // when we want to show only one answer
   // despite accepting multiple for example
-  shownReadings?: string[],
-  shownJapanese?: string[],
-  shownEnglish?: string[],
-}
+  shownReadings?: string[];
+  shownJapanese?: string[];
+  shownEnglish?: string[];
+};
 
 export type ReviewTable = ReviewRow[];
 
 export function meaningCards(data: ReviewTable): ReviewCard[] {
-  return data.map(row => {
+  return data.map((row) => {
     return new ReviewCard({
       id: row.id,
       type: "meaning",
@@ -53,7 +53,7 @@ export function meaningCards(data: ReviewTable): ReviewCard[] {
 }
 
 export function readingCards(data: ReviewTable): ReviewCard[] {
-  return data.map(row => {
+  return data.map((row) => {
     return new ReviewCard({
       id: row.id,
       type: "meaning",
@@ -67,7 +67,7 @@ export function readingCards(data: ReviewTable): ReviewCard[] {
 }
 
 export function translationCards(data: ReviewTable): ReviewCard[] {
-  return data.map(row => {
+  return data.map((row) => {
     return new ReviewCard({
       id: row.id,
       type: "meaning",
@@ -121,7 +121,10 @@ export interface Creator {
 
   enabledParameters: CreatorParams;
 
-  create(parameters: CreatorParams, additionalParameters: string[]): Review | undefined;
+  create(
+    parameters: CreatorParams,
+    additionalParameters: string[]
+  ): Review | undefined;
 
   levels(): string[];
 

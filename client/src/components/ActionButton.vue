@@ -9,7 +9,7 @@ const props = defineProps<{
   plain?: boolean;
   switch?: boolean;
   switched?: boolean;
-  type?: "success" | "default" | "active"
+  type?: "success" | "default" | "active";
 }>();
 
 const buttonType = computed(() => props.type ?? "default");
@@ -27,8 +27,8 @@ function click(e: any) {
     @click="click"
     class="kz-text"
     :class="{
-      'plain': plain,
-      'btn': !plain,
+      plain: plain,
+      btn: !plain,
       'kz-button': !plain,
       'kz-success': buttonType == 'success',
       'kz-button-disabled': props.disabled,

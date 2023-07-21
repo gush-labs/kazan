@@ -209,9 +209,7 @@ function checkAnswer(e: Event) {
 
 <template>
   <div v-if="!showReport" class="d-flex flex-column justify-content-center">
-
     <div class="review-window text-center kz-container d-flex flex-column">
-
       <div class="my-3">
         <h1 class="review-target japanese">{{ card.question }}</h1>
       </div>

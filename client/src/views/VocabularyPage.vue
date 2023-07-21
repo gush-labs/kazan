@@ -34,7 +34,9 @@ const review = computed(
 
 const levels = computed(() => review.value.levels());
 const status = computed(() => review.value.status());
-const fixedParams = computed<CreatorParams>(() => review.value.enabledParameters);
+const fixedParams = computed<CreatorParams>(
+  () => review.value.enabledParameters
+);
 
 const anySelected = computed(() => {
   const meaning = fixedParams.value.meaning ?? select.meaning;
@@ -68,7 +70,6 @@ function startReview() {
 
 <template>
   <DisplayContainer short center class="pt-4">
-
     <div class="text-center mb-3"><h4>Select vocabulary</h4></div>
 
     <select

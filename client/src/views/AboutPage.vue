@@ -13,7 +13,6 @@ BackendClient.status.then((result) => (status.value = result));
       <h4>About the app</h4>
       <p><b>Kazan</b> - WaniKani assistance tool.</p>
       <div class="d-flex flex-column kz-container text-muted">
-
         <div class="d-flex flex-row justify-content-between info-item">
           <div>Version</div>
           <div>1.1</div>
@@ -22,12 +21,13 @@ BackendClient.status.then((result) => (status.value = result));
         <div class="d-flex flex-row justify-content-between info-item">
           <div>Source</div>
           <div>
-            <a class="text-muted source-link" href="https://github.com/gush-labs/kazan"
+            <a
+              class="text-muted source-link"
+              href="https://github.com/gush-labs/kazan"
               >@gush-labs/kazan</a
             >
           </div>
         </div>
-
       </div>
     </div>
   </DisplayContainer>
