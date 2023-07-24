@@ -1,14 +1,14 @@
 <script setup lang="ts">
 import { computed } from "vue";
-
 const emits = defineEmits(["click"]);
+
 const props = defineProps<{
-  label?: string;
-  icon?: string;
-  disabled?: boolean;
-  plain?: boolean;
-  switch?: boolean;
-  switched?: boolean;
+  label?: string;         // text inside of the button
+  icon?: string;          // icon for the button
+  disabled?: boolean;     // if button is disabled or not
+  plain?: boolean;        // if button should have outline
+  switch?: boolean;       // if button represents a switch (can be toggled on and off)
+  switched?: boolean;     // state of the switch: enabled or disabled
   type?: "success" | "default" | "active";
 }>();
 

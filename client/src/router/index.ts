@@ -8,7 +8,6 @@ import VocabularyPage from "@/views/VocabularyPage.vue";
 import ApiGuide from "@/views/ApiGuide.vue";
 import ProfilePage from "@/views/ProfilePage.vue";
 import SettingsPage from "@/views/SettingsPage.vue";
-import AboutPage from "@/views/AboutPage.vue";
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -22,11 +21,6 @@ const router = createRouter({
       path: "/settings",
       name: "settings",
       component: SettingsPage,
-    },
-    {
-      path: "/about",
-      name: "about",
-      component: AboutPage,
     },
     {
       path: "/api-guide",

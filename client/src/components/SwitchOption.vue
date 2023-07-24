@@ -1,8 +1,10 @@
 <script setup lang="ts">
+
 const props = defineProps<{
-  switch: boolean;
-  disabled?: boolean;
+  switch: boolean;      // state of the switch (toggled on or off)
+  disabled?: boolean;   // if switch component is disabled
 }>();
+
 const emits = defineEmits(["click"]);
 </script>
 

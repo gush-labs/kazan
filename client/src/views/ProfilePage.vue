@@ -43,10 +43,8 @@ const user = Authentication.user;
         >Sign in</PageLink
       >
       <PageLink :to="{ name: 'settings' }" icon="gear">Settings</PageLink>
-      <PageLink :to="{ name: 'about' }" icon="info-circle"
-        >About the app</PageLink
-      >
     </div>
+
   </DisplayContainer>
 </template>
 

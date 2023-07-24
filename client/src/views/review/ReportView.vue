@@ -80,7 +80,7 @@ const slowestCount = review.value
     <div class="gap-top">
       <ActionButton
         icon="arrow-return-left"
-        class="w-100"
+        class="w-100 kz-success"
         @click="() => router.back()"
         >Complete</ActionButton
       >
