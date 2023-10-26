@@ -1,7 +1,7 @@
 /**
  * Module contains an API to work with WaniKani integration
  */
-import { Storage } from "@/core/Storage";
+import { useStorage } from "@vueuse/core";
 
 class WaniKaniData {
   apiKey: string | undefined = undefined;
@@ -9,15 +9,15 @@ class WaniKaniData {
 
 export class WaniKaniClient {
   public static get data() {
-    return Storage.getObject<WaniKaniData>("wanikani", new WaniKaniData());
+    return useStorage<WaniKaniData>("wanikani", new WaniKaniData());
   }
 
   public static setKey(key: string) {
-    this.data.apiKey = key;
+    this.data.value.apiKey = key;
   }
 
   public static async request(resource: string, query: any = {}): Promise<any> {
-    const api = this.data.apiKey;
+    const api = this.data.value.apiKey;
     if (!api) {
       return Promise.reject("There is no WaniKani API key present");
     }

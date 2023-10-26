@@ -47,7 +47,7 @@ function takeCard(review: Review) {
 
   // Redefine all variables which describe state of the
   // currently shown card
-  showAnswer.value = Application.configuration.showAnswers;
+  showAnswer.value = Application.configuration.value.showAnswers;
   wrongAnswer.value = false;
   answerInput.value = "";
 

@@ -6,11 +6,14 @@ import { Application, ConfigurationOptions } from "@/core/Application";
 import { computed } from "vue";
 
 const configuration = Application.configuration;
+
+// Load the currently selected font for japanese text from the configuration 
+// and apply it across all application
 const fonts = ConfigurationOptions.availableJapaneseFonts;
 const currentFont = computed(
-  () => '"' + fonts[configuration.japaneseFont].name + '"'
+  () => '"' + fonts[configuration.value.japaneseFont].name + '"'
 );
-const currentStyle = computed(() => fonts[configuration.japaneseFont].style);
+const currentStyle = computed(() => fonts[configuration.value.japaneseFont].style);
 </script>
 
 <template>
@@ -22,6 +25,11 @@ const currentStyle = computed(() => fonts[configuration.japaneseFont].style);
 </template>
 
 <style>
+/** 
+All styling is a total mess. It should be refactored very heavily.
+We don't rely on any design system. Everything depends on the bootstrap.
+*/
+
 /* The main div container where all content is placed */
 .app-container {
   position: relative;
@@ -58,7 +66,13 @@ const currentStyle = computed(() => fonts[configuration.japaneseFont].style);
   --border-base-color: rgba(0, 0, 0, 0.1);
   --border-hover-color: rgba(0, 0, 0, 0.1);
 
-  --button-active-color: rgba(0, 0, 0, 0.5);
+  --button-green-color: rgb(73, 184, 73) !important;
+  --button-blue-color: rgb(64, 138, 217) !important;
+  --button-pink-color: pink;
+  --button-red-color: rgb(203, 81, 81) !important;
+
+  --button-active-color: var(--button-blue-color);
+
   --button-active-text-color: var(--text-light-color);
   --button-disabled-opacity: 0.65;
   --button-border-radius: 10px;
@@ -140,6 +154,7 @@ body {
   border-radius: var(--select-border-radius);
 }
 
+/* TODO: Move this out of this file */
 /* Button component */
 .kz-button {
   position: relative;
@@ -156,22 +171,27 @@ body {
   border: var(--button-border-width) solid var(--border-hover-color);
   background-color: var(--button-hover-bg-color);
 }
+
 .kz-button:focus {
   border: var(--button-border-width) solid var(--border-hover-color);
   background-color: var(--button-bg-color);
 }
+
 .kz-button-active {
   color: var(--button-active-text-color) !important;
   background-color: var(--button-active-color) !important;
 }
+
 .kz-button-disabled {
   opacity: var(--button-disabled-opacity);
   border-radius: var(--button-border-radius);
   color: rgba(0, 0, 0, 0.5);
 }
+
 .kz-button-disabled:focus {
   border: var(--button-border-width) solid var(--border-base-color) !important;
 }
+
 .kz-button-disabled:hover {
   cursor: default;
   border: var(--button-border-width) solid var(--border-base-color) !important;
@@ -179,11 +199,11 @@ body {
 
 /* Frequently used colors */
 .kz-success {
-  background-color: rgb(73, 184, 73) !important;
+  background-color: var(--button-green-color);
   color: white !important;
 }
 .kz-danger {
-  background-color: rgb(203, 81, 81) !important;
+  background-color: var(--button-red-color);
   color: white !important;
 }
 

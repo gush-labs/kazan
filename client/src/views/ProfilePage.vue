@@ -14,7 +14,7 @@ const user = Authentication.user;
     </div>
 
     <div
-      v-if="user"
+      v-if="user.login"
       class="kz-container px-3 py-2 d-flex flex-row profile-container"
     >
       <div class="d-flex flex-column justify-content-center profile-icon">
@@ -27,7 +27,7 @@ const user = Authentication.user;
       <div class="d-flex flex-column justify-content-center">
         <ActionButton
           @click="() => Authentication.logout()"
-          v-if="user"
+          v-if="user.login"
           icon="arrow-left-square"
           class="kz-danger"
         ></ActionButton>
@@ -38,23 +38,19 @@ const user = Authentication.user;
       <PageLink
         class="kz-success"
         :to="{ name: 'login' }"
-        v-if="!user"
+        v-if="!user.login"
         icon="box-arrow-right"
         >Sign in</PageLink
       >
       <PageLink :to="{ name: 'settings' }" icon="gear">Settings</PageLink>
-      <PageLink :to="{ name: 'about' }" icon="info-circle"
-        >About the app</PageLink
-      >
     </div>
+
   </DisplayContainer>
 </template>
 
 <style scoped>
 .profile-icon {
   font-size: 2.5em;
-}
-.profile-container {
 }
 .control-buttons-container {
   display: grid;

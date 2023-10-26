@@ -2,10 +2,12 @@
  * Module responsible for authentication actions (login, logout, etc.).
  */
 import { WaniKaniClient } from "@/core/WaniKaniClient";
-import { Storage, type StorageRef } from "@/core/Storage";
+import { useStorage } from "@vueuse/core";
+import type { Ref } from "vue";
 import { watchUpdate } from "@/core/Utilities";
 
 export class User {
+  login = false;
   username = "";
   level = 0;
   paid = false;
@@ -19,8 +21,9 @@ export type LoginData = {
  * Authenticates user
  */
 export class Authentication {
-  public static get user(): StorageRef<User> {
-    return Storage.get<User>("user");
+
+  public static get user(): Ref<User> {
+    return useStorage<User>("user", new User());
   }
 
   public static onLogin(action: (user: User) => void) {
@@ -38,6 +41,7 @@ export class Authentication {
         return false;
       }
       this.user.value = this.parse(response);
+      this.user.value.login = true;
       return true;
     } catch (error) {
       console.error("Failed to authenticate", error);
@@ -55,7 +59,7 @@ export class Authentication {
   }
 
   public static logout() {
-    Storage.clear();
+    this.user.value = new User();
   }
 }
 

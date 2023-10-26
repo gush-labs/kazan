@@ -11,7 +11,7 @@ const apiKeyInput = ref("");
 const showLoadingProcess = ref(false);
 
 // Redirect user to the profile page if user is logged in
-if (Authentication.user.value) {
+if (Authentication.user.value.login) {
   router.push({ name: "profile" });
 }
 

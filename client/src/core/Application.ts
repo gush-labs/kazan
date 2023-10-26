@@ -4,7 +4,8 @@
  * outgoing processes or global app configuration.
  */
 import { computed, reactive } from "vue";
-import { Storage } from "./Storage";
+import { useStorage } from "@vueuse/core";
+import type { Ref } from "vue";
 
 export type Process = {
   key: string;
@@ -108,8 +109,8 @@ class Configuration {
 export class Application {
   static status = new Status();
 
-  static get configuration(): Configuration {
-    return Storage.getObject<Configuration>(
+  static get configuration(): Ref<Configuration> {
+    return useStorage<Configuration>(
       "configuration",
       new Configuration()
     );
