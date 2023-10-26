@@ -1,38 +1,23 @@
-![Untitled](https://user-images.githubusercontent.com/6123702/194173134-23fec594-76ed-44a9-88b5-26c33e396a28.png)
 # [Kazan - Japanese learning assistant](https://gush-labs.github.io/kazan/)
 
 Web-app that helps you to practice hiragana, katakana, vocabulary, and kanji (coming soon). An assistance tool for your [WaniKani](https://wanikani.com) learning journey.
 
-![iPhone 12 Pro Max -- Silver](https://user-images.githubusercontent.com/6123702/194172375-9a630f5a-805b-4235-ba23-3a2bc7369d36.png)
+![Scene](https://github.com/gush-labs/kazan/assets/6123702/044bcb70-f67a-4696-9e6a-82ea964367bc)
+
 
 ## Features
 
- * **Kana review**
- * **WaniKani vocabulary review**
-   * Meaning, reading, and translation reviews
-   * Review by WaniKani user level
- * **Settings**
-   * Selection of Japanese fonts
-   * Show answers/hide answers
+ * **Hiragana/Kataka reviews**
+ * **WaniKani vocabulary reviews**
  * **WPA support**
 
 ## Development
 
-There are 2 directories inside of this repository:
- * `server` - source code for the server (NodeJS app)
- * `client` - source code for the web-app (Vue/TypeScript app)
+NodeJS and npm are required for local development.
 
-You can navigate to any of those and init them as local npm projects through
-`npm install`. And then use IDE of your choice to make appropriate changes.
-
-If you just want to try to run both server and client locally, you can do that
-by using the following `make` commands:
-
-```sh
-# To launch the server locally
-make server-run
-
-# To lanuch the web-server for the web-app locally
-make client-run
+To run the app on your machine, clone this repository, then:
+```bash
+cd client
+npm run dev
 ```
 
